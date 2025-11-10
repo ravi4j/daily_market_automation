@@ -30,6 +30,8 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 - 🛡️ **Smart Error Handling** - No crashes on weekends/holidays/market closures
 - 📊 **Multiple Symbols** - TQQQ, S&P 500 (^GSPC), AAPL, UBER (easily add more)
 - 🔄 **Auto-Retry** - Automatic retry logic for transient network errors
+- 📈 **Breakout Detection** - Identifies trendline violations, S/R breaks, and reversal points
+- 🎯 **Technical Analysis** - Support/resistance levels, swing highs/lows, trend direction
 - 📧 **Email Notifications** - Optional daily summary emails
 - 🏗️ **Production Ready** - Organized structure for multiple automation scripts
 
@@ -49,8 +51,11 @@ daily_market_automation/
 ├── .github/
 │   └── workflows/         # GitHub Actions workflows
 ├── src/                   # Source code
-│   ├── fetch_daily_prices.py  # Main market data fetching script
+│   ├── fetch_daily_prices.py  # Market data fetching script
+│   ├── detect_breakouts.py    # Breakout detection & analysis
+│   ├── visualize_breakouts.py # Chart generation with trendlines
 │   └── common/           # Shared utilities for future scripts
+├── charts/                # Generated chart images (PNG, committed & regenerated daily)
 ├── tests/                # Test files
 │   └── test_incremental.py
 ├── scripts/              # Helper scripts
@@ -176,32 +181,68 @@ Schedule run **daily at 6:30pm America/Chicago** (after U.S. market close):
 4. (Optional) Use a venv by pointing `Program/script` to the `python.exe` inside `.venv\Scripts`
 
 ### Option C — GitHub Actions (runs in the cloud)
-Create this file at `.github/workflows/daily.yml` (already included here):
+
+This project includes **two automated workflows**:
+
+#### 1. Data Fetching (`.github/workflows/daily-fetch.yml`)
+Runs daily to fetch latest market data:
+
 ```yaml
 name: Fetch Daily Prices
 on:
   schedule:
     - cron: "35 0 * * 1-5"   # 00:35 UTC ≈ 6:35 PM America/Chicago (M-F)
-  workflow_dispatch: {}
-jobs:
-  fetch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: pip install -r requirements-fetch.txt
-      - run: python src/fetch_daily_prices.py
-      - name: Commit updated data
-        run: |
-          git config user.name "automation-bot"
-          git config user.email "bot@example.com"
-          git add data/*.csv
-          git commit -m "Update daily data" || echo "No changes"
-          git push
+  workflow_dispatch: {}      # Manual trigger
 ```
-> Requires a GitHub repository with proper permissions (write access for the workflow, or a PAT).
+
+**What it does:**
+- Fetches latest OHLCV data for all symbols
+- Updates CSV files in `data/` directory
+- Commits and pushes changes automatically
+- Runs Monday-Friday after market close
+
+#### 2. Chart Generation (`.github/workflows/daily-charts.yml`)
+Runs automatically **after** data fetch completes:
+
+```yaml
+name: Generate Daily Charts
+on:
+  workflow_run:
+    workflows: ["Fetch Daily Prices"]
+    types: [completed]
+  workflow_dispatch: {}      # Manual trigger
+```
+
+**What it does:**
+- Generates visual breakout charts (includes analysis)
+- Creates PNG charts in `charts/` directory
+- Commits and pushes chart images
+- Uploads charts as workflow artifacts (30-day retention)
+- Only runs if fetch workflow succeeded
+
+**Note**: The chart generation script (`visualize_breakouts.py`) includes the breakout analysis, so no separate detection step is needed.
+
+#### Setup Requirements:
+1. **Repository Settings** → **Actions** → **General**
+   - Enable "Allow GitHub Actions to create and approve pull requests"
+   - Workflow permissions: "Read and write permissions"
+2. Push workflows to your repository
+3. Enable workflows in the Actions tab
+
+#### Manual Triggers:
+```bash
+# Trigger fetch workflow manually
+gh workflow run daily-fetch.yml
+
+# Trigger chart generation manually
+gh workflow run daily-charts.yml
+```
+
+#### View Results:
+- **Code tab**: See updated CSV files in `data/` and charts in `charts/`
+- **Charts**: Committed to repo and viewable directly on GitHub (regenerated daily)
+- **Actions tab**: View workflow runs and download chart artifacts
+- **Artifacts**: Charts also available as workflow artifacts (30-day retention)
 
 ## 3) Optional Email Summary
 Copy `.env.example` to `.env` and fill values, or set these environment variables before running:
@@ -218,7 +259,214 @@ TQQQ: 2025-11-07  AdjClose=xx.xx  Close=yy.yy
 SP500: 2025-11-07  AdjClose=aa.aa  Close=bb.bb
 ```
 
-## 4) Testing
+## 4) Breakout Detection
+
+### Analyze Market Breakouts
+
+The project includes a powerful breakout detection script that identifies:
+- **Trendline Violations** - Breakouts above/below support/resistance trendlines
+- **Support/Resistance Breaks** - Price breaking through key S/R levels
+- **Reversal Points** - Price near previous swing highs/lows
+
+```bash
+# Activate virtual environment
+source .venv/bin/activate
+
+# Run breakout analysis
+python src/detect_breakouts.py
+```
+
+### What It Detects
+
+**🔹 Trendline Analysis:**
+- Uses linear regression on recent highs/lows
+- Identifies uptrends vs downtrends
+- Detects bullish/bearish trendline breakouts
+
+**🔹 Support/Resistance Analysis:**
+- Calculates S/R from 20-day highs/lows
+- Measures distance from current price to S/R levels
+- Alerts when price breaks through resistance or support
+
+**🔹 Reversal Point Analysis:**
+- Identifies swing highs and lows (local peaks/troughs)
+- Detects when price is near previous reversal points
+- Signals potential trend reversals
+
+### Example Output
+
+```
+================================================================================
+📊 TQQQ - 2025-11-10
+================================================================================
+Current Price: $110.03 | Volume: 29,818,811
+
+🔹 TRENDLINE ANALYSIS:
+   Trend Direction: 📈 UPTREND
+   Support Trendline: $113.49
+   Resistance Trendline: $117.47
+   🚨 BREAKOUT DETECTED: BEARISH_TRENDLINE_BREAKOUT
+
+🔹 SUPPORT/RESISTANCE ANALYSIS:
+   Support: $97.07 (13.35% away)
+   Resistance: $121.37 (9.34% away)
+
+🔹 REVERSAL POINT ANALYSIS:
+   Latest Swing High: $121.37
+   Latest Swing Low: $96.83
+   ⚠️  NEAR_PREVIOUS_HIGH at $109.66
+
+================================================================================
+📋 SUMMARY
+================================================================================
+🚨 BREAKOUTS DETECTED:
+   • TQQQ: BEARISH_TRENDLINE_BREAKOUT
+```
+
+### Customize Detection Parameters
+
+Edit `src/detect_breakouts.py` to adjust:
+
+```python
+LOOKBACK_DAYS = 60               # Analysis period (default: 60 days)
+SUPPORT_RESISTANCE_WINDOW = 20   # S/R calculation window (default: 20 days)
+BREAKOUT_THRESHOLD = 0.02        # Breakout threshold (default: 2%)
+
+# Confirmation Filters (see docs/breakout-confirmation.md for details)
+CONFIRMATION_CONFIG = {
+    'percentage_threshold': 0.02,   # 2% move required
+    'point_threshold': 2.0,          # $2 move required
+    'multiple_closes': 1,            # Consecutive closes needed
+    'time_bars': 1,                  # Bars to confirm
+    'volume_multiplier': 1.2,        # Volume surge (1.2x average)
+}
+```
+
+### Confirmation Filters
+
+The system uses **6 sophisticated filters** to validate breakouts and reduce false signals:
+
+1. **✅ Intrabar Close** - Close must be beyond level (not just wick)
+2. **✅ Multiple Closes** - N consecutive closes required
+3. **✅ Time/Bar Confirmation** - Sustained for N bars
+4. **✅ Percentage Move** - Minimum % threshold
+5. **✅ Point Move** - Minimum $ threshold
+6. **✅ Volume Surge** - Above average volume
+
+**Scoring:** Breakout is **CONFIRMED** if 4+ out of 6 filters pass (66% threshold)
+
+📚 **See detailed documentation:** `docs/breakout-confirmation.md`
+
+### Add More Symbols
+
+The system **automatically discovers** all CSV files in the `data/` directory!
+
+#### Method 1: Auto-Discovery (Default - Recommended) ✅
+
+Simply add new CSV files to `data/` folder:
+
+```bash
+# Add new symbol data
+python src/fetch_daily_prices.py  # Will fetch all configured symbols
+
+# Analysis automatically includes all CSV files
+python src/detect_breakouts.py    # Auto-discovers: AAPL, SP500, TQQQ, UBER, etc.
+python src/visualize_breakouts.py # Creates charts for all discovered symbols
+```
+
+**Benefits:**
+- ✅ No code changes needed
+- ✅ Automatically analyzes all available data
+- ✅ Easy to add/remove symbols (just add/delete CSV files)
+- ✅ Scales automatically
+
+#### Method 2: Hardcode Specific Symbols (Optional)
+
+If you want to analyze only specific symbols, edit `src/detect_breakouts.py`:
+
+```python
+# Around line 24-28
+# Comment out auto-discovery:
+# SYMBOLS = None
+
+# Uncomment and customize:
+SYMBOLS = ["TQQQ", "AAPL"]  # Only analyze these
+```
+
+#### Method 3: Add Symbols to Fetch Script
+
+To add new symbols to fetch, edit `src/fetch_daily_prices.py`:
+
+```python
+# Around line 33
+SYMBOLS = {
+    "TQQQ": "TQQQ",
+    "SP500": "^GSPC",
+    "AAPL": "AAPL",
+    "UBER": "UBER",
+    "TSLA": "TSLA",     # Add Tesla
+    "NVDA": "NVDA",     # Add Nvidia
+    "MSFT": "MSFT",     # Add Microsoft
+}
+```
+
+Then fetch data:
+```bash
+python src/fetch_daily_prices.py
+# Creates: data/TSLA.csv, data/NVDA.csv, data/MSFT.csv
+
+# Analysis automatically picks them up!
+python src/detect_breakouts.py  # Now includes 7 symbols
+```
+
+### Visualize Breakouts with Charts
+
+Create visual charts showing trendlines, support/resistance levels, and breakout alerts:
+
+```bash
+# Generate charts for all symbols
+python src/visualize_breakouts.py
+```
+
+**Charts include:**
+- 📊 Candlestick price action
+- 📈 Support and resistance trendlines (linear regression)
+- 🔵 Horizontal support level
+- 🔴 Horizontal resistance level
+- 🔺 Swing high markers (red triangles)
+- 🔻 Swing low markers (green triangles)
+- 🚨 Breakout alert annotations
+- 📊 Price info and statistics
+
+**Charts are saved to:** `charts/SYMBOL_breakout.png`
+
+Example:
+- `charts/TQQQ_breakout.png`
+- `charts/SP500_breakout.png`
+- `charts/AAPL_breakout.png`
+- `charts/UBER_breakout.png`
+
+> 📌 **Note:** Charts are **committed to the repository** and **regenerated daily** by GitHub Actions. You can view the latest charts directly in the repo or download them as workflow artifacts.
+
+### Combined Analysis Workflow
+
+```bash
+# 1. Fetch latest data
+python src/fetch_daily_prices.py
+
+# 2. Option A: Text-based analysis only
+python src/detect_breakouts.py
+
+# 2. Option B: Generate visual charts (includes analysis)
+python src/visualize_breakouts.py
+
+# 3. View charts
+open charts/TQQQ_breakout.png
+```
+
+**Note**: `visualize_breakouts.py` automatically performs the breakout analysis, so you don't need to run both scripts unless you want the text output from `detect_breakouts.py`.
+
+## 5) Testing
 
 ### Test Incremental Fetching
 To verify that incremental fetching works correctly:

@@ -1,0 +1,77 @@
+name: Generate Daily Charts
+on:
+  # Run after daily-fetch.yml completes
+  workflow_run:
+    workflows: ["Fetch Daily Prices"]
+    types:
+      - completed
+
+  # Also allow manual trigger
+  workflow_dispatch: {}
+
+# Allow pushing chart images back to the repo
+permissions:
+  contents: write
+
+jobs:
+  generate-charts:
+    runs-on: ubuntu-latest
+    # Only run if fetch workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    env:
+      TZ: America/Chicago
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Pull latest changes from fetch workflow
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-base.txt
+
+      - name: Ensure directories exist
+        run: |
+          mkdir -p data
+          mkdir -p charts
+
+      - name: Generate breakout charts
+        run: python src/visualize_breakouts.py
+
+      - name: Commit and push charts
+        run: |
+          git config user.name "automation-bot"
+          git config user.email "bot@example.com"
+          git add charts/*.png || true
+          git commit -m "Generate daily breakout charts [skip ci]" || echo "No chart changes to commit"
+          git push || echo "Push skipped"
+
+      # Upload charts as artifacts for easy viewing
+      - name: Upload chart artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: breakout-charts
+          path: charts/*.png
+          retention-days: 30
+
+      # Optional: Create a comment with chart summary
+      - name: Generate chart summary
+        if: always()
+        run: |
+          echo "## 📊 Daily Breakout Charts Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Charts created for the following symbols:" >> $GITHUB_STEP_SUMMARY
+          ls -1 charts/*.png | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || true
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Charts are available in the artifacts section above." >> $GITHUB_STEP_SUMMARY

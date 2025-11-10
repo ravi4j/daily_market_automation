@@ -28,7 +28,6 @@ jobs:
         run: pip install -r requirements-fetch.txt
 
       - name: Ensure data dir exists
-      - name: Ensure data dir exists
         run: mkdir -p data
 
       - name: Run fetch script
