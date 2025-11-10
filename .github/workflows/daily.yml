@@ -1,22 +1,54 @@
 name: Fetch Daily Prices
 on:
   schedule:
-    - cron: "35 0 * * 1-5"   # 00:35 UTC ≈ 6:35 PM America/Chicago (M-F)
+    - cron: "35 0 * * 1-5"   # ~6:35 PM America/Chicago (Mon–Fri)
   workflow_dispatch: {}
+
+# allow pushing CSV updates back to the repo
+permissions:
+  contents: write
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    env:
+      TZ: America/Chicago
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r requirements.txt
-      - run: python fetch_daily_prices.py
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Ensure data dir exists
+        run: mkdir -p data
+
+      - name: Run fetch script
+        run: python fetch_daily_prices.py
+
       - name: Commit updated data
         run: |
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
-          git add data/*.csv
-          git commit -m "Update daily data" || echo "No changes"
-          git push
+          git add data/*.csv || true
+          git commit -m "Update daily data" || echo "No changes to commit"
+          git push || echo "Push skipped"
+
+      # (Optional) quick peek + artifacts for debugging
+      - name: Show CSV head
+        if: always()
+        run: head -n 5 data/*.csv || true
+
+      - name: Upload CSVs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: csv-output
+          path: data/*.csv
