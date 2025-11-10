@@ -1,0 +1,4 @@
+# Base dependencies used across multiple scripts
+pandas>=2.0.0
+numpy>=1.26.0
+pytz>=2023.3

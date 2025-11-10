@@ -31,7 +31,7 @@ jobs:
         run: mkdir -p data
 
       - name: Run fetch script
-        run: python fetch_daily_prices.py
+        run: python src/fetch_daily_prices.py
 
       - name: Commit updated data
         run: |

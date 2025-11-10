@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Fetch daily OHLCV data for TQQQ and the S&P 500 (^GSPC) and store/update CSVs.
+Fetch daily OHLCV data for multiple symbols and store/update CSVs.
 
 Features:
-- Writes/updates data/TQQQ.csv and data/SP500.csv
+- Incremental fetching: Only downloads NEW data if CSV exists (much faster!)
+- Writes/updates data/TQQQ.csv, data/SP500.csv, data/AAPL.csv, data/UBER.csv
 - Flattens yfinance MultiIndex columns
 - Coerces numerics, drops bad rows, rounds prices to 2 decimals
 - Retries on transient download errors
@@ -26,7 +27,7 @@ import pandas as pd
 try:
     import yfinance as yf
 except ImportError:
-    print("ERROR: Missing dependency 'yfinance'. Run: pip install -r requirements.txt", file=sys.stderr)
+    print("ERROR: Missing dependency 'yfinance'. Run: pip install -r requirements-fetch.txt", file=sys.stderr)
     sys.exit(1)
 
 # --- Config ---
@@ -37,7 +38,10 @@ SYMBOLS = {
     "UBER": "UBER",
 }
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+# Get project root (parent of src/ directory when moved, or current dir if not moved)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR) if os.path.basename(SCRIPT_DIR) == "src" else SCRIPT_DIR
+DATA_DIR = os.path.join(PROJECT_ROOT, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # Automatically create CSV paths from SYMBOLS
@@ -55,18 +59,45 @@ def log(msg: str):
     print(f"[{now}] {msg}", flush=True)
 
 
-def fetch_history(ticker: str, max_retries: int = 3, sleep_s: int = 2) -> pd.DataFrame:
-    """Fetch latest daily history for a ticker. Retries on transient errors."""
+def fetch_history(ticker: str, start_date: str = None, max_retries: int = 3, sleep_s: int = 2) -> pd.DataFrame:
+    """
+    Fetch daily history for a ticker. Retries on transient errors.
+
+    Args:
+        ticker: Stock symbol to fetch
+        start_date: If provided, fetch from this date onwards (format: 'YYYY-MM-DD')
+                   If None, fetch all historical data
+        max_retries: Number of retry attempts
+        sleep_s: Base sleep seconds between retries
+    """
     last_exc = None
     for attempt in range(1, max_retries + 1):
         try:
-            # group_by="column" returns a column-structured DataFrame (can still be MultiIndex)
-            df = yf.download(
-                ticker, period="max", interval="1d",
-                auto_adjust=False, progress=False, group_by="column"
-            )
-            if not isinstance(df.index, pd.DatetimeIndex) or df.empty:
-                raise ValueError("Empty or invalid DataFrame returned")
+            # Fetch incrementally if start_date provided, otherwise get all history
+            if start_date:
+                # Check if start_date is in the future or today (no data available yet)
+                start_dt = pd.Timestamp(start_date)
+                today = pd.Timestamp.today().normalize()
+                if start_dt >= today:
+                    # No new data available yet (weekend, holiday, or market hasn't closed)
+                    return pd.DataFrame()
+
+                df = yf.download(
+                    ticker, start=start_date, interval="1d",
+                    auto_adjust=False, progress=False, group_by="column"
+                )
+            else:
+                df = yf.download(
+                    ticker, period="max", interval="1d",
+                    auto_adjust=False, progress=False, group_by="column"
+                )
+
+            # If empty DataFrame returned, it's not necessarily an error (might be no new data)
+            if df.empty:
+                return pd.DataFrame()
+
+            if not isinstance(df.index, pd.DatetimeIndex):
+                raise ValueError("Invalid DataFrame returned (not DatetimeIndex)")
 
             # ✅ FLATTEN MultiIndex columns from yfinance (drops the ticker level)
             if isinstance(df.columns, pd.MultiIndex):
@@ -78,9 +109,17 @@ def fetch_history(ticker: str, max_retries: int = 3, sleep_s: int = 2) -> pd.Dat
             return df
         except Exception as e:
             last_exc = e
+            error_msg = str(e).lower()
+            # If it's a "start date after end date" error, it means no new data available
+            if "start date cannot be after end date" in error_msg or "no price data found" in error_msg:
+                log(f"No new data available for {ticker} (start_date={start_date})")
+                return pd.DataFrame()
             log(f"Attempt {attempt} for {ticker} failed: {e}")
-            time.sleep(sleep_s * attempt)
-    raise RuntimeError(f"Failed to fetch {ticker} after retries") from last_exc
+            if attempt < max_retries:
+                time.sleep(sleep_s * attempt)
+
+    # If all retries failed, raise error
+    raise RuntimeError(f"Failed to fetch {ticker} after {max_retries} retries") from last_exc
 
 
 def send_email(subject: str, body: str):
@@ -122,8 +161,41 @@ def main():
 
     for sym_key, ticker in SYMBOLS.items():
         try:
-            log(f"Fetching {sym_key} ({ticker}) ...")
-            df = fetch_history(ticker)
+            path = CSV_PATHS[sym_key]
+
+            # Check if CSV exists and get the last date
+            start_date = None
+            old = pd.DataFrame()
+
+            if os.path.exists(path):
+                try:
+                    old = pd.read_csv(path, parse_dates=["Date"]).set_index("Date").sort_index()
+                    if not old.empty:
+                        # Get the last date in the existing CSV
+                        last_date = old.index[-1]
+                        # Fetch from the day after the last date (to avoid duplicates)
+                        start_date = (last_date + pd.Timedelta(days=1)).strftime('%Y-%m-%d')
+                        log(f"CSV exists for {sym_key}. Fetching incrementally from {start_date}...")
+                    else:
+                        log(f"CSV exists but empty for {sym_key}. Fetching all history...")
+                except Exception as e:
+                    log(f"Warning reading existing CSV for {sym_key}: {e}; fetching all history.")
+                    old = pd.DataFrame()
+            else:
+                log(f"No CSV found for {sym_key}. Fetching all history...")
+
+            # Fetch history (incremental if start_date is set, otherwise all)
+            df = fetch_history(ticker, start_date=start_date)
+
+            # If no new data, skip
+            if df.empty:
+                log(f"No new data for {sym_key}. CSV is up to date.")
+                if not old.empty:
+                    last_row_old = old.iloc[-1]
+                    last_date_old = old.index[-1].date()
+                    summaries.append(f"{sym_key}: {last_date_old}  AdjClose={float(last_row_old['Adj Close']):.2f}  Close={float(last_row_old['Close']):.2f} (no new data)")
+                    any_success = True
+                continue
 
             # Keep last ~15 years (keeps CSVs small but current)
             cutoff = pd.Timestamp.today().normalize() - pd.DateOffset(years=15)
@@ -135,19 +207,7 @@ def main():
             adj_close_val = float(last_row_new["Adj Close"])
             close_val     = float(last_row_new["Close"])
 
-            path = CSV_PATHS[sym_key]
-
-            # Load existing if present
-            if os.path.exists(path):
-                try:
-                    old = pd.read_csv(path, parse_dates=["Date"]).set_index("Date").sort_index()
-                except Exception as e:
-                    log(f"Warning reading existing CSV for {sym_key}: {e}; starting fresh.")
-                    old = pd.DataFrame()
-            else:
-                old = pd.DataFrame()
-
-            # Combine, de-dup by date, sort
+            # Combine old and new data, de-dup by date, sort
             combined = pd.concat([old, df]).sort_index(ascending=False)
             combined = combined[~combined.index.duplicated(keep="first")]
 

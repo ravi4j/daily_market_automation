@@ -1,0 +1,3 @@
+# Dependencies for fetch_daily_prices.py
+-r requirements-base.txt
+yfinance>=0.2.50

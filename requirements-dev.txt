@@ -1,0 +1,6 @@
+# Development dependencies (testing, linting, formatting)
+-r requirements-base.txt
+pytest>=7.0.0
+black>=22.0.0
+flake8>=6.0.0
+mypy>=1.0.0
