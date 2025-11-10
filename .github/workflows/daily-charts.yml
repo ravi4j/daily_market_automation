@@ -48,12 +48,17 @@ jobs:
       - name: Generate breakout charts
         run: python src/visualize_breakouts.py
 
-      - name: Commit and push charts
+      - name: Export trading signals
+        run: python src/export_signals.py
+
+      - name: Commit and push charts & signals
         run: |
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
           git add charts/*.png || true
-          git commit -m "Generate daily breakout charts [skip ci]" || echo "No chart changes to commit"
+          git add data/trading_signals.json || true
+          git add data/trading_signals.csv || true
+          git commit -m "Generate daily charts & trading signals [skip ci]" || echo "No changes to commit"
           git push || echo "Push skipped"
 
       # Upload charts as artifacts for easy viewing
@@ -65,13 +70,36 @@ jobs:
           path: charts/*.png
           retention-days: 30
 
-      # Optional: Create a comment with chart summary
-      - name: Generate chart summary
+      # Create workflow summary with signals
+      - name: Generate workflow summary
         if: always()
         run: |
-          echo "## 📊 Daily Breakout Charts Generated" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Daily Breakout Charts & Trading Signals" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Charts created for the following symbols:" >> $GITHUB_STEP_SUMMARY
-          ls -1 charts/*.png | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || true
+
+          # Charts summary
+          echo "### 📈 Charts Generated:" >> $GITHUB_STEP_SUMMARY
+          ls -1 charts/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Charts are available in the artifacts section above." >> $GITHUB_STEP_SUMMARY
+
+          # Trading signals summary
+          echo "### 🎯 Trading Signals:" >> $GITHUB_STEP_SUMMARY
+          if [ -f data/trading_signals.csv ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Symbol | Signal | Price | Score | Volume | Breakout |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|--------|-------|-------|--------|----------|" >> $GITHUB_STEP_SUMMARY
+            tail -n +2 data/trading_signals.csv | while IFS=, read -r symbol signal price breakout score trend vol timestamp; do
+              emoji="⚪"
+              [ "$signal" = "BUY" ] && emoji="🟢"
+              [ "$signal" = "SELL" ] && emoji="🔴"
+              echo "| $emoji $symbol | $signal | \$$price | $score/6 | ${vol}x | $breakout |" >> $GITHUB_STEP_SUMMARY
+            done
+            echo "" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No confirmed breakouts today." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "📁 **Files updated:** charts/, data/trading_signals.json, data/trading_signals.csv" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **View signals:** [trading_signals.json](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/data/trading_signals.json)" >> $GITHUB_STEP_SUMMARY

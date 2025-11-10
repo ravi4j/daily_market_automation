@@ -32,7 +32,9 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 - 🔄 **Auto-Retry** - Automatic retry logic for transient network errors
 - 📈 **Breakout Detection** - Identifies trendline violations, S/R breaks, and reversal points
 - 🎯 **Technical Analysis** - Support/resistance levels, swing highs/lows, trend direction
-- 📧 **Email Notifications** - Optional daily summary emails
+- 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
+- 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)
+- 🤖 **GitHub Actions Automation** - Daily data fetch, chart generation, and signal exports
 - 🏗️ **Production Ready** - Organized structure for multiple automation scripts
 
 ## 📈 Tracked Symbols
@@ -54,17 +56,22 @@ daily_market_automation/
 │   ├── fetch_daily_prices.py  # Market data fetching script
 │   ├── detect_breakouts.py    # Breakout detection & analysis
 │   ├── visualize_breakouts.py # Chart generation with trendlines
+│   ├── export_signals.py      # Trading signal export (JSON/CSV)
 │   └── common/           # Shared utilities for future scripts
 ├── charts/                # Generated chart images (PNG, committed & regenerated daily)
 ├── tests/                # Test files
 │   └── test_incremental.py
 ├── scripts/              # Helper scripts
-│   └── setup.sh          # Automated setup script
-├── data/                 # CSV output files
+│   ├── setup.sh          # Automated setup script
+│   ├── fetch_signals.py  # Fetch signals from GitHub (no auth!)
+│   └── view_signals.sh   # View signals in terminal
+├── data/                 # CSV output files & signals
 │   ├── AAPL.csv
 │   ├── TQQQ.csv
 │   ├── SP500.csv
-│   └── UBER.csv
+│   ├── UBER.csv
+│   ├── trading_signals.json  # Daily trading signals (detailed)
+│   └── trading_signals.csv   # Daily trading signals (simple)
 ├── docs/                 # Documentation
 │   └── architecture.md
 ├── requirements-*.txt    # Python dependencies
@@ -466,7 +473,243 @@ open charts/TQQQ_breakout.png
 
 **Note**: `visualize_breakouts.py` automatically performs the breakout analysis, so you don't need to run both scripts unless you want the text output from `detect_breakouts.py`.
 
-## 5) Testing
+## 5) Trading Signal Exports 🎯
+
+### Overview
+
+The **Trading Signal Export** system generates structured JSON/CSV files with confirmed breakouts - **NO PASSWORDS OR SECRETS REQUIRED**! Perfect for public repos.
+
+**Why This is Better Than Email/Slack:**
+- ✅ **No credentials needed** - Safe for public repositories
+- ✅ **Programmatic access** - JSON/CSV ready for automation
+- ✅ **Git history** - Track signals over time
+- ✅ **Multi-platform** - Consume from anywhere with HTTP
+- ✅ **Free & unlimited** - No API rate limits
+- ✅ **Automated daily updates** - GitHub Actions generates signals
+
+### Generate Signals
+
+```bash
+# Activate virtual environment
+source .venv/bin/activate
+
+# Generate trading signals
+python src/export_signals.py
+```
+
+**Output Files:**
+- `data/trading_signals.json` - Detailed signals with confirmation scores
+- `data/trading_signals.csv` - Simple tabular format
+
+### Signal Format
+
+**JSON Structure:**
+```json
+{
+  "summary": {
+    "generated_at": "2025-11-10T17:30:00",
+    "total_symbols_analyzed": 4,
+    "confirmed_breakouts": 2,
+    "buy_signals": 1,
+    "sell_signals": 1,
+    "watch_signals": 0
+  },
+  "signals": [
+    {
+      "symbol": "TQQQ",
+      "signal": "SELL",
+      "breakout_type": "BEARISH_TRENDLINE_BREAKOUT_CONFIRMED",
+      "price": 110.03,
+      "timestamp": "2025-11-10T00:00:00",
+      "confirmation_score": 5,
+      "filters_passed": {
+        "intrabar_close": true,
+        "multiple_closes": true,
+        "time_bars": true,
+        "percentage_move": true,
+        "point_move": true,
+        "volume_surge": false
+      },
+      "details": {
+        "support": 97.07,
+        "resistance": 121.37,
+        "trend_direction": "UPTREND",
+        "volume": 29818811,
+        "volume_ratio": 1.15,
+        "swing_high": 121.37,
+        "swing_low": 96.83
+      },
+      "technical_levels": {
+        "support_trendline": 113.49,
+        "resistance_trendline": 117.47
+      }
+    }
+  ]
+}
+```
+
+**CSV Format:**
+```csv
+Symbol,Signal,Price,Breakout,Score,Trend,Volume_Ratio,Timestamp
+TQQQ,SELL,110.03,BEARISH_TRENDLINE_BREAKOUT_CONFIRMED,5,UPTREND,1.15,2025-11-10T00:00:00
+AAPL,BUY,225.50,RESISTANCE_BREAK_CONFIRMED,6,UPTREND,1.45,2025-11-10T00:00:00
+```
+
+### Automated Daily Signal Generation
+
+Signals are **automatically generated daily** by GitHub Actions after market close!
+
+**Workflow:** `daily-charts.yml`
+1. Fetches latest market data
+2. Generates breakout charts
+3. **Exports trading signals** (JSON + CSV)
+4. **Commits signals to repo** (viewable on GitHub)
+5. Creates workflow summary with signal table
+
+**View on GitHub:**
+- Browse: `data/trading_signals.json` directly on GitHub
+- Raw URL: `https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json`
+
+### Consuming Signals (No Auth Required!)
+
+#### Option 1: Python Script
+
+Use the included consumption script:
+
+```bash
+# Fetch signals from your public repo (update repo name first!)
+python scripts/fetch_signals.py --repo YOUR_USERNAME/daily_market_automation
+
+# Filter for BUY signals only
+python scripts/fetch_signals.py --repo YOUR_USERNAME/daily_market_automation --signal BUY
+
+# High-confidence signals only (score >= 5)
+python scripts/fetch_signals.py --repo YOUR_USERNAME/daily_market_automation --min-score 5
+```
+
+**Before first use:** Edit `scripts/fetch_signals.py` and replace `your-username` with your GitHub username.
+
+#### Option 2: Shell Script
+
+```bash
+# Quick view in terminal
+REPO="YOUR_USERNAME/daily_market_automation" ./scripts/view_signals.sh
+```
+
+#### Option 3: Direct curl/wget
+
+```bash
+# Fetch JSON (works from anywhere, no auth!)
+curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json
+
+# With jq for pretty printing
+curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json | jq '.signals[]'
+
+# Fetch CSV
+curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.csv
+```
+
+#### Option 4: Google Sheets / Excel
+
+In Google Sheets, use `IMPORTDATA`:
+```
+=IMPORTDATA("https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.csv")
+```
+
+#### Option 5: Custom Integration
+
+```python
+import requests
+
+# Fetch from your public repo (no auth needed!)
+url = "https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json"
+response = requests.get(url)
+data = response.json()
+
+# Process signals
+for signal in data['signals']:
+    if signal['signal'] == 'BUY' and signal['confirmation_score'] >= 5:
+        print(f"🟢 Strong BUY: {signal['symbol']} @ ${signal['price']}")
+        # Add your logic here: send notification, execute trade, etc.
+```
+
+### Signal Types
+
+| Signal | Meaning | Action |
+|--------|---------|--------|
+| 🟢 **BUY** | Bullish breakout / Resistance break | Consider long position |
+| 🔴 **SELL** | Bearish breakout / Support break | Consider short or exit |
+| ⚪ **WATCH** | Reversal point / Uncertain | Monitor closely |
+
+### Confirmation Score
+
+Signals include a **confirmation score (0-6)** based on:
+1. ✅ Intrabar close confirmation
+2. ✅ Multiple consecutive closes
+3. ✅ Time/bar sustainability
+4. ✅ Percentage move threshold
+5. ✅ Point/dollar move threshold
+6. ✅ Volume surge confirmation
+
+**Score >= 4** = CONFIRMED breakout (66% filters passed)
+
+### Use Cases
+
+**🔔 Morning Check (Before Market Open):**
+```bash
+# Quick check for new signals
+curl -s https://raw.githubusercontent.com/YOUR/repo/main/data/trading_signals.csv | grep BUY
+```
+
+**📱 Mobile/Tablet:**
+- Bookmark the raw JSON/CSV URL
+- View directly in browser
+- Use with iOS Shortcuts for notifications
+
+**🤖 Trading Bots:**
+- Poll the JSON URL every N minutes
+- Parse signals and execute trades
+- No webhook setup needed!
+
+**📊 Spreadsheet Dashboard:**
+- Import CSV into Google Sheets
+- Add formulas for filtering/alerting
+- Auto-refreshes on page load
+
+**💬 Slack/Discord Bot:**
+- Fetch JSON periodically
+- Post new signals to channel
+- No complex webhooks!
+
+### Files Updated Daily
+
+After GitHub Actions runs:
+- ✅ `data/trading_signals.json` - Latest signals (committed to repo)
+- ✅ `data/trading_signals.csv` - Latest signals (committed to repo)
+- ✅ `charts/*.png` - Latest breakout charts
+- ✅ Workflow summary with signal table in Actions tab
+
+### Example Workflow Summary
+
+GitHub Actions creates a nice summary table:
+
+| Symbol | Signal | Price | Score | Volume | Breakout |
+|--------|--------|-------|-------|--------|----------|
+| 🟢 AAPL | BUY | $225.50 | 6/6 | 1.45x | RESISTANCE_BREAK_CONFIRMED |
+| 🔴 TQQQ | SELL | $110.03 | 5/6 | 1.15x | BEARISH_TRENDLINE_BREAKOUT_CONFIRMED |
+
+### Security Note 🔒
+
+**This system is 100% safe for public repos because:**
+- No passwords, API keys, or secrets required
+- All data is already public (market prices)
+- Signals are analysis results, not proprietary data
+- Anyone can view your signals (make repo private if concerned)
+- No execution - signals are informational only
+
+---
+
+## 6) Testing
 
 ### Test Incremental Fetching
 To verify that incremental fetching works correctly:
