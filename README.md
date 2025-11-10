@@ -64,7 +64,8 @@ daily_market_automation/
 ├── scripts/              # Helper scripts
 │   ├── setup.sh          # Automated setup script
 │   ├── fetch_signals.py  # Fetch signals from GitHub (no auth!)
-│   └── view_signals.sh   # View signals in terminal
+│   ├── view_signals.sh   # View signals in terminal
+│   └── send_telegram_signals.py  # Send signals to Telegram
 ├── data/                 # CSV output files & signals
 │   ├── AAPL.csv
 │   ├── TQQQ.csv
@@ -73,7 +74,10 @@ daily_market_automation/
 │   ├── trading_signals.json  # Daily trading signals (detailed)
 │   └── trading_signals.csv   # Daily trading signals (simple)
 ├── docs/                 # Documentation
-│   └── architecture.md
+│   ├── architecture.md
+│   ├── breakout-confirmation.md
+│   ├── workflows.md
+│   └── telegram-setup.md
 ├── requirements-*.txt    # Python dependencies
 └── README.md
 ```
@@ -675,6 +679,13 @@ curl -s https://raw.githubusercontent.com/YOUR/repo/main/data/trading_signals.cs
 - Import CSV into Google Sheets
 - Add formulas for filtering/alerting
 - Auto-refreshes on page load
+
+**💬 Telegram Bot:**
+- Simple Python script sends signals to your phone
+- No server needed - runs locally or via GitHub Actions
+- **Automated via GitHub Actions** - Daily notifications after market close
+- See `TELEGRAM_QUICKSTART.md` for 5-minute setup
+- See `docs/github-secrets-setup.md` for GitHub automation
 
 **💬 Slack/Discord Bot:**
 - Fetch JSON periodically

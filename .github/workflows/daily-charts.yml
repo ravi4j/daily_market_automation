@@ -61,6 +61,24 @@ jobs:
           git commit -m "Generate daily charts & trading signals [skip ci]" || echo "No changes to commit"
           git push || echo "Push skipped"
 
+      # Send signals to Telegram (optional - only if secrets are configured)
+      - name: Send Telegram notification
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          # Only run if Telegram secrets are configured
+          if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
+            echo "📤 Sending signals to Telegram..."
+            pip install requests
+            python scripts/send_telegram_signals.py || echo "⚠️  Telegram notification failed (non-critical)"
+          else
+            echo "ℹ️  Telegram secrets not configured - skipping notification"
+            echo "   To enable: Add TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID to GitHub Secrets"
+          fi
+
       # Upload charts as artifacts for easy viewing
       - name: Upload chart artifacts
         if: always()
