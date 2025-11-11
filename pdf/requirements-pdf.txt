@@ -1,0 +1,3 @@
+# Dependencies for convert_pdf_png.py
+pdf2image==1.17.0
+pillow>=9.5.0

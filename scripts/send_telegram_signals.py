@@ -124,7 +124,7 @@ def main():
     parser.add_argument('--token', help='Telegram bot token (or set TELEGRAM_BOT_TOKEN env var)')
     parser.add_argument('--chat', help='Telegram chat ID (or set TELEGRAM_CHAT_ID env var)')
     parser.add_argument('--repo', help='GitHub repo (or set GITHUB_REPO env var)',
-                       default='your-username/daily_market_automation')
+                       default='ravi4j/daily_market_automation')
     parser.add_argument('--branch', default='main', help='GitHub branch (default: main)')
     parser.add_argument('--min-score', type=int, default=0,
                        help='Only send signals with score >= N (default: 0, all signals)')
@@ -134,7 +134,7 @@ def main():
     # Get credentials
     bot_token = args.token or os.getenv('TELEGRAM_BOT_TOKEN')
     chat_id = args.chat or os.getenv('TELEGRAM_CHAT_ID')
-    repo = args.repo or os.getenv('GITHUB_REPO', 'your-username/daily_market_automation')
+    repo = args.repo or os.getenv('GITHUB_REPO', 'ravi4j/daily_market_automation')
 
     if not bot_token or not chat_id:
         print("❌ Error: Telegram credentials not provided!")
