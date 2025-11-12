@@ -39,6 +39,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements-base.txt
+          pip install --index-url https://pypi.org/simple/ pandas-ta
 
       - name: Ensure directories exist
         run: |
@@ -46,8 +47,11 @@ jobs:
           mkdir -p charts
           mkdir -p signals
 
-      - name: Generate breakout charts
+      - name: Generate simple breakout charts
         run: python src/visualize_breakouts.py
+
+      - name: Generate enhanced charts with indicators
+        run: python src/visualize_breakouts_with_indicators.py
 
       - name: Export trading signals
         run: python src/export_signals.py
