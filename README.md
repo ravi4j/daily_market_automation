@@ -32,8 +32,10 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 - 🔄 **Auto-Retry** - Automatic retry logic for transient network errors
 - 📈 **Breakout Detection** - Identifies trendline violations, S/R breaks, and reversal points
 - 🎯 **Technical Analysis** - Support/resistance levels, swing highs/lows, trend direction
+- 📊 **50+ Technical Indicators** - RSI, MACD, Bollinger Bands, ADX, and many more via pandas-ta
 - 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
 - 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)
+- 💬 **Telegram Integration** - Get instant notifications of trading signals
 - 🤖 **GitHub Actions Automation** - Daily data fetch, chart generation, and signal exports
 - 🏗️ **Production Ready** - Organized structure for multiple automation scripts
 

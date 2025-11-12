@@ -1,0 +1,14 @@
+# Technical Analysis Indicators
+# Dependencies for advanced technical analysis
+-r requirements-base.txt
+
+# pandas-ta: Comprehensive technical analysis library
+# Includes 130+ indicators: RSI, MACD, Bollinger Bands, etc.
+pandas-ta>=0.3.14b0
+
+# ta-lib alternative (optional, but pandas-ta is more modern)
+# TA-Lib requires system-level installation: brew install ta-lib
+# ta-lib>=0.4.0
+
+# Additional technical analysis libraries
+# ta>=0.11.0  # Another alternative TA library
