@@ -117,7 +117,7 @@ This proves the RSI approach works!
 ```python
 # Your portfolio value if you just bought and held
 AAPL:  Started $100 in 2010 → Now $2,500+ (25x)
-TQQQ:  Started $100 in 2010 → Now $15,000+ (150x) 
+TQQQ:  Started $100 in 2010 → Now $15,000+ (150x)
 ```
 
 **What Strategies Should Beat:**
@@ -340,4 +340,3 @@ A: **Paper trade for 30 days**, track results, then decide.
 python src/strategy_runner.py
 python scripts/send_daily_alerts.py  # If you want Telegram alerts
 ```
-
