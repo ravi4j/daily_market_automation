@@ -1,0 +1,55 @@
+{
+  "generated_at": "2025-11-11T21:41:52.555395",
+  "total_alerts": 3,
+  "buy_signals": 1,
+  "sell_signals": 2,
+  "alerts": [
+    {
+      "symbol": "TQQQ",
+      "signal": "SELL",
+      "strategy_name": "Trend Following",
+      "confidence": "MEDIUM",
+      "price": 110.03,
+      "timestamp": "2025-11-11T21:41:52.502209",
+      "reason": "\u2022 Trend broken: Price fell below SMA20",
+      "technical_data": {
+        "Price": 110.03,
+        "SMA20": 110.08,
+        "RSI": 51.6,
+        "ADX": 17.19
+      }
+    },
+    {
+      "symbol": "UBER",
+      "signal": "SELL",
+      "strategy_name": "Trend Following",
+      "confidence": "MEDIUM",
+      "price": 92.39,
+      "timestamp": "2025-11-11T21:41:52.516332",
+      "reason": "\u2022 Trend broken: Price fell below SMA20",
+      "technical_data": {
+        "Price": 92.39,
+        "SMA20": 94.27,
+        "RSI": 43.4,
+        "ADX": 12.52
+      }
+    },
+    {
+      "symbol": "AAPL",
+      "signal": "BUY",
+      "strategy_name": "Trend Following",
+      "confidence": "MEDIUM",
+      "price": 269.46,
+      "timestamp": "2025-11-11T21:41:52.550172",
+      "reason": "\u2022 Strong uptrend: Price > SMA20 > SMA50 > SMA200\n\u2022 Price is 2.28% above SMA20\n\u2022 RSI healthy at 64.97 (not overbought)\n\u2022 ADX confirms strong trend at 30.47",
+      "technical_data": {
+        "Price": 269.46,
+        "SMA20": 263.45,
+        "SMA50": 253.0,
+        "SMA200": 224.63,
+        "RSI": 64.97,
+        "ADX": 30.47
+      }
+    }
+  ]
+}

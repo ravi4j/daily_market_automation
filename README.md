@@ -34,10 +34,11 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 - 🎯 **Technical Analysis** - Support/resistance levels, swing highs/lows, trend direction
 - 📊 **50+ Technical Indicators** - RSI, MACD, Bollinger Bands, ADX, and many more via pandas-ta
 - 🔬 **Strategy Backtesting** - Test trading strategies on historical data with performance metrics
+- 🚨 **Daily Trading Alerts** - Automated BUY/SELL signals with 4 proven strategies
+- 📱 **Telegram Notifications** - Get instant alerts on your phone after market close
 - 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
 - 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)
-- 💬 **Telegram Integration** - Get instant notifications of trading signals
-- 🤖 **GitHub Actions Automation** - Daily data fetch, chart generation, and signal exports
+- 🤖 **GitHub Actions Automation** - Daily data fetch, chart generation, alerts, and signal exports
 - 🏗️ **Production Ready** - Organized structure for multiple automation scripts
 
 ## 📈 Tracked Symbols
@@ -75,8 +76,9 @@ daily_market_automation/
 │   ├── SP500.csv
 │   └── UBER.csv
 ├── signals/              # Trading signals output
-│   ├── trading_signals.json  # Daily trading signals (detailed)
-│   └── trading_signals.csv   # Daily trading signals (simple)
+│   ├── trading_signals.json  # Breakout-based trading signals (detailed)
+│   ├── trading_signals.csv   # Breakout-based trading signals (simple)
+│   └── daily_alerts.json     # Daily strategy alerts (BUY/SELL signals)
 ├── docs/                 # Documentation
 │   ├── architecture.md
 │   ├── breakout-confirmation.md
@@ -724,7 +726,79 @@ GitHub Actions creates a nice summary table:
 
 ---
 
-## 6) Testing
+## 6) Daily Trading Alerts 🚨
+
+Get automated BUY/SELL alerts using 4 proven trading strategies!
+
+### Quick Start
+
+```bash
+# Run strategy analysis
+python src/strategy_runner.py
+
+# View alerts
+cat signals/daily_alerts.json
+```
+
+### Available Strategies
+
+1. **RSI + MACD Confluence** - Finds oversold/overbought + momentum confirmation
+2. **Trend Following** - Identifies strong trends (SMA20/50/200 alignment)
+3. **Bollinger Band Mean Reversion** - Catches extremes for reversals
+4. **Momentum Breakout** - Captures breakouts above 20-day high/low
+
+### Example Alert Output
+
+```json
+{
+  "symbol": "AAPL",
+  "signal": "BUY",
+  "strategy_name": "RSI+MACD Confluence",
+  "confidence": "HIGH",
+  "price": 150.25,
+  "reason": "• RSI is oversold at 28.50 (< 35)\n• MACD just crossed above signal line\n• ADX shows strong trend at 26.30",
+  "technical_data": {
+    "RSI": 28.5,
+    "MACD": -1.25,
+    "Signal": -1.5,
+    "ADX": 26.3
+  }
+}
+```
+
+### Send Alerts to Telegram
+
+```bash
+# Setup credentials (one-time)
+export TELEGRAM_BOT_TOKEN="your_token"
+export TELEGRAM_CHAT_ID="your_chat_id"
+
+# Send alerts
+python scripts/send_daily_alerts.py
+
+# Or with custom confidence level
+python scripts/send_daily_alerts.py --min-confidence HIGH
+```
+
+### Automate with GitHub Actions
+
+The workflow `.github/workflows/daily-alerts.yml`:
+- ✅ Runs every weekday at 4:30 PM EST (after market close)
+- ✅ Fetches latest data
+- ✅ Runs all 4 strategies
+- ✅ Sends alerts via Telegram
+- ✅ Commits results to `signals/daily_alerts.json`
+
+**Setup:**
+1. Add GitHub Secrets: `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
+2. Enable the workflow (it's ready to go!)
+3. Receive daily alerts automatically 📱
+
+**Full Guide:** [docs/daily-alerts-guide.md](docs/daily-alerts-guide.md)
+
+---
+
+## 7) Testing
 
 ### Test Incremental Fetching
 To verify that incremental fetching works correctly:
