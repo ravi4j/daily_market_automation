@@ -183,29 +183,29 @@ def my_strategy(row, position):
     Args:
         row: Current bar data (pandas Series with OHLCV + indicators)
         position: Current open position (Trade object or None)
-    
+
     Returns:
         'BUY', 'SELL', or 'HOLD'
     """
-    
+
     # Check if indicators exist
     if 'RSI_14' not in row.index:
         return 'HOLD'
-    
+
     # Get indicator values
     rsi = row['RSI_14']
     price = row['Close']
-    
+
     # Entry logic (when position is None)
     if position is None:
         if rsi < 30:  # Oversold
             return 'BUY'
-    
+
     # Exit logic (when position exists)
     else:
         if rsi > 70:  # Overbought
             return 'SELL'
-    
+
     return 'HOLD'
 ```
 
@@ -214,17 +214,17 @@ def my_strategy(row, position):
 ```python
 def trend_momentum_strategy(row, position):
     """Buy when price is in uptrend AND momentum is strong"""
-    
+
     required = ['SMA_20', 'SMA_50', 'RSI_14', 'ADX_14']
     if not all(ind in row.index for ind in required):
         return 'HOLD'
-    
+
     price = row['Close']
     sma20 = row['SMA_20']
     sma50 = row['SMA_50']
     rsi = row['RSI_14']
     adx = row['ADX_14']
-    
+
     if position is None:
         # Buy conditions: All must be true
         if (price > sma20 > sma50 and  # Uptrend
@@ -237,7 +237,7 @@ def trend_momentum_strategy(row, position):
             rsi < 40 or                 # Momentum lost
             adx < 20):                  # Trend weakening
             return 'SELL'
-    
+
     return 'HOLD'
 ```
 
@@ -246,23 +246,23 @@ def trend_momentum_strategy(row, position):
 ```python
 def volume_mean_reversion(row, position):
     """Buy dips with volume confirmation"""
-    
+
     if 'RSI_14' not in row.index:
         return 'HOLD'
-    
+
     rsi = row['RSI_14']
     volume = row['Volume']
-    
+
     # Get BB columns
     bb_lower = [col for col in row.index if 'BBL' in col]
     if not bb_lower:
         return 'HOLD'
-    
+
     price = row['Close']
     lower_band = row[bb_lower[0]]
-    
+
     # Calculate volume MA (would need to add this indicator)
-    
+
     if position is None:
         # Buy on oversold with volume spike
         if (rsi < 35 and
@@ -272,7 +272,7 @@ def volume_mean_reversion(row, position):
         # Exit on reversion
         if rsi > 60:
             return 'SELL'
-    
+
     return 'HOLD'
 ```
 
@@ -281,20 +281,20 @@ def volume_mean_reversion(row, position):
 ```python
 def breakout_strategy(row, position):
     """Buy on volatility breakout"""
-    
+
     # Find Donchian Channel columns
     dc_upper = [col for col in row.index if 'DCU' in col]
     if not dc_upper:
         return 'HOLD'
-    
+
     price = row['Close']
     dc_high = row[dc_upper[0]]
-    
+
     if 'ATR_14' not in row.index:
         return 'HOLD'
-    
+
     atr = row['ATR_14']
-    
+
     if position is None:
         # Buy on breakout above 20-day high
         if price > dc_high:
@@ -304,7 +304,7 @@ def breakout_strategy(row, position):
         entry_price = position.entry_price
         if price < entry_price - (2 * atr):
             return 'SELL'
-    
+
     return 'HOLD'
 ```
 
@@ -372,38 +372,38 @@ print(results_df.head())
 ```python
 def optimize_ma_crossover(df, symbol):
     """Optimize moving average crossover parameters"""
-    
+
     results = []
-    
+
     for fast in [10, 20, 30]:
         for slow in [50, 100, 200]:
             if fast >= slow:
                 continue
-            
+
             # Add indicators
             indicators = TechnicalIndicators(df)
             indicators.add_sma(fast)
             indicators.add_sma(slow)
-            
+
             # Define strategy with these parameters
             def ma_strategy(row, position):
                 if f'SMA_{fast}' not in row.index:
                     return 'HOLD'
-                
+
                 fast_ma = row[f'SMA_{fast}']
                 slow_ma = row[f'SMA_{slow}']
-                
+
                 if position is None and fast_ma > slow_ma:
                     return 'BUY'
                 elif position is not None and fast_ma < slow_ma:
                     return 'SELL'
-                
+
                 return 'HOLD'
-            
+
             # Backtest
             backtester = Backtester(indicators.df, symbol=symbol)
             result = backtester.run_strategy(ma_strategy, f"MA{fast}/{slow}")
-            
+
             results.append({
                 'fast': fast,
                 'slow': slow,
@@ -411,7 +411,7 @@ def optimize_ma_crossover(df, symbol):
                 'win_rate': result.win_rate,
                 'profit_factor': result.profit_factor
             })
-    
+
     return pd.DataFrame(results).sort_values('return_pct', ascending=False)
 ```
 
@@ -565,4 +565,3 @@ python -c "from examples.quick_backtest import *; main()"
 8. ✅ Paper trade before going live!
 
 **Happy Backtesting! 📈**
-
