@@ -20,7 +20,7 @@ def fetch_signals(repo="your-username/daily_market_automation", branch="main"):
     No authentication needed for public repos!
     """
     # GitHub raw content URL
-    url = f"https://raw.githubusercontent.com/{repo}/{branch}/data/trading_signals.json"
+    url = f"https://raw.githubusercontent.com/{repo}/{branch}/signals/trading_signals.json"
 
     print(f"📡 Fetching signals from: {repo}")
     print(f"🔗 URL: {url}\n")

@@ -44,6 +44,7 @@ jobs:
         run: |
           mkdir -p data
           mkdir -p charts
+          mkdir -p signals
 
       - name: Generate breakout charts
         run: python src/visualize_breakouts.py
@@ -56,8 +57,8 @@ jobs:
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
           git add charts/*.png || true
-          git add data/trading_signals.json || true
-          git add data/trading_signals.csv || true
+          git add signals/trading_signals.json || true
+          git add signals/trading_signals.csv || true
           git commit -m "Generate daily charts & trading signals [skip ci]" || echo "No changes to commit"
           git push || echo "Push skipped"
 
@@ -102,11 +103,11 @@ jobs:
 
           # Trading signals summary
           echo "### 🎯 Trading Signals:" >> $GITHUB_STEP_SUMMARY
-          if [ -f data/trading_signals.csv ]; then
+          if [ -f signals/trading_signals.csv ]; then
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "| Symbol | Signal | Price | Score | Volume | Breakout |" >> $GITHUB_STEP_SUMMARY
             echo "|--------|--------|-------|-------|--------|----------|" >> $GITHUB_STEP_SUMMARY
-            tail -n +2 data/trading_signals.csv | while IFS=, read -r symbol signal price breakout score trend vol timestamp; do
+            tail -n +2 signals/trading_signals.csv | while IFS=, read -r symbol signal price breakout score trend vol timestamp; do
               emoji="⚪"
               [ "$signal" = "BUY" ] && emoji="🟢"
               [ "$signal" = "SELL" ] && emoji="🔴"
@@ -119,5 +120,5 @@ jobs:
           fi
 
           echo "---" >> $GITHUB_STEP_SUMMARY
-          echo "📁 **Files updated:** charts/, data/trading_signals.json, data/trading_signals.csv" >> $GITHUB_STEP_SUMMARY
-          echo "🔗 **View signals:** [trading_signals.json](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/data/trading_signals.json)" >> $GITHUB_STEP_SUMMARY
+          echo "📁 **Files updated:** charts/, signals/trading_signals.json, signals/trading_signals.csv" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 **View signals:** [trading_signals.json](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/signals/trading_signals.json)" >> $GITHUB_STEP_SUMMARY

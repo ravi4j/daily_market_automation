@@ -50,7 +50,7 @@ def send_telegram_message(bot_token: str, chat_id: str, message: str, parse_mode
 
 def fetch_signals_from_github(repo: str, branch: str = "main") -> dict:
     """Fetch trading signals from GitHub"""
-    url = f"https://raw.githubusercontent.com/{repo}/{branch}/data/trading_signals.json"
+    url = f"https://raw.githubusercontent.com/{repo}/{branch}/signals/trading_signals.json"
 
     try:
         response = requests.get(url, timeout=10)
@@ -114,7 +114,7 @@ def format_signal_message(data: dict) -> str:
         message += "Hold positions and monitor.\n"
 
     message += f"\n────────────────────\n"
-    message += f"🔗 View details: <a href='https://github.com/{os.getenv('GITHUB_REPO', 'your-repo')}/blob/main/data/trading_signals.json'>JSON</a>"
+    message += f"🔗 View details: <a href='https://github.com/{os.getenv('GITHUB_REPO', 'your-repo')}/blob/main/signals/trading_signals.json'>JSON</a>"
 
     return message
 

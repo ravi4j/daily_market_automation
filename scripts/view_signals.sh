@@ -9,7 +9,7 @@
 # Configuration
 REPO="${REPO:-your-username/daily_market_automation}"
 BRANCH="${BRANCH:-main}"
-URL="https://raw.githubusercontent.com/${REPO}/${BRANCH}/data/trading_signals.json"
+URL="https://raw.githubusercontent.com/${REPO}/${BRANCH}/signals/trading_signals.json"
 
 echo "📡 Fetching signals from: $REPO"
 echo "🔗 URL: $URL"
@@ -60,5 +60,5 @@ fi
 
 echo ""
 echo "================================================================================"
-echo "📁 View full JSON: https://github.com/${REPO}/blob/${BRANCH}/data/trading_signals.json"
+echo "📁 View full JSON: https://github.com/${REPO}/blob/${BRANCH}/signals/trading_signals.json"
 echo "================================================================================"

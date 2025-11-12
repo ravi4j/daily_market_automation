@@ -66,11 +66,12 @@ daily_market_automation/
 │   ├── fetch_signals.py  # Fetch signals from GitHub (no auth!)
 │   ├── view_signals.sh   # View signals in terminal
 │   └── send_telegram_signals.py  # Send signals to Telegram
-├── data/                 # CSV output files & signals
+├── data/                 # Historical price CSV files
 │   ├── AAPL.csv
 │   ├── TQQQ.csv
 │   ├── SP500.csv
-│   ├── UBER.csv
+│   └── UBER.csv
+├── signals/              # Trading signals output
 │   ├── trading_signals.json  # Daily trading signals (detailed)
 │   └── trading_signals.csv   # Daily trading signals (simple)
 ├── docs/                 # Documentation
@@ -502,8 +503,8 @@ python src/export_signals.py
 ```
 
 **Output Files:**
-- `data/trading_signals.json` - Detailed signals with confirmation scores
-- `data/trading_signals.csv` - Simple tabular format
+- `signals/trading_signals.json` - Detailed signals with confirmation scores
+- `signals/trading_signals.csv` - Simple tabular format
 
 ### Signal Format
 
@@ -571,8 +572,8 @@ Signals are **automatically generated daily** by GitHub Actions after market clo
 5. Creates workflow summary with signal table
 
 **View on GitHub:**
-- Browse: `data/trading_signals.json` directly on GitHub
-- Raw URL: `https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json`
+- Browse: `signals/trading_signals.json` directly on GitHub
+- Raw URL: `https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json`
 
 ### Consuming Signals (No Auth Required!)
 
@@ -604,20 +605,20 @@ REPO="YOUR_USERNAME/daily_market_automation" ./scripts/view_signals.sh
 
 ```bash
 # Fetch JSON (works from anywhere, no auth!)
-curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json
+curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json
 
 # With jq for pretty printing
-curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json | jq '.signals[]'
+curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json | jq '.signals[]'
 
 # Fetch CSV
-curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.csv
+curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.csv
 ```
 
 #### Option 4: Google Sheets / Excel
 
 In Google Sheets, use `IMPORTDATA`:
 ```
-=IMPORTDATA("https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.csv")
+=IMPORTDATA("https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.csv")
 ```
 
 #### Option 5: Custom Integration
@@ -626,7 +627,7 @@ In Google Sheets, use `IMPORTDATA`:
 import requests
 
 # Fetch from your public repo (no auth needed!)
-url = "https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/data/trading_signals.json"
+url = "https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json"
 response = requests.get(url)
 data = response.json()
 
@@ -662,7 +663,7 @@ Signals include a **confirmation score (0-6)** based on:
 **🔔 Morning Check (Before Market Open):**
 ```bash
 # Quick check for new signals
-curl -s https://raw.githubusercontent.com/YOUR/repo/main/data/trading_signals.csv | grep BUY
+curl -s https://raw.githubusercontent.com/YOUR/repo/main/signals/trading_signals.csv | grep BUY
 ```
 
 **📱 Mobile/Tablet:**
@@ -695,8 +696,8 @@ curl -s https://raw.githubusercontent.com/YOUR/repo/main/data/trading_signals.cs
 ### Files Updated Daily
 
 After GitHub Actions runs:
-- ✅ `data/trading_signals.json` - Latest signals (committed to repo)
-- ✅ `data/trading_signals.csv` - Latest signals (committed to repo)
+- ✅ `signals/trading_signals.json` - Latest signals (committed to repo)
+- ✅ `signals/trading_signals.csv` - Latest signals (committed to repo)
 - ✅ `charts/*.png` - Latest breakout charts
 - ✅ Workflow summary with signal table in Actions tab
 
