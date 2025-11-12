@@ -56,7 +56,7 @@ Market closes → Fetch latest prices → Update CSV files
 For each symbol:
   ├── Load price data + indicators
   ├── Run Strategy 1: RSI + MACD Confluence
-  ├── Run Strategy 2: Trend Following  
+  ├── Run Strategy 2: Trend Following
   ├── Run Strategy 3: BB Mean Reversion
   ├── Run Strategy 4: Momentum Breakout
   └── Generate alerts (BUY/SELL/HOLD)
@@ -300,14 +300,14 @@ schedule:
    #!/bin/bash
    cd /path/to/daily_market_automation
    source .venv/bin/activate
-   
+
    # Set credentials
    export TELEGRAM_BOT_TOKEN="your_token"
    export TELEGRAM_CHAT_ID="your_chat_id"
-   
+
    # Fetch latest data
    python src/fetch_daily_prices.py
-   
+
    # Run strategies and send alerts
    python scripts/send_daily_alerts.py --min-confidence MEDIUM
    ```
@@ -320,7 +320,7 @@ schedule:
 3. **Add to crontab**:
    ```bash
    crontab -e
-   
+
    # Add this line (runs Mon-Fri at 4:30 PM)
    30 16 * * 1-5 /path/to/run_daily_alerts.sh >> /path/to/alerts.log 2>&1
    ```
@@ -361,15 +361,15 @@ Edit `src/strategy_runner.py`:
 ```python
 def strategy_my_custom(self, symbol: str, df: pd.DataFrame) -> Optional[TradingAlert]:
     """Your custom strategy"""
-    
+
     # Add indicators
     indicators = TechnicalIndicators(df)
     indicators.add_rsi(14)
     indicators.add_ema(50)
-    
+
     df = indicators.df
     latest = df.iloc[-1]
-    
+
     # Your logic
     if latest['RSI_14'] < 30 and latest['Close'] > latest['EMA_50']:
         return TradingAlert(
@@ -382,7 +382,7 @@ def strategy_my_custom(self, symbol: str, df: pd.DataFrame) -> Optional[TradingA
             reason="Your reason here",
             technical_data={'RSI': latest['RSI_14']}
         )
-    
+
     return None
 ```
 
@@ -565,4 +565,3 @@ python scripts/send_daily_alerts.py --min-confidence HIGH
 5. ✅ Receive daily alerts! 🎉
 
 **Happy Trading! 📈**
-

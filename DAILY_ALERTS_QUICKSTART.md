@@ -172,7 +172,7 @@ Edit `.github/workflows/daily-alerts.yml`:
 schedule:
   # Current: 4:30 PM EST (Mon-Fri)
   - cron: '30 21 * * 1-5'
-  
+
   # Example: 5:00 PM EST (Mon-Fri)
   - cron: '0 22 * * 1-5'
 ```
@@ -264,4 +264,3 @@ echo "Test" | curl -X POST \
 ---
 
 **🎉 You're all set! You'll now receive daily trading alerts automatically!**
-
