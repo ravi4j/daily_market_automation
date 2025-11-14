@@ -105,11 +105,11 @@ def fetch_history(ticker: str, start_date: str = None, max_retries: int = 3, sle
         try:
             # Fetch incrementally if start_date provided, otherwise get all history
             if start_date:
-                # Check if start_date is in the future or today (no data available yet)
+                # Check if start_date is in the future (don't try to fetch future dates)
                 start_dt = pd.Timestamp(start_date)
                 today = pd.Timestamp.today().normalize()
-                if start_dt >= today:
-                    # No new data available yet (weekend, holiday, or market hasn't closed)
+                if start_dt > today:
+                    # No new data available yet (trying to fetch future dates)
                     return pd.DataFrame()
 
                 df = yf.download(
