@@ -1,0 +1,26 @@
+# Portfolio Symbols Configuration
+# Add or remove symbols here to track your positions
+# Format: symbol_key: ticker_symbol
+#
+# Examples:
+#   - Regular stocks: AAPL, MSFT, GOOGL
+#   - ETFs: TQQQ, SPY, QQQ
+#   - Indices: ^GSPC (S&P 500), ^DJI (Dow Jones)
+#
+# Notes:
+#   - symbol_key: Used for CSV filename (e.g., TQQQ.csv)
+#   - ticker_symbol: Used by yfinance to fetch data
+#   - For indices, prefix with ^ (e.g., ^GSPC)
+
+symbols:
+  TQQQ: TQQQ
+  SP500: ^GSPC
+  AAPL: AAPL
+  UBER: UBER
+
+# Add more symbols here as needed:
+# MSFT: MSFT
+# GOOGL: GOOGL
+# TSLA: TSLA
+# SPY: SPY
+# QQQ: QQQ

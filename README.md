@@ -43,12 +43,29 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 
 ## 📈 Tracked Symbols
 
+**Default symbols** (easily customizable):
 - `TQQQ` - ProShares UltraPro QQQ (3x leveraged NASDAQ-100)
 - `^GSPC` - S&P 500 Index
 - `AAPL` - Apple Inc.
 - `UBER` - Uber Technologies Inc.
 
 All data is stored as CSV files in the `data/` directory.
+
+### 🎛️ Customize Your Portfolio
+
+You can easily add/remove symbols without touching any Python code!
+
+**Edit `config/symbols.yaml`:**
+```yaml
+symbols:
+  TQQQ: TQQQ
+  AAPL: AAPL
+  NVDA: NVDA     # Add new symbols
+  MSFT: MSFT     # Just add them here!
+  SP500: ^GSPC
+```
+
+See [`config/README.md`](config/README.md) for detailed instructions and examples.
 
 ## 📁 Project Structure
 
@@ -62,6 +79,9 @@ daily_market_automation/
 │   ├── visualize_breakouts.py # Chart generation with trendlines
 │   ├── export_signals.py      # Trading signal export (JSON/CSV)
 │   └── common/           # Shared utilities for future scripts
+├── config/               # Configuration files
+│   ├── symbols.yaml      # Portfolio symbols (customize your watchlist!)
+│   └── README.md         # Config documentation
 ├── charts/                # Generated chart images (PNG, committed & regenerated daily)
 ├── tests/                # Test files
 │   └── test_incremental.py

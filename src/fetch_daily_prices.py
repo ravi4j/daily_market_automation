@@ -22,6 +22,7 @@ from email.mime.text import MIMEText
 from datetime import datetime
 
 import pandas as pd
+import yaml
 
 # --- Dependencies ---
 try:
@@ -31,12 +32,41 @@ except ImportError:
     sys.exit(1)
 
 # --- Config ---
-SYMBOLS = {
-    "TQQQ": "TQQQ",
-    "SP500": "^GSPC",
-    "AAPL": "AAPL",
-    "UBER": "UBER",
-}
+def load_symbols_config():
+    """Load symbols from config/symbols.yaml"""
+    # Get project root
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir) if os.path.basename(script_dir) == "src" else script_dir
+    config_path = os.path.join(project_root, "config", "symbols.yaml")
+
+    # Fallback to hardcoded symbols if config file doesn't exist
+    default_symbols = {
+        "TQQQ": "TQQQ",
+        "SP500": "^GSPC",
+        "AAPL": "AAPL",
+        "UBER": "UBER",
+    }
+
+    if not os.path.exists(config_path):
+        print(f"⚠️  Config file not found: {config_path}")
+        print("   Using default symbols. Create config/symbols.yaml to customize.")
+        return default_symbols
+
+    try:
+        with open(config_path, 'r') as f:
+            config = yaml.safe_load(f)
+            symbols = config.get('symbols', {})
+            if not symbols:
+                print("⚠️  No symbols found in config file, using defaults")
+                return default_symbols
+            print(f"✅ Loaded {len(symbols)} symbols from {config_path}")
+            return symbols
+    except Exception as e:
+        print(f"⚠️  Error loading config file: {e}")
+        print("   Using default symbols")
+        return default_symbols
+
+SYMBOLS = load_symbols_config()
 
 # Get project root (parent of src/ directory when moved, or current dir if not moved)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
