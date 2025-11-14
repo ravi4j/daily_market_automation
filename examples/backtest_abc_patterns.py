@@ -90,7 +90,7 @@ def backtest_abc_strategy(symbol: str = 'TQQQ',
         abc_signal = abc_strategy.generate_signal(symbol, df_slice)
         signals.append(abc_signal)
         
-        if abc_signal and abc_signal.action in ['BUY', 'SELL']:
+        if abc_signal and abc_signal.signal in ['BUY', 'SELL']:
             patterns_found += 1
     
     print(f"   Patterns detected: {patterns_found}")
@@ -112,23 +112,23 @@ def backtest_abc_strategy(symbol: str = 'TQQQ',
             return None
         
         # BUY signal
-        if signal.action == 'BUY' and position is None:
+        if signal.signal == 'BUY' and position is None:
             return {
                 'action': 'BUY',
-                'entry': signal.entry_price,
+                'entry': signal.best_entry if signal.best_entry else signal.entry_levels[0],
                 'stop_loss': signal.stop_loss,
-                'take_profit': signal.take_profits[0] if signal.take_profits else None,
-                'reason': f"ABC {signal.pattern_type} | Entry: {signal.entry_zone}"
+                'take_profit': signal.take_profit_1,
+                'reason': f"ABC {signal.pattern_type}"
             }
         
         # SELL signal
-        elif signal.action == 'SELL' and position is None:
+        elif signal.signal == 'SELL' and position is None:
             return {
                 'action': 'SELL',
-                'entry': signal.entry_price,
+                'entry': signal.best_entry if signal.best_entry else signal.entry_levels[0],
                 'stop_loss': signal.stop_loss,
-                'take_profit': signal.take_profits[0] if signal.take_profits else None,
-                'reason': f"ABC {signal.pattern_type} | Entry: {signal.entry_zone}"
+                'take_profit': signal.take_profit_1,
+                'reason': f"ABC {signal.pattern_type}"
             }
         
         return None

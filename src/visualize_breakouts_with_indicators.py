@@ -37,6 +37,7 @@ from detect_breakouts import (
 
 # Import indicators
 from indicators import TechnicalIndicators
+from chart_utils import get_chart_organizer
 
 # Get project root
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -369,7 +370,9 @@ def create_enhanced_chart(symbol, lookback_days=60):
     plt.setp(ax_macd.get_xticklabels(), visible=False)
 
     # Save chart
-    output_file = os.path.join(CHARTS_DIR, f"{symbol}_enhanced_breakout.png")
+    # Save chart using organized structure
+    chart_organizer = get_chart_organizer(CHARTS_DIR)
+    output_file = chart_organizer.get_indicators_path(symbol, timestamp=False)
     plt.tight_layout()
     plt.savefig(output_file, dpi=150, bbox_inches='tight')
     plt.close()

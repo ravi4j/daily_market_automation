@@ -25,13 +25,16 @@ sys.path.insert(0, str(Path(__file__).parent))
 from abc_pattern_detector import ABCPatternDetector, ABCPattern
 from abc_strategy import ABCStrategy
 from indicators import TechnicalIndicators
+from chart_utils import ChartOrganizer
 
 
 class ABCPatternVisualizer:
     """Visualize ABC patterns on price charts"""
     
-    def __init__(self, figsize=(16, 10)):
+    def __init__(self, figsize=(16, 10), output_dir: str = 'charts'):
         self.figsize = figsize
+        self.output_dir = output_dir
+        self.chart_organizer = ChartOrganizer(output_dir)
         self.colors = {
             'bullish': '#00ff00',
             'bearish': '#ff0000',
@@ -124,13 +127,12 @@ class ABCPatternVisualizer:
         # Adjust layout
         plt.tight_layout()
         
-        # Save chart
-        output_path = Path(output_dir)
-        output_path.mkdir(exist_ok=True)
-        
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"{symbol}_ABC_{pattern.trend}_{timestamp}.png"
-        filepath = output_path / filename
+        # Save chart using organized structure
+        filepath = self.chart_organizer.get_abc_pattern_path(
+            symbol=symbol,
+            pattern_type=pattern.trend,
+            timestamp=True
+        )
         
         plt.savefig(filepath, dpi=150, bbox_inches='tight', facecolor='white')
         plt.close()

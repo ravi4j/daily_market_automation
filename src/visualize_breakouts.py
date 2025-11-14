@@ -30,6 +30,7 @@ from detect_breakouts import (
     discover_symbols,
     log
 )
+from chart_utils import get_chart_organizer
 
 # Get project root
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -246,8 +247,9 @@ def create_breakout_chart(symbol: str, lookback_days: int = 60):
         # Tight layout
         plt.tight_layout()
 
-        # Save chart
-        chart_path = os.path.join(CHARTS_DIR, f"{symbol}_breakout.png")
+        # Save chart using organized structure
+        chart_organizer = get_chart_organizer(CHARTS_DIR)
+        chart_path = chart_organizer.get_breakout_path(symbol, timestamp=False)
         plt.savefig(chart_path, dpi=150, bbox_inches='tight')
         plt.close()
 
