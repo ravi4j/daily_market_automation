@@ -12,6 +12,7 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 
 from indicators import TechnicalIndicators
+from abc_strategy import ABCStrategy
 
 
 @dataclass
@@ -465,6 +466,93 @@ class StrategyRunner:
 
         return None
 
+    def strategy_abc_patterns(self, symbol: str, df: pd.DataFrame) -> Optional[TradingAlert]:
+        """
+        ABC Pattern Strategy
+        
+        Detects ABC wave patterns with Fibonacci retracements and extensions.
+        
+        BUY when:
+        - Bullish ABC pattern detected and activated
+        - Price in BC entry zone (B→A2)
+        - Risk/reward >= 2.5
+        
+        SELL when:
+        - Bearish ABC pattern detected and activated
+        - Price in BC entry zone (B→A2)
+        - Risk/reward >= 2.5
+        """
+        try:
+            # Initialize ABC strategy
+            abc_strategy = ABCStrategy(
+                swing_length=10,
+                min_retrace=0.382,
+                max_retrace=0.786,
+                stop_loss_pips=20,
+                min_risk_reward=2.5
+            )
+            
+            # Generate ABC signal
+            abc_signal = abc_strategy.generate_signal(symbol, df)
+            
+            if not abc_signal:
+                return None
+            
+            # Only return if it's a real BUY or SELL signal
+            if abc_signal.signal not in ['BUY', 'SELL']:
+                return None
+            
+            # Build reason text
+            reason_parts = []
+            reason_parts.append(f"• Pattern: {abc_signal.pattern_type} ABC")
+            reason_parts.append(f"• Activated: {'✅ Yes' if abc_signal.pattern_activated else '❌ No'}")
+            reason_parts.append(f"• Retracement: {abc_signal.retracement_pct:.1f}%")
+            
+            if abc_signal.entry_levels:
+                reason_parts.append(f"• Best Entry: ${abc_signal.best_entry:.2f}")
+                # Calculate distance to entry
+                distance = ((abc_signal.best_entry - abc_signal.current_price) / abc_signal.current_price) * 100
+                reason_parts.append(f"• Distance to Entry: {distance:+.2f}%")
+            
+            reason_parts.append(f"• Stop Loss: ${abc_signal.stop_loss:.2f}")
+            reason_parts.append(f"• TP1 (1.618): ${abc_signal.take_profit_1:.2f}")
+            reason_parts.append(f"• TP2 (1.809): ${abc_signal.take_profit_2:.2f}")
+            reason_parts.append(f"• TP3 (2.000): ${abc_signal.take_profit_3:.2f}")
+            reason_parts.append(f"• Risk:Reward: 1:{abc_signal.risk_reward:.1f}")
+            
+            reason = "\n".join(reason_parts)
+            
+            # Convert ABC signal to TradingAlert format
+            alert = TradingAlert(
+                symbol=symbol,
+                signal=abc_signal.signal,
+                strategy_name='ABC Pattern',
+                confidence=abc_signal.confidence,
+                price=abc_signal.current_price,
+                timestamp=abc_signal.timestamp.isoformat(),
+                reason=reason,
+                technical_data={
+                    'Pattern': abc_signal.pattern_type,
+                    'Point_0': abc_signal.point_0,
+                    'Point_A': abc_signal.point_a,
+                    'Point_B': abc_signal.point_b,
+                    'Point_A2': abc_signal.a2_price if abc_signal.a2_price else 0,
+                    'Best_Entry': abc_signal.best_entry if abc_signal.best_entry else 0,
+                    'Stop_Loss': abc_signal.stop_loss,
+                    'TP1': abc_signal.take_profit_1,
+                    'Risk_Reward': abc_signal.risk_reward,
+                    'RSI': abc_signal.technical_data.get('RSI', 0),
+                    'MACD': abc_signal.technical_data.get('MACD', 0),
+                    'ADX': abc_signal.technical_data.get('ADX', 0)
+                }
+            )
+            
+            return alert
+            
+        except Exception as e:
+            print(f"  ⚠️  Error in ABC pattern strategy for {symbol}: {e}")
+            return None
+
     # ==================== MAIN RUNNER ====================
 
     def run_daily_analysis(self,
@@ -489,7 +577,8 @@ class StrategyRunner:
             'rsi_macd': self.strategy_rsi_macd_confluence,
             'trend_following': self.strategy_trend_following,
             'mean_reversion': self.strategy_bollinger_mean_reversion,
-            'momentum_breakout': self.strategy_momentum_breakout
+            'momentum_breakout': self.strategy_momentum_breakout,
+            'abc_patterns': self.strategy_abc_patterns
         }
 
         # Select strategies to run
