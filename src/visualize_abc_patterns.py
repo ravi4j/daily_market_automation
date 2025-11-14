@@ -56,9 +56,12 @@ class ABCPatternVisualizer:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=self.figsize, 
                                        gridspec_kw={'height_ratios': [3, 1]})
         
-        # Prepare data
+        # Prepare data and zoom to pattern timeframe
         df_plot = df.copy()
         df_plot = df_plot.reset_index()
+        
+        # Zoom to pattern timeframe (from point 0 with some buffer)
+        df_plot = self._zoom_to_pattern(df_plot, pattern)
         
         # Get column names
         date_col = 'Date' if 'Date' in df_plot.columns else df_plot.columns[0]
@@ -139,6 +142,40 @@ class ABCPatternVisualizer:
         
         return str(filepath)
     
+    def _zoom_to_pattern(self, df_plot: pd.DataFrame, pattern: ABCPattern) -> pd.DataFrame:
+        """
+        Zoom dataframe to pattern timeframe for better visibility
+        
+        Args:
+            df_plot: Full dataframe
+            pattern: ABC pattern with bar indices
+            
+        Returns:
+            Zoomed dataframe
+        """
+        # Add buffer before and after pattern (20% on each side)
+        total_pattern_length = len(df_plot) - pattern.bar_0
+        buffer = max(int(total_pattern_length * 0.2), 30)  # At least 30 bars buffer
+        
+        # Calculate zoom window
+        start_idx = max(0, pattern.bar_0 - buffer)
+        end_idx = min(len(df_plot), len(df_plot) + buffer)
+        
+        # Zoom to window
+        df_zoomed = df_plot.iloc[start_idx:end_idx].copy()
+        df_zoomed = df_zoomed.reset_index(drop=True)
+        
+        # Adjust pattern bar indices to new dataframe
+        pattern.bar_0 = pattern.bar_0 - start_idx
+        pattern.bar_a = pattern.bar_a - start_idx
+        pattern.bar_b = pattern.bar_b - start_idx
+        if pattern.bar_c:
+            pattern.bar_c = pattern.bar_c - start_idx
+        if pattern.a2_bar:
+            pattern.a2_bar = pattern.a2_bar - start_idx
+        
+        return df_zoomed
+    
     def _plot_pattern_structure(self, ax, df_plot, pattern: ABCPattern, date_col: str):
         """Plot 0-A-B-C pattern structure"""
         close_col = self._get_col(df_plot, 'close')
@@ -163,39 +200,39 @@ class ABCPatternVisualizer:
             ax.plot([date_b, date_future], [pattern.point_b, target_c],
                    color=color, linewidth=2, linestyle='--', alpha=0.5, zorder=2)
         
-        # Mark points 0, A, B
-        marker_size = 200
+        # Mark points 0, A, B with larger markers
+        marker_size = 400  # Increased from 200
         ax.scatter([date_0], [pattern.point_0], s=marker_size, c=color, 
-                  marker='o', edgecolors='white', linewidths=2, zorder=5,
+                  marker='o', edgecolors='white', linewidths=3, zorder=5,
                   label='Pattern Points')
         ax.scatter([date_a], [pattern.point_a], s=marker_size, c=color,
-                  marker='o', edgecolors='white', linewidths=2, zorder=5)
+                  marker='o', edgecolors='white', linewidths=3, zorder=5)
         ax.scatter([date_b], [pattern.point_b], s=marker_size, c=color,
-                  marker='o', edgecolors='white', linewidths=2, zorder=5)
+                  marker='o', edgecolors='white', linewidths=3, zorder=5)
         
-        # Add labels
-        label_offset = (df_plot[close_col].max() - df_plot[close_col].min()) * 0.02
-        ax.text(date_0, pattern.point_0 - label_offset, '0', 
-               ha='center', va='top', fontsize=12, fontweight='bold',
-               bbox=dict(boxstyle='round,pad=0.3', facecolor='white', edgecolor=color))
-        ax.text(date_a, pattern.point_a + label_offset, 'A',
-               ha='center', va='bottom', fontsize=12, fontweight='bold',
-               bbox=dict(boxstyle='round,pad=0.3', facecolor='white', edgecolor=color))
+        # Add labels with larger font and better visibility
+        label_offset = (df_plot[close_col].max() - df_plot[close_col].min()) * 0.03
+        ax.text(date_0, pattern.point_0 - label_offset, '0\n${:.2f}'.format(pattern.point_0), 
+               ha='center', va='top', fontsize=14, fontweight='bold',
+               bbox=dict(boxstyle='round,pad=0.5', facecolor='white', edgecolor=color, linewidth=2))
+        ax.text(date_a, pattern.point_a + label_offset, 'A\n${:.2f}'.format(pattern.point_a),
+               ha='center', va='bottom', fontsize=14, fontweight='bold',
+               bbox=dict(boxstyle='round,pad=0.5', facecolor='white', edgecolor=color, linewidth=2))
         ax.text(date_b, pattern.point_b - label_offset if pattern.trend == "BULLISH" else pattern.point_b + label_offset, 
-               'B', ha='center', va='top' if pattern.trend == "BULLISH" else 'bottom',
-               fontsize=12, fontweight='bold',
-               bbox=dict(boxstyle='round,pad=0.3', facecolor='white', edgecolor=color))
+               'B\n${:.2f}'.format(pattern.point_b), ha='center', va='top' if pattern.trend == "BULLISH" else 'bottom',
+               fontsize=14, fontweight='bold',
+               bbox=dict(boxstyle='round,pad=0.5', facecolor='white', edgecolor=color, linewidth=2))
         
         # Mark point C if reached
         if pattern.c_reached and pattern.point_c and pattern.bar_c:
             date_c = df_plot[date_col].iloc[pattern.bar_c]
-            ax.scatter([date_c], [pattern.point_c], s=marker_size, 
+            ax.scatter([date_c], [pattern.point_c], s=marker_size * 1.2, 
                       c=self.colors['target_zone'], marker='*',
-                      edgecolors='white', linewidths=2, zorder=5)
-            ax.text(date_c, pattern.point_c + label_offset, 'C',
-                   ha='center', va='bottom', fontsize=12, fontweight='bold',
-                   bbox=dict(boxstyle='round,pad=0.3', 
-                           facecolor=self.colors['target_zone'], edgecolor='white'))
+                      edgecolors='white', linewidths=3, zorder=5)
+            ax.text(date_c, pattern.point_c + label_offset, 'C\n${:.2f}'.format(pattern.point_c),
+                   ha='center', va='bottom', fontsize=14, fontweight='bold',
+                   bbox=dict(boxstyle='round,pad=0.5', 
+                           facecolor=self.colors['target_zone'], edgecolor='white', linewidth=2))
     
     def _plot_activation_line(self, ax, df_plot, pattern: ABCPattern, date_col: str):
         """Plot activation line at point A"""
@@ -223,13 +260,15 @@ class ABCPatternVisualizer:
                   label=f'A2 - New {"High" if pattern.trend == "BULLISH" else "Low"} (${pattern.a2_price:.2f})',
                   zorder=2)
         
-        # Mark A2 point
-        ax.scatter([date_a2], [pattern.a2_price], s=150,
+        # Mark A2 point with larger marker
+        ax.scatter([date_a2], [pattern.a2_price], s=300,
                   c=self.colors['a2_line'], marker='D',
-                  edgecolors='white', linewidths=2, zorder=5)
-        ax.text(date_a2, pattern.a2_price, ' A2',
-               va='center', ha='left', fontsize=10, fontweight='bold',
-               color=self.colors['a2_line'])
+                  edgecolors='white', linewidths=3, zorder=5)
+        ax.text(date_a2, pattern.a2_price, ' A2\n ${:.2f}'.format(pattern.a2_price),
+               va='center', ha='left', fontsize=12, fontweight='bold',
+               color=self.colors['a2_line'],
+               bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
+                        edgecolor=self.colors['a2_line'], alpha=0.9))
     
     def _plot_entry_zone(self, ax, df_plot, pattern: ABCPattern, date_col: str):
         """Plot BC entry zone (B to A2)"""
@@ -259,10 +298,10 @@ class ABCPatternVisualizer:
             ax.axhline(y=entry, color=self.colors['entry_zone'],
                       linestyle=':', linewidth=1.5, alpha=0.6, zorder=2)
             ax.text(date_end, entry, f'  Entry {i+1} ({label_text}): ${entry:.2f}',
-                   va='center', ha='left', fontsize=9,
+                   va='center', ha='left', fontsize=11, fontweight='bold',
                    color=self.colors['entry_zone'],
-                   bbox=dict(boxstyle='round,pad=0.2', facecolor='white',
-                           edgecolor=self.colors['entry_zone'], alpha=0.7))
+                   bbox=dict(boxstyle='round,pad=0.4', facecolor='white',
+                           edgecolor=self.colors['entry_zone'], alpha=0.9, linewidth=2))
     
     def _plot_target_zone(self, ax, df_plot, pattern: ABCPattern, date_col: str):
         """Plot target zone (1.618 to 2.0 extension)"""
@@ -294,10 +333,11 @@ class ABCPatternVisualizer:
             ax.axhline(y=tp, color=self.colors['target_zone'],
                       linestyle=linestyle, linewidth=2, alpha=alpha, zorder=2)
             ax.text(date_end, tp, f'  {label}: ${tp:.2f}',
-                   va='center', ha='left', fontsize=9,
-                   color=self.colors['target_zone'], fontweight='bold' if i == 0 else 'normal',
-                   bbox=dict(boxstyle='round,pad=0.2', facecolor='white',
-                           edgecolor=self.colors['target_zone'], alpha=0.7))
+                   va='center', ha='left', fontsize=11 if i == 0 else 10, 
+                   fontweight='bold',
+                   color=self.colors['target_zone'],
+                   bbox=dict(boxstyle='round,pad=0.4', facecolor='white',
+                           edgecolor=self.colors['target_zone'], alpha=0.9, linewidth=2))
     
     def _plot_stop_loss(self, ax, df_plot, pattern: ABCPattern, date_col: str):
         """Plot stop loss line"""
