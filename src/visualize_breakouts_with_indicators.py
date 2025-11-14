@@ -268,7 +268,7 @@ def create_enhanced_chart(symbol, lookback_days=60):
             # Make it more readable
             sr_msg = sr_type.replace('_', ' ').title().replace('Breakout', '').strip()
             title += f" | 🟢 {sr_msg}"
-    
+
     title += f"\nGenerated: {generation_date}"
 
     ax_price.set_title(title, fontsize=14, fontweight='bold', pad=15)
