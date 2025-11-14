@@ -33,8 +33,10 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 - 📈 **Breakout Detection** - Identifies trendline violations, S/R breaks, and reversal points
 - 🎯 **Technical Analysis** - Support/resistance levels, swing highs/lows, trend direction
 - 📊 **50+ Technical Indicators** - RSI, MACD, Bollinger Bands, ADX, and many more via pandas-ta
+- 📐 **ABC Pattern Detection** - Professional ABC pattern recognition with entry zones and targets
+- 🎨 **Advanced Charting** - Beautiful visualizations with pattern overlays and risk/reward zones
 - 🔬 **Strategy Backtesting** - Test trading strategies on historical data with performance metrics
-- 🚨 **Daily Trading Alerts** - Automated BUY/SELL signals with 4 proven strategies
+- 🚨 **Daily Trading Alerts** - Automated BUY/SELL signals with 5 proven strategies (includes ABC patterns)
 - 📱 **Telegram Notifications** - Get instant alerts on your phone after market close
 - 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
 - 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)

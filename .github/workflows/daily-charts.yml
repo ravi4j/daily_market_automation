@@ -53,6 +53,9 @@ jobs:
       - name: Generate enhanced charts with indicators
         run: python src/visualize_breakouts_with_indicators.py
 
+      - name: Generate ABC pattern charts
+        run: python src/visualize_abc_patterns.py
+
       - name: Export trading signals
         run: python src/export_signals.py
 
