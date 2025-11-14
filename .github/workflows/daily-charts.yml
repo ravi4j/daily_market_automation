@@ -113,15 +113,15 @@ jobs:
           # Charts summary by type
           echo "### 📈 Charts Generated:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "**Breakouts** (Simple):" >> $GITHUB_STEP_SUMMARY
           ls -1 charts/breakouts/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "**Indicators** (Technical Analysis):" >> $GITHUB_STEP_SUMMARY
           ls -1 charts/indicators/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "**ABC Patterns** (Trading Setups):" >> $GITHUB_STEP_SUMMARY
           ls -1 charts/abc_patterns/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
