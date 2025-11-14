@@ -63,7 +63,10 @@ jobs:
         run: |
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
-          git add charts/*.png || true
+          git add charts/breakouts/*.png || true
+          git add charts/indicators/*.png || true
+          git add charts/abc_patterns/*.png || true
+          git add charts/strategies/*.png || true
           git add signals/trading_signals.json || true
           git add signals/trading_signals.csv || true
           git commit -m "Generate daily charts & trading signals [skip ci]" || echo "No changes to commit"
@@ -92,20 +95,35 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: breakout-charts
-          path: charts/*.png
+          name: daily-charts
+          path: |
+            charts/breakouts/*.png
+            charts/indicators/*.png
+            charts/abc_patterns/*.png
+            charts/strategies/*.png
           retention-days: 30
 
       # Create workflow summary with signals
       - name: Generate workflow summary
         if: always()
         run: |
-          echo "## 📊 Daily Breakout Charts & Trading Signals" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Daily Charts & Trading Signals" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Charts summary
+          # Charts summary by type
           echo "### 📈 Charts Generated:" >> $GITHUB_STEP_SUMMARY
-          ls -1 charts/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "**Breakouts** (Simple):" >> $GITHUB_STEP_SUMMARY
+          ls -1 charts/breakouts/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "**Indicators** (Technical Analysis):" >> $GITHUB_STEP_SUMMARY
+          ls -1 charts/indicators/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "**ABC Patterns** (Trading Setups):" >> $GITHUB_STEP_SUMMARY
+          ls -1 charts/abc_patterns/*.png 2>/dev/null | xargs -I {} basename {} | sed 's/^/- /' >> $GITHUB_STEP_SUMMARY || echo "- None" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           # Trading signals summary
