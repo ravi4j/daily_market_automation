@@ -247,8 +247,10 @@ def create_enhanced_chart(symbol, lookback_days=60):
     ax_price.plot(swing_highs.index, swing_highs['High'], 'rv', markersize=8, alpha=0.7, label='Swing High')
     ax_price.plot(swing_lows.index, swing_lows['Low'], 'g^', markersize=8, alpha=0.7, label='Swing Low')
 
-    # Title with breakout info
+    # Title with breakout info and generation date
+    from datetime import datetime
     latest_price = df_recent['Close'].iloc[-1]
+    generation_date = datetime.now().strftime('%Y-%m-%d %H:%M')
     title = f"{symbol} - ${latest_price:.2f}"
 
     # Clean up trendline result (extract breakout_type from dict)
@@ -266,6 +268,8 @@ def create_enhanced_chart(symbol, lookback_days=60):
             # Make it more readable
             sr_msg = sr_type.replace('_', ' ').title().replace('Breakout', '').strip()
             title += f" | 🟢 {sr_msg}"
+    
+    title += f"\nGenerated: {generation_date}"
 
     ax_price.set_title(title, fontsize=14, fontweight='bold', pad=15)
     ax_price.set_ylabel('Price ($)', fontsize=11)

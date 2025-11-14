@@ -105,10 +105,12 @@ class ABCPatternVisualizer:
         ax1.grid(True, alpha=0.3, linestyle='--')
         ax1.legend(loc='upper left', fontsize=10)
         
-        # Title
+        # Title with generation date
+        from datetime import datetime
         trend_emoji = "🟢" if pattern.trend == "BULLISH" else "🔴"
         activation_status = "✅ ACTIVATED" if pattern.activated else "⏳ PENDING"
-        title = f"{trend_emoji} ABC Pattern: {symbol} - {pattern.trend} ({activation_status})"
+        generation_date = datetime.now().strftime('%Y-%m-%d %H:%M')
+        title = f"{trend_emoji} ABC Pattern: {symbol} - {pattern.trend} ({activation_status})\nGenerated: {generation_date}"
         ax1.set_title(title, fontsize=16, fontweight='bold', pad=20)
         
         # Plot volume
@@ -134,7 +136,7 @@ class ABCPatternVisualizer:
         filepath = self.chart_organizer.get_abc_pattern_path(
             symbol=symbol,
             pattern_type=pattern.trend,
-            timestamp=True
+            timestamp=False  # Consistent naming without timestamps
         )
         
         plt.savefig(filepath, dpi=150, bbox_inches='tight', facecolor='white')

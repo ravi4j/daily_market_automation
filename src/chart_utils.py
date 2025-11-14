@@ -88,14 +88,14 @@ class ChartOrganizer:
     def get_abc_pattern_path(self, 
                             symbol: str, 
                             pattern_type: str,
-                            timestamp: bool = True) -> Path:
+                            timestamp: bool = False) -> Path:
         """
         Get path for ABC pattern chart
         
         Args:
             symbol: Symbol name
             pattern_type: BULLISH or BEARISH
-            timestamp: Whether to include timestamp
+            timestamp: Whether to include timestamp (default: False for consistency)
         """
         suffix = f"_ABC_{pattern_type}"
         if timestamp:
@@ -232,7 +232,7 @@ def get_indicators_chart_path(symbol: str, timestamp: bool = False) -> str:
     """Get path for indicators chart"""
     return str(get_chart_organizer().get_indicators_path(symbol, timestamp))
 
-def get_abc_chart_path(symbol: str, pattern_type: str, timestamp: bool = True) -> str:
+def get_abc_chart_path(symbol: str, pattern_type: str, timestamp: bool = False) -> str:
     """Get path for ABC pattern chart"""
     return str(get_chart_organizer().get_abc_pattern_path(symbol, pattern_type, timestamp))
 
@@ -249,7 +249,7 @@ if __name__ == "__main__":
     print("Example paths:")
     print(f"  Breakout:    {organizer.get_breakout_path('TQQQ')}")
     print(f"  Indicators:  {organizer.get_indicators_path('AAPL')}")
-    print(f"  ABC:         {organizer.get_abc_pattern_path('UBER', 'BULLISH')}")
+    print(f"  ABC:         {organizer.get_abc_pattern_path('UBER', 'BULLISH', timestamp=False)}")
     print(f"  Strategy:    {organizer.get_strategy_path('SP500', 'rsi_macd')}")
     
     organizer.print_summary()

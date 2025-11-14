@@ -210,8 +210,9 @@ def create_breakout_chart(symbol: str, lookback_days: int = 60):
         # Plot candlesticks
         latest = recent_df.iloc[-1]
         trend = "📈 UPTREND" if trendline_result['trend_slope_high'] > 0 else "📉 DOWNTREND"
+        generation_date = datetime.now().strftime('%Y-%m-%d %H:%M')
         title = f"{symbol} - Breakout Analysis ({recent_df.index[-1].strftime('%Y-%m-%d')})\n"
-        title += f"Price: ${latest['Close']:.2f} | {trend}"
+        title += f"Price: ${latest['Close']:.2f} | {trend} | Generated: {generation_date}"
 
         plot_candlestick_simple(ax, recent_df, title)
 
