@@ -1,0 +1,52 @@
+{
+  "scan_date": "2025-11-15T16:40:57.087726",
+  "symbols_scanned": 5,
+  "scanned_symbols": [
+    "TQQQ",
+    "SP500",
+    "AAPL",
+    "UBER",
+    "SQQQ"
+  ],
+  "opportunities_found": 1,
+  "opportunities": [
+    {
+      "symbol": "TQQQ",
+      "fundamentals": {
+        "symbol": "TQQQ",
+        "company_name": "ProShares UltraPro QQQ",
+        "current_price": 104.74,
+        "market_cap": 0,
+        "pe_ratio": 34.291107,
+        "forward_pe": null,
+        "peg_ratio": null,
+        "profit_margins": null,
+        "revenue_growth": null,
+        "52w_high": 121.37,
+        "52w_low": 35.0,
+        "distance_from_52w_high": 13.7,
+        "5d_change": -7.07,
+        "analyst_target": null,
+        "recommendation": "none"
+      },
+      "news": [
+        {
+          "symbol": "TQQQ",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 18:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "has_red_flag": false,
+            "drop_percentage": null,
+            "sentiment_score": 0
+          }
+        }
+      ],
+      "opportunity_score": 80,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+name: Daily News Scanner
+
+on:
+  # Run twice daily: morning and after market close
+  schedule:
+    - cron: '0 14 * * 1-5'  # 9:00 AM EST (14:00 UTC)
+    - cron: '30 21 * * 1-5' # 4:30 PM EST (21:30 UTC)
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scan-news:
+    runs-on: ubuntu-latest
+    
+    env:
+      TZ: America/New_York
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-base.txt
+          pip install -r requirements-fetch.txt
+          pip install requests
+      
+      - name: Ensure directories exist
+        run: mkdir -p signals
+      
+      - name: Scan news for opportunities
+        run: |
+          echo "📰 Scanning Yahoo Finance news for buying opportunities..."
+          python scripts/send_news_opportunities.py
+      
+      - name: Commit opportunities
+        run: |
+          git config user.name "automation-bot"
+          git config user.email "bot@example.com"
+          git add signals/news_opportunities.json || true
+          git commit -m "Update news opportunities [skip ci]" || echo "No changes to commit"
+          git push || echo "Push skipped"
+      
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-opportunities
+          path: signals/news_opportunities.json
+          retention-days: 30
+      
+      - name: Generate workflow summary
+        if: always()
+        run: |
+          echo "## 📰 News Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f signals/news_opportunities.json ]; then
+            SCANNED=$(jq -r '.symbols_scanned' signals/news_opportunities.json)
+            FOUND=$(jq -r '.opportunities_found' signals/news_opportunities.json)
+            
+            echo "### 📊 Results" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- Symbols Scanned: **${SCANNED}**" >> $GITHUB_STEP_SUMMARY
+            echo "- Opportunities Found: **${FOUND}**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "$FOUND" -gt 0 ]; then
+              echo "### 🎯 Top Opportunities" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "| Symbol | Score | 5D Change | From 52W High |" >> $GITHUB_STEP_SUMMARY
+              echo "|--------|-------|-----------|---------------|" >> $GITHUB_STEP_SUMMARY
+              
+              # Extract top 5 opportunities
+              jq -r '.opportunities[:5] | .[] | 
+                "\(.symbol) | \(.opportunity_score) | \(.fundamentals["5d_change"])% | \(.fundamentals.distance_from_52w_high)%"' \
+                signals/news_opportunities.json >> $GITHUB_STEP_SUMMARY || true
+              
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "💡 Check Telegram for detailed alerts" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "✅ No significant buying opportunities detected" >> $GITHUB_STEP_SUMMARY
+              echo "All tracked symbols are stable or rising" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⚠️ No results file generated" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "📅 Scan completed: $(date)" >> $GITHUB_STEP_SUMMARY
+

@@ -19,32 +19,32 @@ permissions:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    
+
     env:
       TZ: America/New_York
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-base.txt
           pip install --index-url https://pypi.org/simple/ pandas-ta requests yfinance pyyaml
-      
+
       - name: Create directories
         run: |
           mkdir -p data
           mkdir -p temp
-      
+
       - name: Run comprehensive analysis
         id: analyze
         run: |
@@ -52,7 +52,7 @@ jobs:
           python scripts/analyze_symbol.py \
             --symbol "${{ github.event.inputs.symbol }}" \
             --output temp/analysis_report.json
-      
+
       - name: Send analysis to Telegram
         if: always()
         run: |
@@ -64,20 +64,20 @@ jobs:
           else
             echo "⚠️  Analysis report not found"
           fi
-      
+
       - name: Add to config if requested
         if: github.event.inputs.add_to_tracking == 'true'
         run: |
           echo "➕ Adding ${{ github.event.inputs.symbol }} to config..."
           python scripts/add_symbol_to_config.py \
             --symbol "${{ github.event.inputs.symbol }}"
-          
+
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
           git add config/symbols.yaml
           git commit -m "Add ${{ github.event.inputs.symbol }} to daily tracking [skip ci]" || echo "Already in config"
           git push || echo "Push skipped"
-      
+
       - name: Upload analysis artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -85,34 +85,34 @@ jobs:
           name: analysis-${{ github.event.inputs.symbol }}
           path: temp/analysis_report.json
           retention-days: 7
-      
+
       - name: Create workflow summary
         if: always()
         run: |
           echo "## 🔍 On-Demand Analysis: ${{ github.event.inputs.symbol }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ -f temp/analysis_report.json ]; then
             echo "### 📊 Analysis Complete" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "✅ Analysis completed successfully" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
+
             # Extract key info from JSON
             PRICE=$(jq -r '.current_price' temp/analysis_report.json 2>/dev/null || echo "N/A")
             REC=$(jq -r '.recommendation' temp/analysis_report.json 2>/dev/null || echo "N/A")
             CONF=$(jq -r '.confidence' temp/analysis_report.json 2>/dev/null || echo "N/A")
-            
+
             echo "**Symbol:** ${{ github.event.inputs.symbol }}" >> $GITHUB_STEP_SUMMARY
             echo "**Current Price:** \$$PRICE" >> $GITHUB_STEP_SUMMARY
             echo "**Recommendation:** $REC" >> $GITHUB_STEP_SUMMARY
             echo "**Confidence:** $CONF" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
+
             if [ "${{ github.event.inputs.add_to_tracking }}" = "true" ]; then
               echo "✅ Added to daily tracking config" >> $GITHUB_STEP_SUMMARY
             fi
-            
+
             if [ -n "$TELEGRAM_BOT_TOKEN" ]; then
               echo "📱 Analysis sent to Telegram" >> $GITHUB_STEP_SUMMARY
             else
@@ -121,8 +121,7 @@ jobs:
           else
             echo "❌ Analysis failed" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "💡 **Tip:** Download the analysis artifact for detailed results" >> $GITHUB_STEP_SUMMARY
-

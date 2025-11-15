@@ -37,6 +37,7 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 - 🎨 **Advanced Charting** - Beautiful visualizations with pattern overlays and risk/reward zones
 - 🔬 **Strategy Backtesting** - Test trading strategies on historical data with performance metrics
 - 🚨 **Daily Trading Alerts** - Automated BUY/SELL signals with 5 proven strategies (includes ABC patterns)
+- 📰 **News Scanner** - Monitors Yahoo Finance news to identify buying opportunities from price dips
 - 📱 **Telegram Notifications** - Get instant alerts on your phone after market close
 - 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
 - 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)
@@ -820,7 +821,86 @@ The workflow `.github/workflows/daily-alerts.yml`:
 
 ---
 
-## 7) Testing
+## 7) News Scanner 📰
+
+**NEW!** Automatically identify buying opportunities from market dips and news!
+
+### What It Does
+
+- 🔍 Scans your portfolio symbols for price drops (5%+ in 5 days)
+- 📰 Analyzes Yahoo Finance news for sentiment
+- 📊 Checks fundamentals (P/E, margins, growth, analyst ratings)
+- 🎯 Scores opportunities (0-100) based on risk/reward
+- 📱 Sends Telegram alerts with top picks
+
+### Quick Start
+
+**Automatic (Runs twice daily):**
+- 9:00 AM EST - Morning scan
+- 4:30 PM EST - After market close
+
+**Manual Trigger:**
+```bash
+# Activate venv
+source venv/bin/activate
+
+# Run scanner
+python scripts/send_news_opportunities.py
+```
+
+### Example Telegram Alert
+
+```
+📰 Daily News Scan Report
+2025-11-15 16:30
+
+Scanned: 4 symbols
+Found: 2 opportunities
+
+━━━━━━━━━━━━━━━━━━━━
+
+1. NVDA 🟢
+NVIDIA Corporation
+Score: 85/100
+• Price: $485.20 (-8.5%)
+• From 52W High: 12.3%
+• P/E: 42.5
+• Analyst: Buy
+
+📰 NVIDIA shares fall after earnings...
+
+💡 Next Steps:
+• Review fundamentals
+• Run on-demand analysis
+• Set price alerts
+⚠️ Not financial advice. DYOR.
+```
+
+### Features
+
+✅ **Smart Filtering** - Avoids red flags (bankruptcy, fraud, scandals)  
+✅ **Fundamental Analysis** - Checks valuation, growth, profitability  
+✅ **Uses Your Config** - Scans symbols from `config/symbols.yaml`  
+✅ **Opportunity Scoring** - Ranks best risk/reward setups  
+✅ **GitHub Actions** - Fully automated, no manual work  
+
+### Real-World Use Case
+
+**"CoreWeave and other stocks fell, might be buying opportunities"**
+
+The scanner detects:
+1. 15% price drop ✅
+2. News: "Falls on competitive concerns" (not bankruptcy/fraud) ✅
+3. Strong fundamentals (good P/E, revenue growth, margins) ✅
+4. Score: 82/100 → 🟢 STRONG BUY recommendation
+5. Sends alert to your phone 📱
+
+**Quick Start Guide:** [NEWS_SCANNER_QUICKSTART.md](NEWS_SCANNER_QUICKSTART.md)  
+**Full Documentation:** [docs/NEWS_SCANNER_GUIDE.md](docs/NEWS_SCANNER_GUIDE.md)
+
+---
+
+## 8) Testing
 
 ### Test Incremental Fetching
 To verify that incremental fetching works correctly:
