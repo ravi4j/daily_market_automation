@@ -1,0 +1,122 @@
+{
+  "scan_date": "2025-11-15T16:49:04.868576",
+  "scan_type": "S&P 500",
+  "symbols_scanned": 5,
+  "opportunities_found": 3,
+  "opportunities": [
+    {
+      "symbol": "NVDA",
+      "fundamentals": {
+        "symbol": "NVDA",
+        "company_name": "NVIDIA Corporation",
+        "current_price": 190.17,
+        "market_cap": 4630069116928,
+        "pe_ratio": 54.025566,
+        "forward_pe": 46.15777,
+        "peg_ratio": null,
+        "profit_margins": 0.52414,
+        "revenue_growth": 0.556,
+        "52w_high": 212.19,
+        "52w_low": 86.62,
+        "distance_from_52w_high": 10.38,
+        "5d_change": -4.46,
+        "analyst_target": 232.79439,
+        "recommendation": "strong_buy"
+      },
+      "news": [
+        {
+          "symbol": "NVDA",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 18:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "has_red_flag": false,
+            "drop_percentage": null,
+            "sentiment_score": 0
+          }
+        }
+      ],
+      "opportunity_score": 95,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity"
+    },
+    {
+      "symbol": "AVGO",
+      "fundamentals": {
+        "symbol": "AVGO",
+        "company_name": "Broadcom Inc.",
+        "current_price": 342.46,
+        "market_cap": 1617220993024,
+        "pe_ratio": 87.81025,
+        "forward_pe": 55.50405,
+        "peg_ratio": null,
+        "profit_margins": 0.31592,
+        "revenue_growth": 0.164,
+        "52w_high": 386.48,
+        "52w_low": 138.1,
+        "distance_from_52w_high": 11.39,
+        "5d_change": -4.44,
+        "analyst_target": 394.82068,
+        "recommendation": "strong_buy"
+      },
+      "news": [
+        {
+          "symbol": "AVGO",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 18:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "has_red_flag": false,
+            "drop_percentage": null,
+            "sentiment_score": 0
+          }
+        }
+      ],
+      "opportunity_score": 95,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity"
+    },
+    {
+      "symbol": "ORCL",
+      "fundamentals": {
+        "symbol": "ORCL",
+        "company_name": "Oracle Corporation",
+        "current_price": 222.85,
+        "market_cap": 635299168256,
+        "pe_ratio": 51.585648,
+        "forward_pe": 31.124304,
+        "peg_ratio": null,
+        "profit_margins": 0.21079999,
+        "revenue_growth": 0.122,
+        "52w_high": 345.72,
+        "52w_low": 118.86,
+        "distance_from_52w_high": 35.54,
+        "5d_change": -7.47,
+        "analyst_target": 344.03693,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "ORCL",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 18:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "has_red_flag": false,
+            "drop_percentage": null,
+            "sentiment_score": 0
+          }
+        }
+      ],
+      "opportunity_score": 100,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity"
+    }
+  ]
+}

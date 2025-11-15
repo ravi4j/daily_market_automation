@@ -1,0 +1,551 @@
+{
+  "last_updated": "2025-11-15T16:48:39.499268",
+  "count": 109,
+  "symbols": [
+    {
+      "symbol": "AAPL",
+      "company": "Apple Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "MSFT",
+      "company": "Microsoft Corporation",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "NVDA",
+      "company": "NVIDIA Corporation",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "AVGO",
+      "company": "Broadcom Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "ORCL",
+      "company": "Oracle Corporation",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "CSCO",
+      "company": "Cisco Systems Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "ADBE",
+      "company": "Adobe Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "CRM",
+      "company": "Salesforce Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "AMD",
+      "company": "Advanced Micro Devices Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "INTC",
+      "company": "Intel Corporation",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "QCOM",
+      "company": "QUALCOMM Incorporated",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "TXN",
+      "company": "Texas Instruments Incorporated",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "NOW",
+      "company": "ServiceNow Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "INTU",
+      "company": "Intuit Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "AMAT",
+      "company": "Applied Materials Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "MU",
+      "company": "Micron Technology Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "LRCX",
+      "company": "Lam Research Corporation",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "KLAC",
+      "company": "KLA Corporation",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "SNPS",
+      "company": "Synopsys Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "CDNS",
+      "company": "Cadence Design Systems Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "PANW",
+      "company": "Palo Alto Networks Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "ADSK",
+      "company": "Autodesk Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "FTNT",
+      "company": "Fortinet Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "ADP",
+      "company": "Automatic Data Processing Inc.",
+      "sector": "Information Technology"
+    },
+    {
+      "symbol": "GOOGL",
+      "company": "Alphabet Inc. (Class A)",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "GOOG",
+      "company": "Alphabet Inc. (Class C)",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "META",
+      "company": "Meta Platforms Inc.",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "NFLX",
+      "company": "Netflix Inc.",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "DIS",
+      "company": "The Walt Disney Company",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "CMCSA",
+      "company": "Comcast Corporation",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "T",
+      "company": "AT&T Inc.",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "VZ",
+      "company": "Verizon Communications Inc.",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "TMUS",
+      "company": "T-Mobile US Inc.",
+      "sector": "Communication Services"
+    },
+    {
+      "symbol": "AMZN",
+      "company": "Amazon.com Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "TSLA",
+      "company": "Tesla Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "HD",
+      "company": "The Home Depot Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "MCD",
+      "company": "McDonald's Corporation",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "NKE",
+      "company": "NIKE Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "SBUX",
+      "company": "Starbucks Corporation",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "LOW",
+      "company": "Lowe's Companies Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "TJX",
+      "company": "The TJX Companies Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "BKNG",
+      "company": "Booking Holdings Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "ABNB",
+      "company": "Airbnb Inc.",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "GM",
+      "company": "General Motors Company",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "F",
+      "company": "Ford Motor Company",
+      "sector": "Consumer Discretionary"
+    },
+    {
+      "symbol": "BRK.B",
+      "company": "Berkshire Hathaway Inc. (Class B)",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "JPM",
+      "company": "JPMorgan Chase & Co.",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "V",
+      "company": "Visa Inc.",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "MA",
+      "company": "Mastercard Incorporated",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "BAC",
+      "company": "Bank of America Corporation",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "WFC",
+      "company": "Wells Fargo & Company",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "C",
+      "company": "Citigroup Inc.",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "MS",
+      "company": "Morgan Stanley",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "GS",
+      "company": "The Goldman Sachs Group Inc.",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "BLK",
+      "company": "BlackRock Inc.",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "SCHW",
+      "company": "The Charles Schwab Corporation",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "AXP",
+      "company": "American Express Company",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "SPGI",
+      "company": "S&P Global Inc.",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "CB",
+      "company": "Chubb Limited",
+      "sector": "Financials"
+    },
+    {
+      "symbol": "UNH",
+      "company": "UnitedHealth Group Incorporated",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "JNJ",
+      "company": "Johnson & Johnson",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "LLY",
+      "company": "Eli Lilly and Company",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "ABBV",
+      "company": "AbbVie Inc.",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "MRK",
+      "company": "Merck & Co. Inc.",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "PFE",
+      "company": "Pfizer Inc.",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "TMO",
+      "company": "Thermo Fisher Scientific Inc.",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "ABT",
+      "company": "Abbott Laboratories",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "DHR",
+      "company": "Danaher Corporation",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "BMY",
+      "company": "Bristol-Myers Squibb Company",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "AMGN",
+      "company": "Amgen Inc.",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "GILD",
+      "company": "Gilead Sciences Inc.",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "CVS",
+      "company": "CVS Health Corporation",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "CI",
+      "company": "The Cigna Group",
+      "sector": "Health Care"
+    },
+    {
+      "symbol": "WMT",
+      "company": "Walmart Inc.",
+      "sector": "Consumer Staples"
+    },
+    {
+      "symbol": "PG",
+      "company": "The Procter & Gamble Company",
+      "sector": "Consumer Staples"
+    },
+    {
+      "symbol": "KO",
+      "company": "The Coca-Cola Company",
+      "sector": "Consumer Staples"
+    },
+    {
+      "symbol": "PEP",
+      "company": "PepsiCo Inc.",
+      "sector": "Consumer Staples"
+    },
+    {
+      "symbol": "COST",
+      "company": "Costco Wholesale Corporation",
+      "sector": "Consumer Staples"
+    },
+    {
+      "symbol": "PM",
+      "company": "Philip Morris International Inc.",
+      "sector": "Consumer Staples"
+    },
+    {
+      "symbol": "MO",
+      "company": "Altria Group Inc.",
+      "sector": "Consumer Staples"
+    },
+    {
+      "symbol": "XOM",
+      "company": "Exxon Mobil Corporation",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "CVX",
+      "company": "Chevron Corporation",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "COP",
+      "company": "ConocoPhillips",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "SLB",
+      "company": "Schlumberger Limited",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "EOG",
+      "company": "EOG Resources Inc.",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "PSX",
+      "company": "Phillips 66",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "MPC",
+      "company": "Marathon Petroleum Corporation",
+      "sector": "Energy"
+    },
+    {
+      "symbol": "BA",
+      "company": "The Boeing Company",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "CAT",
+      "company": "Caterpillar Inc.",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "GE",
+      "company": "General Electric Company",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "UPS",
+      "company": "United Parcel Service Inc.",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "RTX",
+      "company": "RTX Corporation",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "HON",
+      "company": "Honeywell International Inc.",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "UNP",
+      "company": "Union Pacific Corporation",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "DE",
+      "company": "Deere & Company",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "LMT",
+      "company": "Lockheed Martin Corporation",
+      "sector": "Industrials"
+    },
+    {
+      "symbol": "NEE",
+      "company": "NextEra Energy Inc.",
+      "sector": "Utilities"
+    },
+    {
+      "symbol": "DUK",
+      "company": "Duke Energy Corporation",
+      "sector": "Utilities"
+    },
+    {
+      "symbol": "SO",
+      "company": "The Southern Company",
+      "sector": "Utilities"
+    },
+    {
+      "symbol": "D",
+      "company": "Dominion Energy Inc.",
+      "sector": "Utilities"
+    },
+    {
+      "symbol": "AMT",
+      "company": "American Tower Corporation",
+      "sector": "Real Estate"
+    },
+    {
+      "symbol": "PLD",
+      "company": "Prologis Inc.",
+      "sector": "Real Estate"
+    },
+    {
+      "symbol": "CCI",
+      "company": "Crown Castle Inc.",
+      "sector": "Real Estate"
+    },
+    {
+      "symbol": "EQIX",
+      "company": "Equinix Inc.",
+      "sector": "Real Estate"
+    },
+    {
+      "symbol": "LIN",
+      "company": "Linde plc",
+      "sector": "Materials"
+    },
+    {
+      "symbol": "APD",
+      "company": "Air Products and Chemicals Inc.",
+      "sector": "Materials"
+    },
+    {
+      "symbol": "SHW",
+      "company": "The Sherwin-Williams Company",
+      "sector": "Materials"
+    },
+    {
+      "symbol": "FCX",
+      "company": "Freeport-McMoRan Inc.",
+      "sector": "Materials"
+    },
+    {
+      "symbol": "NEM",
+      "company": "Newmont Corporation",
+      "sector": "Materials"
+    }
+  ]
+}
