@@ -38,6 +38,7 @@ That's it! Run daily to get incremental updates (2-5 seconds).
 - 🔬 **Strategy Backtesting** - Test trading strategies on historical data with performance metrics
 - 🚨 **Daily Trading Alerts** - Automated BUY/SELL signals with 5 proven strategies (includes ABC patterns)
 - 📰 **News Scanner** - Monitors Yahoo Finance news to identify buying opportunities from price dips
+- 💼 **Insider Trading Tracker** - Follows corporate insider transactions to identify "smart money" movements
 - 📱 **Telegram Notifications** - Get instant alerts on your phone after market close
 - 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
 - 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)
@@ -900,7 +901,127 @@ The scanner detects:
 
 ---
 
-## 8) Testing
+## 8) Insider Trading Tracker 💼
+
+**NEW!** Follow corporate insider transactions to identify "smart money" movements!
+
+### What It Does
+
+- 💼 Fetches insider transactions (buys/sells by executives, directors)
+- 📊 Analyzes sentiment (STRONG_BUY, BUY, NEUTRAL, SELL, STRONG_SELL)
+- 🎯 Adjusts opportunity scores (+15 for strong buying, -15 for strong selling)
+- ⚡ Pre-filters for efficiency (only scans stocks with 5%+ drops)
+- 🚀 Stays under API limits (50 calls/min)
+
+### Quick Start
+
+```bash
+# 1. Get free API key: https://finnhub.io/register
+# 2. Set environment variable
+export FINNHUB_API_KEY='your_key_here'
+
+# 3. Test it
+python scripts/test_insider_tracking.py
+
+# 4. Use it!
+python scripts/scan_sp500_news.py
+```
+
+### Example Output
+
+```
+📊 Top 10 Opportunities:
+  1. NVDA   - Score:  87/100 (+15 insider) (-5.2%) - NVIDIA Corporation
+  2. AAPL   - Score:  82/100 (+8 insider) (-3.1%) - Apple Inc.
+  3. TSLA   - Score:  65/100 (-8.2%) - Tesla Inc.
+```
+
+### Example Telegram Alert
+
+```
+1. NVDA 🟢
+NVIDIA Corporation
+Score: 87/100 (+15 insider 🟢)
+• Price: $485.50 (-5.2%)
+• From 52W High: 12.3%
+• P/E: 45.2
+• Insider: 🟢🟢 STRONG_BUY (4B/1S)
+
+📰 Nvidia shares drop on supply chain concerns...
+```
+
+### Command Flags
+
+```bash
+# Pre-filtered scan (default, fast ~2 min for 50 stocks)
+python scripts/scan_sp500_news.py
+
+# Full scan (all 500 stocks, ~20 min)
+python scripts/scan_sp500_news.py --full-scan
+
+# Custom drop threshold
+python scripts/scan_sp500_news.py --min-drop 3.0
+
+# Skip insider data (faster)
+python scripts/scan_sp500_news.py --no-insider
+
+# Test mode
+python scripts/scan_sp500_news.py --top 10
+```
+
+### How It Works
+
+1. **Pre-filter**: Quickly checks all 500 stocks for 5%+ drops (using yfinance, free)
+2. **Fetch insider data**: Only for stocks that dropped (using Finnhub API)
+3. **Analyze sentiment**: Calculates buy/sell ratio and transaction values
+4. **Adjust scores**: Boosts scores for insider buying, penalizes for selling
+5. **Send alerts**: Top opportunities with insider signals
+
+### Score Adjustments
+
+| Insider Signal | Criteria | Score Change |
+|---------------|----------|--------------|
+| 🟢🟢 STRONG_BUY | 75%+ buying | +15 |
+| 🟢 BUY | 60%+ buying | +8 |
+| ⚪ NEUTRAL | Balanced | 0 |
+| 🔴 SELL | 40% or less buying | -8 |
+| 🔴🔴 STRONG_SELL | 25% or less buying | -15 |
+
+### GitHub Actions Setup
+
+1. Add secret `FINNHUB_API_KEY` to your repo
+2. Workflows automatically use insider data if key is set
+3. Degrades gracefully if not set (skips insider tracking)
+
+### Features
+
+✅ **Finnhub API Integration** - Free tier: 60 calls/min  
+✅ **Rate Limiting** - Built-in protection (50 calls/min buffer)  
+✅ **Caching** - 24h cache for fundamentals  
+✅ **Pre-filtering** - Only scan dropped stocks  
+✅ **Fallback Strategies** - Works without API key  
+✅ **S&P 500 List** - Finnhub → Wikipedia → File fallback  
+
+### Real-World Example
+
+**Scenario:** Market dips 5%, you want to find opportunities with insider confidence.
+
+1. **Pre-filter**: Identifies 50 stocks with 5%+ drops (fast)
+2. **Fetch insider data**: Only for those 50 stocks (100 API calls, ~2 min)
+3. **Find strong signals**:
+   - NVDA: Score 70 → 85 (+15 insider buying)
+   - AAPL: Score 74 → 82 (+8 insider buying)
+   - MSFT: Score 75 → 75 (no recent insider activity)
+4. **Alert sent**: Top picks with insider confidence
+5. **You decide**: Buy NVDA and AAPL based on multiple signals
+
+**Quick Start:** [INSIDER_QUICKSTART.md](INSIDER_QUICKSTART.md)  
+**Full Guide:** [INSIDER_TRACKING_GUIDE.md](INSIDER_TRACKING_GUIDE.md)  
+**Test Script:** `python scripts/test_insider_tracking.py`
+
+---
+
+## 9) Testing
 
 ### Test Incremental Fetching
 To verify that incremental fetching works correctly:

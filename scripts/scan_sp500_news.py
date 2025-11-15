@@ -58,21 +58,21 @@ def format_opportunity_message(opportunities: list, symbols_scanned: int, scan_t
     message = f"📰 *{scan_type} News Scan*\n"
     message += f"_{datetime.now().strftime('%Y-%m-%d %H:%M')}_\n\n"
     message += f"Scanned: *{symbols_scanned}* stocks\n"
-    
+
     if not opportunities:
         message += "\n✅ No significant buying opportunities found.\n"
         message += "Market is generally stable or rising.\n"
         return message
-    
+
     message += f"Found: *{len(opportunities)}* opportunities\n\n"
-    
+
     # Group by sector
     by_sector = group_by_sector(opportunities)
     message += "📊 *By Sector:*\n"
     for sector, opps in sorted(by_sector.items(), key=lambda x: len(x[1]), reverse=True):
         message += f"• {sector}: {len(opps)}\n"
     message += "\n━━━━━━━━━━━━━━━━━━━━\n\n"
-    
+
     # Show top 10 opportunities
     for i, opp in enumerate(opportunities[:10], 1):
         fund = opp['fundamentals']
@@ -91,12 +91,31 @@ def format_opportunity_message(opportunities: list, symbols_scanned: int, scan_t
         message += f"*{i}. {opp['symbol']}* {emoji}\n"
         company_name = fund['company_name'][:35]
         message += f"_{company_name}_\n"
-        message += f"Score: *{score}/100*\n"
+        
+        # Score with insider boost indicator
+        insider_boost = opp.get('insider_boost', 0)
+        if insider_boost != 0:
+            message += f"Score: *{score}/100* "
+            if insider_boost > 0:
+                message += f"(+{insider_boost} insider 🟢)\n"
+            else:
+                message += f"({insider_boost} insider 🔴)\n"
+        else:
+            message += f"Score: *{score}/100*\n"
+        
         message += f"• Price: ${fund['current_price']} ({fund['5d_change']:+.2f}%)\n"
         message += f"• From 52W High: {fund['distance_from_52w_high']:.1f}%\n"
 
         if fund.get('pe_ratio'):
             message += f"• P/E: {fund['pe_ratio']:.1f}\n"
+        
+        # Insider activity summary (if present)
+        if 'insider_activity' in opp:
+            insider = opp['insider_activity']
+            sentiment_emoji = {'STRONG_BUY': '🟢🟢', 'BUY': '🟢', 'NEUTRAL': '⚪', 'SELL': '🔴', 'STRONG_SELL': '🔴🔴'}
+            insider_emoji = sentiment_emoji.get(insider['sentiment'], '⚪')
+            message += f"• Insider: {insider_emoji} {insider['sentiment']} "
+            message += f"({insider['num_buys']}B/{insider['num_sells']}S)\n"
 
         # Add news headline if available
         if opp['news'] and opp['news'][0].get('title'):
@@ -120,14 +139,53 @@ def format_opportunity_message(opportunities: list, symbols_scanned: int, scan_t
     return message
 
 
+def pre_filter_by_drop(symbols: list, min_drop: float = 5.0, period_days: int = 5) -> list:
+    """
+    Pre-filter symbols to only those with significant price drops
+    This speeds up scanning by reducing unnecessary API calls
+    
+    Args:
+        symbols: List of symbols to check
+        min_drop: Minimum drop percentage (default 5.0%)
+        period_days: Lookback period (default 5 days)
+    
+    Returns:
+        List of symbols that dropped by min_drop% or more
+    """
+    import yfinance as yf
+    
+    dropped_symbols = []
+    
+    for symbol in tqdm(symbols, desc="Pre-filtering", unit="stock"):
+        try:
+            ticker = yf.Ticker(symbol)
+            hist = ticker.history(period=f'{period_days}d')
+            
+            if len(hist) >= 2:
+                first_close = hist['Close'].iloc[0]
+                last_close = hist['Close'].iloc[-1]
+                change_pct = ((last_close - first_close) / first_close) * 100
+                
+                if change_pct <= -min_drop:
+                    dropped_symbols.append(symbol)
+        except Exception:
+            # Skip symbols that fail
+            continue
+    
+    return dropped_symbols
+
+
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description='Scan S&P 500 for news opportunities')
+    parser = argparse.ArgumentParser(description='Scan S&P 500 for news opportunities with insider tracking')
     parser.add_argument('--sector', type=str, help='Filter by sector (e.g., "Information Technology")')
     parser.add_argument('--top', type=int, default=None, help='Scan only top N symbols alphabetically (for testing)')
     parser.add_argument('--batch-size', type=int, default=50, help='Batch size for parallel processing')
     parser.add_argument('--no-telegram', action='store_true', help='Skip Telegram notifications')
+    parser.add_argument('--full-scan', action='store_true', help='Scan all stocks (skip pre-filtering by price drop)')
+    parser.add_argument('--min-drop', type=float, default=5.0, help='Minimum price drop %% for pre-filter (default: 5.0)')
+    parser.add_argument('--no-insider', action='store_true', help='Skip insider tracking (faster but less comprehensive)')
 
     args = parser.parse_args()
 
@@ -147,13 +205,13 @@ def main():
         print("❌ S&P 500 list not found!")
         print("   Run: python scripts/fetch_sp500_list.py")
         sys.exit(1)
-    
+
     with open(json_file, 'r') as f:
         data = json.load(f)
         symbol_data = {item['symbol']: item for item in data['symbols']}
-    
+
     symbols = list(symbol_data.keys())
-    
+
     # Filter by sector if specified
     if args.sector:
         symbols = [s for s, info in symbol_data.items() if info['sector'] == args.sector]
@@ -167,27 +225,81 @@ def main():
         symbols = symbols[:args.top]
         print(f"🧪 Testing mode: scanning top {args.top} symbols")
 
-    print(f"📰 Scanning {len(symbols)} stocks for opportunities...")
+    # Pre-filter by price drops (unless --full-scan specified)
+    original_count = len(symbols)
+    if not args.full_scan:
+        print(f"\n🔍 Pre-filtering for stocks with {args.min_drop}%+ drops...")
+        print(f"   (Use --full-scan to skip this step)")
+        symbols = pre_filter_by_drop(symbols, min_drop=args.min_drop, period_days=5)
+        print(f"✅ Found {len(symbols)} stocks with {args.min_drop}%+ drops (from {original_count} total)")
+        
+        if len(symbols) == 0:
+            print("\n✅ No significant dips found!")
+            print("   Market is generally stable")
+            sys.exit(0)
+    else:
+        print(f"\n⚡ Full scan mode: scanning all {len(symbols)} stocks")
+
+    print(f"\n📰 Scanning {len(symbols)} stocks for opportunities...")
     print(f"⏱️  This will take approximately {len(symbols) * 0.5 / 60:.1f} minutes")
     print()
 
     # Initialize monitor
     monitor = NewsMonitor()
+    
+    # Initialize insider tracker (optional)
+    insider_tracker = None
+    if not args.no_insider:
+        try:
+            from src.insider_tracker import InsiderTracker
+            insider_tracker = InsiderTracker()
+            print("✅ Insider tracking enabled")
+        except ImportError:
+            print("⚠️  finnhub-python not installed, skipping insider tracking")
+            print("   Install: pip install finnhub-python")
+        except ValueError as e:
+            print(f"⚠️  Insider tracking disabled: {e}")
+            print("   Set FINNHUB_API_KEY to enable")
+        except Exception as e:
+            print(f"⚠️  Insider tracking failed to initialize: {e}")
+    else:
+        print("⏭️  Insider tracking skipped (--no-insider)")
+    
+    print()
 
     # Scan all symbols with progress bar
     print("🔍 Scanning symbols...")
     all_opportunities = []
-    
+
     # Use a simple sequential scan with progress bar
     # (Parallel might hit rate limits)
     for symbol in tqdm(symbols, desc="Scanning", unit="stock"):
         try:
             opps = monitor.identify_opportunities([symbol], min_drop=3.0)
+            
             # Add sector information to each opportunity
             for opp in opps:
                 if symbol in symbol_data:
                     opp['sector'] = symbol_data[symbol]['sector']
                     opp['company_full'] = symbol_data[symbol]['company']
+                
+                # Add insider tracking if enabled
+                if insider_tracker:
+                    try:
+                        insider_data = insider_tracker.get_insider_activity(symbol, days=30)
+                        if insider_data:
+                            opp['insider_activity'] = insider_data
+                            
+                            # Adjust opportunity score based on insider sentiment
+                            adjustment = insider_data['score_adjustment']
+                            old_score = opp['opportunity_score']
+                            new_score = max(0, min(100, old_score + adjustment))
+                            opp['opportunity_score'] = new_score
+                            opp['insider_boost'] = adjustment
+                    except Exception as e:
+                        # Don't fail the whole scan if insider tracking errors
+                        pass
+            
             all_opportunities.extend(opps)
         except Exception as e:
             # Skip symbols that fail
@@ -217,7 +329,9 @@ def main():
         print("\n📊 Top 10 Opportunities:")
         for i, opp in enumerate(all_opportunities[:10], 1):
             fund = opp['fundamentals']
-            print(f"  {i}. {opp['symbol']:6s} - Score: {opp['opportunity_score']:3d}/100 ({fund['5d_change']:+.2f}%) - {fund['company_name'][:40]}")
+            insider_boost = opp.get('insider_boost', 0)
+            boost_str = f" (+{insider_boost} insider)" if insider_boost > 0 else (f" ({insider_boost} insider)" if insider_boost < 0 else "")
+            print(f"  {i}. {opp['symbol']:6s} - Score: {opp['opportunity_score']:3d}/100{boost_str} ({fund['5d_change']:+.2f}%) - {fund['company_name'][:40]}")
     else:
         print("\n✅ No significant dips found in S&P 500")
         print("   Market is generally stable")

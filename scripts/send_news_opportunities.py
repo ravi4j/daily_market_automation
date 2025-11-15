@@ -89,7 +89,18 @@ def format_opportunity_message(opportunities: list, symbols_scanned: int) -> str
         
         message += f"*{i}. {opp['symbol']}* {emoji}\n"
         message += f"_{fund['company_name'][:40]}_\n"
-        message += f"Score: *{score}/100*\n"
+        
+        # Score with insider boost indicator
+        insider_boost = opp.get('insider_boost', 0)
+        if insider_boost != 0:
+            message += f"Score: *{score}/100* "
+            if insider_boost > 0:
+                message += f"(+{insider_boost} insider 🟢)\n"
+            else:
+                message += f"({insider_boost} insider 🔴)\n"
+        else:
+            message += f"Score: *{score}/100*\n"
+        
         message += f"• Price: ${fund['current_price']} ({fund['5d_change']:+.2f}%)\n"
         message += f"• From 52W High: {fund['distance_from_52w_high']:.1f}%\n"
         
@@ -98,6 +109,14 @@ def format_opportunity_message(opportunities: list, symbols_scanned: int) -> str
         
         if fund.get('recommendation') and fund['recommendation'] != 'none':
             message += f"• Analyst: {fund['recommendation'].replace('_', ' ').title()}\n"
+        
+        # Insider activity summary (if present)
+        if 'insider_activity' in opp:
+            insider = opp['insider_activity']
+            sentiment_emoji = {'STRONG_BUY': '🟢🟢', 'BUY': '🟢', 'NEUTRAL': '⚪', 'SELL': '🔴', 'STRONG_SELL': '🔴🔴'}
+            insider_emoji = sentiment_emoji.get(insider['sentiment'], '⚪')
+            message += f"• Insider: {insider_emoji} {insider['sentiment']} "
+            message += f"({insider['num_buys']}B/{insider['num_sells']}S)\n"
         
         # Add news headline if available
         if opp['news'] and opp['news'][0].get('title'):
@@ -135,6 +154,19 @@ def main():
     # Initialize monitor
     monitor = NewsMonitor()
     
+    # Initialize insider tracker (optional)
+    insider_tracker = None
+    try:
+        from src.insider_tracker import InsiderTracker
+        insider_tracker = InsiderTracker()
+        print("✅ Insider tracking enabled")
+    except ImportError:
+        print("⚠️  finnhub-python not installed, skipping insider tracking")
+    except ValueError as e:
+        print(f"⚠️  Insider tracking disabled: {e}")
+    except Exception as e:
+        print(f"⚠️  Insider tracking failed: {e}")
+    
     # Load symbols from config
     symbols_to_scan = load_symbols_config()
     
@@ -143,6 +175,29 @@ def main():
     
     # Scan for opportunities (using lower threshold to catch more)
     opportunities = monitor.identify_opportunities(symbols_to_scan, min_drop=3.0)
+    
+    # Add insider tracking to opportunities
+    if insider_tracker and opportunities:
+        print("\n💼 Fetching insider data...")
+        for opp in opportunities:
+            symbol = opp['symbol']
+            try:
+                insider_data = insider_tracker.get_insider_activity(symbol, days=30)
+                if insider_data:
+                    opp['insider_activity'] = insider_data
+                    
+                    # Adjust opportunity score based on insider sentiment
+                    adjustment = insider_data['score_adjustment']
+                    old_score = opp['opportunity_score']
+                    new_score = max(0, min(100, old_score + adjustment))
+                    opp['opportunity_score'] = new_score
+                    opp['insider_boost'] = adjustment
+            except Exception:
+                pass  # Skip if insider data fails
+    
+    # Re-sort opportunities by adjusted score
+    if opportunities:
+        opportunities.sort(key=lambda x: x['opportunity_score'], reverse=True)
     
     # Save to file
     output_file = 'signals/news_opportunities.json'
@@ -167,7 +222,9 @@ def main():
         print("\n📊 Top Opportunities:")
         for i, opp in enumerate(opportunities[:5], 1):
             fund = opp['fundamentals']
-            print(f"  {i}. {opp['symbol']} - Score: {opp['opportunity_score']}/100 ({fund['5d_change']:+.2f}%)")
+            insider_boost = opp.get('insider_boost', 0)
+            boost_str = f" (+{insider_boost} insider)" if insider_boost > 0 else (f" ({insider_boost} insider)" if insider_boost < 0 else "")
+            print(f"  {i}. {opp['symbol']} - Score: {opp['opportunity_score']}/100{boost_str} ({fund['5d_change']:+.2f}%)")
     else:
         print("\n✅ No significant dips found in tracked symbols")
     

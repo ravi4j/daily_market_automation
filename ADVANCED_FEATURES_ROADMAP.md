@@ -232,7 +232,7 @@ def analyze_sentiment(text):
     inputs = tokenizer(text, return_tensors="pt", truncation=True)
     outputs = model(**inputs)
     scores = torch.nn.functional.softmax(outputs.logits, dim=-1)
-    
+
     return {
         'positive': scores[0][0].item(),
         'negative': scores[0][1].item(),
@@ -347,7 +347,7 @@ Score: 92/100 (+10 insider boost)
    • 15 insider BUYS
    • Net: +125K shares ($15.2M)
    • CEO bought 50K shares @ $485
-   
+
 💡 Strong confluence:
    ✅ High news opportunity score
    ✅ Heavy insider buying
@@ -446,4 +446,3 @@ Choose one and I'll help you build it!
 ---
 
 **Questions?** Just ask! We'll implement these one by one.
-

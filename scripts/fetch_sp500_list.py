@@ -1,17 +1,46 @@
 #!/usr/bin/env python3
 """
-Fetch current S&P 500 constituents list from Wikipedia
+Fetch current S&P 500 constituents list
+Priority: Finnhub API -> Wikipedia -> File fallback
 """
 
 import pandas as pd
 import json
 import os
+import sys
 from datetime import datetime
 
-def fetch_sp500_symbols():
-    """Fetch S&P 500 symbols from Wikipedia or use fallback list"""
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+
+def fetch_from_finnhub():
+    """Fetch S&P 500 list from Finnhub API"""
     try:
-        # Try fetching from Wikipedia first
+        from src.finnhub_data import FinnhubClient
+        
+        print("📡 Trying Finnhub API (primary source)...")
+        client = FinnhubClient()
+        sp500_data = client.fetch_sp500_list()
+        
+        print(f"✅ Fetched {len(sp500_data)} stocks from Finnhub")
+        return sp500_data, 'finnhub'
+    
+    except ImportError:
+        print("⚠️  finnhub-python not installed")
+        return None, None
+    except ValueError as e:
+        print(f"⚠️  Finnhub API key not found: {e}")
+        return None, None
+    except Exception as e:
+        print(f"⚠️  Finnhub API failed: {e}")
+        return None, None
+
+
+def fetch_from_wikipedia():
+    """Fetch S&P 500 symbols from Wikipedia"""
+    try:
+        print("📡 Trying Wikipedia (secondary source)...")
         import requests
         from io import StringIO
 
@@ -43,12 +72,34 @@ def fetch_sp500_symbols():
             })
 
         print(f"✅ Fetched {len(sp500_data)} S&P 500 symbols from Wikipedia")
-        return sp500_data
+        return sp500_data, 'wikipedia'
 
     except Exception as e:
         print(f"⚠️  Could not fetch from Wikipedia: {e}")
-        print("📦 Using comprehensive fallback list...")
-        return load_comprehensive_list()
+        return None, None
+
+
+def fetch_sp500_symbols():
+    """
+    Fetch S&P 500 symbols with priority fallback:
+    1. Finnhub API (most comprehensive, but not exact S&P 500)
+    2. Wikipedia (accurate S&P 500 list)
+    3. File fallback (static comprehensive list)
+    """
+    # Try Finnhub first
+    sp500_data, source = fetch_from_finnhub()
+    if sp500_data:
+        return sp500_data, source
+    
+    # Try Wikipedia second
+    sp500_data, source = fetch_from_wikipedia()
+    if sp500_data:
+        return sp500_data, source
+    
+    # Fall back to file
+    print("📦 Using comprehensive fallback list (file)...")
+    sp500_data = load_comprehensive_list()
+    return sp500_data, 'file'
 
 
 def load_comprehensive_list():
@@ -56,7 +107,7 @@ def load_comprehensive_list():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
     comprehensive_file = os.path.join(project_root, 'data', 'sp500_comprehensive.txt')
-    
+
     if os.path.exists(comprehensive_file):
         sp500_data = []
         with open(comprehensive_file, 'r') as f:
@@ -267,12 +318,21 @@ def get_symbols_by_sector(sector_name=None, data_dir='data'):
 
 def main():
     """Fetch and save S&P 500 list"""
-    print("📊 Fetching S&P 500 constituent list from Wikipedia...")
+    print("📊 Fetching S&P 500 constituent list...")
+    print("   Priority: Finnhub API -> Wikipedia -> File fallback\n")
 
-    sp500_data = fetch_sp500_symbols()
+    sp500_data, source = fetch_sp500_symbols()
 
     if sp500_data:
         save_sp500_list(sp500_data)
+
+        # Print source info
+        source_names = {
+            'finnhub': '📡 Finnhub API',
+            'wikipedia': '🌐 Wikipedia',
+            'file': '📦 File fallback'
+        }
+        print(f"\n✨ Source: {source_names.get(source, source)}")
 
         # Print sector breakdown
         sectors = {}
@@ -284,7 +344,7 @@ def main():
         for sector, count in sorted(sectors.items(), key=lambda x: x[1], reverse=True):
             print(f"   {sector}: {count} companies")
 
-        print(f"\n✅ Ready to scan {len(sp500_data)} S&P 500 stocks!")
+        print(f"\n✅ Ready to scan {len(sp500_data)} stocks!")
         print("   Use: python scripts/scan_sp500_news.py")
     else:
         print("❌ Failed to fetch S&P 500 list")

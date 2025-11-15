@@ -1,0 +1,62 @@
+# Insider Trading Tracker Configuration
+
+# Enable/disable insider tracking
+enabled: true
+
+# Lookback period for insider transactions (days)
+lookback_days: 30
+
+# Score adjustments for different insider sentiments
+# These values are added to the opportunity score (0-100)
+score_adjustments:
+  STRONG_BUY: 15   # Heavy insider buying
+  BUY: 8           # Moderate insider buying
+  NEUTRAL: 0       # Mixed or balanced activity
+  SELL: -8         # Moderate insider selling
+  STRONG_SELL: -15 # Heavy insider selling
+
+# Pre-filter settings for efficiency
+pre_filter:
+  # Only scan stocks that dropped by this percentage or more
+  min_drop_pct: 5.0
+  
+  # Lookback period for price drops (days)
+  drop_period_days: 5
+
+# API rate limiting (calls per minute)
+# Finnhub free tier: 60 calls/min
+# Set to 50 for safety buffer
+rate_limit:
+  calls_per_minute: 50
+
+# Caching settings
+cache:
+  # Cache TTL for fundamentals (hours)
+  ttl_hours: 24
+  
+  # Cache directory
+  directory: "data/cache"
+
+# Finnhub API settings
+api:
+  # API key from environment variable
+  key_env_var: "FINNHUB_API_KEY"
+  
+  # Fallback behavior if API key not set or API fails
+  # Options: "disable" (skip insider tracking), "warn" (show warning but continue)
+  fallback_mode: "warn"
+
+# S&P 500 list source priority
+sp500_source:
+  # Try these sources in order:
+  # 1. finnhub - Fetch from Finnhub API (most stocks, but not exact S&P 500)
+  # 2. wikipedia - Scrape from Wikipedia (accurate but may fail)
+  # 3. file - Use local file (data/sp500_comprehensive.txt)
+  priority:
+    - finnhub
+    - wikipedia
+    - file
+  
+  # Update frequency for cached S&P 500 list (days)
+  update_frequency_days: 7
+
