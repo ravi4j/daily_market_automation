@@ -357,4 +357,3 @@ All features implemented, tested, documented, and pushed to GitHub!
 6. ✅ Review alerts in Telegram
 
 **That's it! Happy tracking! 🎉**
-

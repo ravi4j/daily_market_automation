@@ -91,7 +91,7 @@ def format_opportunity_message(opportunities: list, symbols_scanned: int, scan_t
         message += f"*{i}. {opp['symbol']}* {emoji}\n"
         company_name = fund['company_name'][:35]
         message += f"_{company_name}_\n"
-        
+
         # Score with insider boost indicator
         insider_boost = opp.get('insider_boost', 0)
         if insider_boost != 0:
@@ -102,13 +102,13 @@ def format_opportunity_message(opportunities: list, symbols_scanned: int, scan_t
                 message += f"({insider_boost} insider 🔴)\n"
         else:
             message += f"Score: *{score}/100*\n"
-        
+
         message += f"• Price: ${fund['current_price']} ({fund['5d_change']:+.2f}%)\n"
         message += f"• From 52W High: {fund['distance_from_52w_high']:.1f}%\n"
 
         if fund.get('pe_ratio'):
             message += f"• P/E: {fund['pe_ratio']:.1f}\n"
-        
+
         # Insider activity summary (if present)
         if 'insider_activity' in opp:
             insider = opp['insider_activity']
@@ -143,35 +143,35 @@ def pre_filter_by_drop(symbols: list, min_drop: float = 5.0, period_days: int = 
     """
     Pre-filter symbols to only those with significant price drops
     This speeds up scanning by reducing unnecessary API calls
-    
+
     Args:
         symbols: List of symbols to check
         min_drop: Minimum drop percentage (default 5.0%)
         period_days: Lookback period (default 5 days)
-    
+
     Returns:
         List of symbols that dropped by min_drop% or more
     """
     import yfinance as yf
-    
+
     dropped_symbols = []
-    
+
     for symbol in tqdm(symbols, desc="Pre-filtering", unit="stock"):
         try:
             ticker = yf.Ticker(symbol)
             hist = ticker.history(period=f'{period_days}d')
-            
+
             if len(hist) >= 2:
                 first_close = hist['Close'].iloc[0]
                 last_close = hist['Close'].iloc[-1]
                 change_pct = ((last_close - first_close) / first_close) * 100
-                
+
                 if change_pct <= -min_drop:
                     dropped_symbols.append(symbol)
         except Exception:
             # Skip symbols that fail
             continue
-    
+
     return dropped_symbols
 
 
@@ -232,7 +232,7 @@ def main():
         print(f"   (Use --full-scan to skip this step)")
         symbols = pre_filter_by_drop(symbols, min_drop=args.min_drop, period_days=5)
         print(f"✅ Found {len(symbols)} stocks with {args.min_drop}%+ drops (from {original_count} total)")
-        
+
         if len(symbols) == 0:
             print("\n✅ No significant dips found!")
             print("   Market is generally stable")
@@ -246,7 +246,7 @@ def main():
 
     # Initialize monitor
     monitor = NewsMonitor()
-    
+
     # Initialize insider tracker (optional)
     insider_tracker = None
     if not args.no_insider:
@@ -264,7 +264,7 @@ def main():
             print(f"⚠️  Insider tracking failed to initialize: {e}")
     else:
         print("⏭️  Insider tracking skipped (--no-insider)")
-    
+
     print()
 
     # Scan all symbols with progress bar
@@ -276,20 +276,20 @@ def main():
     for symbol in tqdm(symbols, desc="Scanning", unit="stock"):
         try:
             opps = monitor.identify_opportunities([symbol], min_drop=3.0)
-            
+
             # Add sector information to each opportunity
             for opp in opps:
                 if symbol in symbol_data:
                     opp['sector'] = symbol_data[symbol]['sector']
                     opp['company_full'] = symbol_data[symbol]['company']
-                
+
                 # Add insider tracking if enabled
                 if insider_tracker:
                     try:
                         insider_data = insider_tracker.get_insider_activity(symbol, days=30)
                         if insider_data:
                             opp['insider_activity'] = insider_data
-                            
+
                             # Adjust opportunity score based on insider sentiment
                             adjustment = insider_data['score_adjustment']
                             old_score = opp['opportunity_score']
@@ -299,7 +299,7 @@ def main():
                     except Exception as e:
                         # Don't fail the whole scan if insider tracking errors
                         pass
-            
+
             all_opportunities.extend(opps)
         except Exception as e:
             # Skip symbols that fail

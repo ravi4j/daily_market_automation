@@ -19,7 +19,7 @@ score_adjustments:
 pre_filter:
   # Only scan stocks that dropped by this percentage or more
   min_drop_pct: 5.0
-  
+
   # Lookback period for price drops (days)
   drop_period_days: 5
 
@@ -33,7 +33,7 @@ rate_limit:
 cache:
   # Cache TTL for fundamentals (hours)
   ttl_hours: 24
-  
+
   # Cache directory
   directory: "data/cache"
 
@@ -41,7 +41,7 @@ cache:
 api:
   # API key from environment variable
   key_env_var: "FINNHUB_API_KEY"
-  
+
   # Fallback behavior if API key not set or API fails
   # Options: "disable" (skip insider tracking), "warn" (show warning but continue)
   fallback_mode: "warn"
@@ -56,7 +56,6 @@ sp500_source:
     - finnhub
     - wikipedia
     - file
-  
+
   # Update frequency for cached S&P 500 list (days)
   update_frequency_days: 7
-

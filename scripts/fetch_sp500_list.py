@@ -18,14 +18,14 @@ def fetch_from_finnhub():
     """Fetch S&P 500 list from Finnhub API"""
     try:
         from src.finnhub_data import FinnhubClient
-        
+
         print("📡 Trying Finnhub API (primary source)...")
         client = FinnhubClient()
         sp500_data = client.fetch_sp500_list()
-        
+
         print(f"✅ Fetched {len(sp500_data)} stocks from Finnhub")
         return sp500_data, 'finnhub'
-    
+
     except ImportError:
         print("⚠️  finnhub-python not installed")
         return None, None
@@ -90,12 +90,12 @@ def fetch_sp500_symbols():
     sp500_data, source = fetch_from_finnhub()
     if sp500_data:
         return sp500_data, source
-    
+
     # Try Wikipedia second
     sp500_data, source = fetch_from_wikipedia()
     if sp500_data:
         return sp500_data, source
-    
+
     # Fall back to file
     print("📦 Using comprehensive fallback list (file)...")
     sp500_data = load_comprehensive_list()
