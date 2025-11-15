@@ -14,23 +14,23 @@ def fetch_sp500_symbols():
         # Try fetching from Wikipedia first
         import requests
         from io import StringIO
-        
+
         url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
-        
+
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        
+
         tables = pd.read_html(StringIO(response.text))
         sp500_table = tables[0]
-        
+
         # Extract symbols and company names
         symbols = sp500_table['Symbol'].tolist()
         companies = sp500_table['Security'].tolist()
         sectors = sp500_table['GICS Sector'].tolist()
-        
+
         # Create a dict mapping symbol to company info
         sp500_data = []
         for symbol, company, sector in zip(symbols, companies, sectors):
@@ -41,18 +41,45 @@ def fetch_sp500_symbols():
                 'company': company,
                 'sector': sector
             })
-        
+
         print(f"✅ Fetched {len(sp500_data)} S&P 500 symbols from Wikipedia")
         return sp500_data
-    
+
     except Exception as e:
         print(f"⚠️  Could not fetch from Wikipedia: {e}")
-        print("📦 Using fallback list of major S&P 500 stocks...")
-        return get_fallback_sp500_list()
+        print("📦 Using comprehensive fallback list...")
+        return load_comprehensive_list()
 
 
-def get_fallback_sp500_list():
-    """Fallback list of major S&P 500 stocks by sector"""
+def load_comprehensive_list():
+    """Load comprehensive S&P 500 list from file"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    comprehensive_file = os.path.join(project_root, 'data', 'sp500_comprehensive.txt')
+    
+    if os.path.exists(comprehensive_file):
+        sp500_data = []
+        with open(comprehensive_file, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                parts = line.split(',')
+                if len(parts) >= 3:
+                    sp500_data.append({
+                        'symbol': parts[0].strip(),
+                        'company': parts[1].strip(),
+                        'sector': parts[2].strip()
+                    })
+        print(f"✅ Loaded {len(sp500_data)} stocks from comprehensive list")
+        return sp500_data
+    else:
+        # Fallback to inline list if file doesn't exist
+        return get_inline_fallback_list()
+
+
+def get_inline_fallback_list():
+    """Inline fallback list if file is missing"""
     fallback_list = [
         # Information Technology
         {'symbol': 'AAPL', 'company': 'Apple Inc.', 'sector': 'Information Technology'},
@@ -79,7 +106,7 @@ def get_fallback_sp500_list():
         {'symbol': 'ADSK', 'company': 'Autodesk Inc.', 'sector': 'Information Technology'},
         {'symbol': 'FTNT', 'company': 'Fortinet Inc.', 'sector': 'Information Technology'},
         {'symbol': 'ADP', 'company': 'Automatic Data Processing Inc.', 'sector': 'Information Technology'},
-        
+
         # Communication Services
         {'symbol': 'GOOGL', 'company': 'Alphabet Inc. (Class A)', 'sector': 'Communication Services'},
         {'symbol': 'GOOG', 'company': 'Alphabet Inc. (Class C)', 'sector': 'Communication Services'},
@@ -90,7 +117,7 @@ def get_fallback_sp500_list():
         {'symbol': 'T', 'company': 'AT&T Inc.', 'sector': 'Communication Services'},
         {'symbol': 'VZ', 'company': 'Verizon Communications Inc.', 'sector': 'Communication Services'},
         {'symbol': 'TMUS', 'company': 'T-Mobile US Inc.', 'sector': 'Communication Services'},
-        
+
         # Consumer Discretionary
         {'symbol': 'AMZN', 'company': 'Amazon.com Inc.', 'sector': 'Consumer Discretionary'},
         {'symbol': 'TSLA', 'company': 'Tesla Inc.', 'sector': 'Consumer Discretionary'},
@@ -104,7 +131,7 @@ def get_fallback_sp500_list():
         {'symbol': 'ABNB', 'company': 'Airbnb Inc.', 'sector': 'Consumer Discretionary'},
         {'symbol': 'GM', 'company': 'General Motors Company', 'sector': 'Consumer Discretionary'},
         {'symbol': 'F', 'company': 'Ford Motor Company', 'sector': 'Consumer Discretionary'},
-        
+
         # Financials
         {'symbol': 'BRK.B', 'company': 'Berkshire Hathaway Inc. (Class B)', 'sector': 'Financials'},
         {'symbol': 'JPM', 'company': 'JPMorgan Chase & Co.', 'sector': 'Financials'},
@@ -120,7 +147,7 @@ def get_fallback_sp500_list():
         {'symbol': 'AXP', 'company': 'American Express Company', 'sector': 'Financials'},
         {'symbol': 'SPGI', 'company': 'S&P Global Inc.', 'sector': 'Financials'},
         {'symbol': 'CB', 'company': 'Chubb Limited', 'sector': 'Financials'},
-        
+
         # Health Care
         {'symbol': 'UNH', 'company': 'UnitedHealth Group Incorporated', 'sector': 'Health Care'},
         {'symbol': 'JNJ', 'company': 'Johnson & Johnson', 'sector': 'Health Care'},
@@ -136,7 +163,7 @@ def get_fallback_sp500_list():
         {'symbol': 'GILD', 'company': 'Gilead Sciences Inc.', 'sector': 'Health Care'},
         {'symbol': 'CVS', 'company': 'CVS Health Corporation', 'sector': 'Health Care'},
         {'symbol': 'CI', 'company': 'The Cigna Group', 'sector': 'Health Care'},
-        
+
         # Consumer Staples
         {'symbol': 'WMT', 'company': 'Walmart Inc.', 'sector': 'Consumer Staples'},
         {'symbol': 'PG', 'company': 'The Procter & Gamble Company', 'sector': 'Consumer Staples'},
@@ -145,7 +172,7 @@ def get_fallback_sp500_list():
         {'symbol': 'COST', 'company': 'Costco Wholesale Corporation', 'sector': 'Consumer Staples'},
         {'symbol': 'PM', 'company': 'Philip Morris International Inc.', 'sector': 'Consumer Staples'},
         {'symbol': 'MO', 'company': 'Altria Group Inc.', 'sector': 'Consumer Staples'},
-        
+
         # Energy
         {'symbol': 'XOM', 'company': 'Exxon Mobil Corporation', 'sector': 'Energy'},
         {'symbol': 'CVX', 'company': 'Chevron Corporation', 'sector': 'Energy'},
@@ -154,7 +181,7 @@ def get_fallback_sp500_list():
         {'symbol': 'EOG', 'company': 'EOG Resources Inc.', 'sector': 'Energy'},
         {'symbol': 'PSX', 'company': 'Phillips 66', 'sector': 'Energy'},
         {'symbol': 'MPC', 'company': 'Marathon Petroleum Corporation', 'sector': 'Energy'},
-        
+
         # Industrials
         {'symbol': 'BA', 'company': 'The Boeing Company', 'sector': 'Industrials'},
         {'symbol': 'CAT', 'company': 'Caterpillar Inc.', 'sector': 'Industrials'},
@@ -165,19 +192,19 @@ def get_fallback_sp500_list():
         {'symbol': 'UNP', 'company': 'Union Pacific Corporation', 'sector': 'Industrials'},
         {'symbol': 'DE', 'company': 'Deere & Company', 'sector': 'Industrials'},
         {'symbol': 'LMT', 'company': 'Lockheed Martin Corporation', 'sector': 'Industrials'},
-        
+
         # Utilities
         {'symbol': 'NEE', 'company': 'NextEra Energy Inc.', 'sector': 'Utilities'},
         {'symbol': 'DUK', 'company': 'Duke Energy Corporation', 'sector': 'Utilities'},
         {'symbol': 'SO', 'company': 'The Southern Company', 'sector': 'Utilities'},
         {'symbol': 'D', 'company': 'Dominion Energy Inc.', 'sector': 'Utilities'},
-        
+
         # Real Estate
         {'symbol': 'AMT', 'company': 'American Tower Corporation', 'sector': 'Real Estate'},
         {'symbol': 'PLD', 'company': 'Prologis Inc.', 'sector': 'Real Estate'},
         {'symbol': 'CCI', 'company': 'Crown Castle Inc.', 'sector': 'Real Estate'},
         {'symbol': 'EQIX', 'company': 'Equinix Inc.', 'sector': 'Real Estate'},
-        
+
         # Materials
         {'symbol': 'LIN', 'company': 'Linde plc', 'sector': 'Materials'},
         {'symbol': 'APD', 'company': 'Air Products and Chemicals Inc.', 'sector': 'Materials'},
@@ -185,7 +212,7 @@ def get_fallback_sp500_list():
         {'symbol': 'FCX', 'company': 'Freeport-McMoRan Inc.', 'sector': 'Materials'},
         {'symbol': 'NEM', 'company': 'Newmont Corporation', 'sector': 'Materials'},
     ]
-    
+
     print(f"✅ Loaded {len(fallback_list)} major S&P 500 stocks from fallback list")
     return fallback_list
 
@@ -193,43 +220,43 @@ def save_sp500_list(sp500_data, output_dir='data'):
     """Save S&P 500 list to JSON file"""
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, 'sp500_symbols.json')
-    
+
     output = {
         'last_updated': datetime.now().isoformat(),
         'count': len(sp500_data),
         'symbols': sp500_data
     }
-    
+
     with open(output_file, 'w') as f:
         json.dump(output, f, indent=2)
-    
+
     print(f"💾 Saved to {output_file}")
     return output_file
 
 def load_sp500_list(data_dir='data'):
     """Load S&P 500 list from JSON file"""
     json_file = os.path.join(data_dir, 'sp500_symbols.json')
-    
+
     if not os.path.exists(json_file):
         print(f"⚠️  S&P 500 list not found at {json_file}")
         print("   Run this script first to fetch the list")
         return None
-    
+
     with open(json_file, 'r') as f:
         data = json.load(f)
-    
+
     return [item['symbol'] for item in data['symbols']]
 
 def get_symbols_by_sector(sector_name=None, data_dir='data'):
     """Get symbols filtered by sector"""
     json_file = os.path.join(data_dir, 'sp500_symbols.json')
-    
+
     if not os.path.exists(json_file):
         return []
-    
+
     with open(json_file, 'r') as f:
         data = json.load(f)
-    
+
     if sector_name:
         return [
             item['symbol'] for item in data['symbols']
@@ -241,22 +268,22 @@ def get_symbols_by_sector(sector_name=None, data_dir='data'):
 def main():
     """Fetch and save S&P 500 list"""
     print("📊 Fetching S&P 500 constituent list from Wikipedia...")
-    
+
     sp500_data = fetch_sp500_symbols()
-    
+
     if sp500_data:
         save_sp500_list(sp500_data)
-        
+
         # Print sector breakdown
         sectors = {}
         for item in sp500_data:
             sector = item['sector']
             sectors[sector] = sectors.get(sector, 0) + 1
-        
+
         print("\n📊 Sector Breakdown:")
         for sector, count in sorted(sectors.items(), key=lambda x: x[1], reverse=True):
             print(f"   {sector}: {count} companies")
-        
+
         print(f"\n✅ Ready to scan {len(sp500_data)} S&P 500 stocks!")
         print("   Use: python scripts/scan_sp500_news.py")
     else:
@@ -264,4 +291,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

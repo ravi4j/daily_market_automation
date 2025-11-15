@@ -1,0 +1,367 @@
+# Comprehensive S&P 500 Stock List
+# This file contains major S&P 500 stocks organized by sector
+# Format: SYMBOL,Company Name,Sector
+
+# Information Technology (Mega Cap)
+AAPL,Apple Inc.,Information Technology
+MSFT,Microsoft Corporation,Information Technology
+NVDA,NVIDIA Corporation,Information Technology
+AVGO,Broadcom Inc.,Information Technology
+ORCL,Oracle Corporation,Information Technology
+CSCO,Cisco Systems Inc.,Information Technology
+ADBE,Adobe Inc.,Information Technology
+CRM,Salesforce Inc.,Information Technology
+AMD,Advanced Micro Devices Inc.,Information Technology
+INTC,Intel Corporation,Information Technology
+QCOM,QUALCOMM Incorporated,Information Technology
+TXN,Texas Instruments Incorporated,Information Technology
+NOW,ServiceNow Inc.,Information Technology
+INTU,Intuit Inc.,Information Technology
+AMAT,Applied Materials Inc.,Information Technology
+MU,Micron Technology Inc.,Information Technology
+LRCX,Lam Research Corporation,Information Technology
+KLAC,KLA Corporation,Information Technology
+SNPS,Synopsys Inc.,Information Technology
+CDNS,Cadence Design Systems Inc.,Information Technology
+PANW,Palo Alto Networks Inc.,Information Technology
+ADSK,Autodesk Inc.,Information Technology
+FTNT,Fortinet Inc.,Information Technology
+ADP,Automatic Data Processing Inc.,Information Technology
+IBM,International Business Machines Corporation,Information Technology
+ACN,Accenture plc,Information Technology
+AVGO,Broadcom Inc.,Information Technology
+HPQ,HP Inc.,Information Technology
+FICO,Fair Isaac Corporation,Information Technology
+ANSS,ANSYS Inc.,Information Technology
+
+# Information Technology (Growth/Cloud)
+SNOW,Snowflake Inc.,Information Technology
+DDOG,Datadog Inc.,Information Technology
+NET,Cloudflare Inc.,Information Technology
+ZS,Zscaler Inc.,Information Technology
+CRWD,CrowdStrike Holdings Inc.,Information Technology
+OKTA,Okta Inc.,Information Technology
+TWLO,Twilio Inc.,Information Technology
+ZM,Zoom Video Communications Inc.,Information Technology
+DOCU,DocuSign Inc.,Information Technology
+SPLK,Splunk Inc.,Information Technology
+VEEV,Veeva Systems Inc.,Information Technology
+WDAY,Workday Inc.,Information Technology
+TEAM,Atlassian Corporation,Information Technology
+HUBS,HubSpot Inc.,Information Technology
+MDB,MongoDB Inc.,Information Technology
+
+# Communication Services
+GOOGL,Alphabet Inc. Class A,Communication Services
+GOOG,Alphabet Inc. Class C,Communication Services
+META,Meta Platforms Inc.,Communication Services
+NFLX,Netflix Inc.,Communication Services
+DIS,The Walt Disney Company,Communication Services
+CMCSA,Comcast Corporation,Communication Services
+T,AT&T Inc.,Communication Services
+VZ,Verizon Communications Inc.,Communication Services
+TMUS,T-Mobile US Inc.,Communication Services
+CHTR,Charter Communications Inc.,Communication Services
+EA,Electronic Arts Inc.,Communication Services
+TTWO,Take-Two Interactive Software Inc.,Communication Services
+LYV,Live Nation Entertainment Inc.,Communication Services
+NWSA,News Corporation Class A,Communication Services
+FOX,Fox Corporation Class A,Communication Services
+PARA,Paramount Global,Communication Services
+WBD,Warner Bros. Discovery Inc.,Communication Services
+MTCH,Match Group Inc.,Communication Services
+SPOT,Spotify Technology SA,Communication Services
+
+# Consumer Discretionary (Mega Cap)
+AMZN,Amazon.com Inc.,Consumer Discretionary
+TSLA,Tesla Inc.,Consumer Discretionary
+HD,The Home Depot Inc.,Consumer Discretionary
+MCD,McDonald's Corporation,Consumer Discretionary
+NKE,NIKE Inc.,Consumer Discretionary
+SBUX,Starbucks Corporation,Consumer Discretionary
+LOW,Lowe's Companies Inc.,Consumer Discretionary
+TJX,The TJX Companies Inc.,Consumer Discretionary
+BKNG,Booking Holdings Inc.,Consumer Discretionary
+ABNB,Airbnb Inc.,Consumer Discretionary
+GM,General Motors Company,Consumer Discretionary
+F,Ford Motor Company,Consumer Discretionary
+MAR,Marriott International Inc.,Consumer Discretionary
+HLT,Hilton Worldwide Holdings Inc.,Consumer Discretionary
+YUM,Yum! Brands Inc.,Consumer Discretionary
+CMG,Chipotle Mexican Grill Inc.,Consumer Discretionary
+DPZ,Domino's Pizza Inc.,Consumer Discretionary
+
+# Consumer Discretionary (Retail & Auto)
+ORLY,O'Reilly Automotive Inc.,Consumer Discretionary
+AZO,AutoZone Inc.,Consumer Discretionary
+ROST,Ross Stores Inc.,Consumer Discretionary
+RCL,Royal Caribbean Cruises Ltd.,Consumer Discretionary
+CCL,Carnival Corporation,Consumer Discretionary
+NCLH,Norwegian Cruise Line Holdings Ltd.,Consumer Discretionary
+LVS,Las Vegas Sands Corp.,Consumer Discretionary
+WYNN,Wynn Resorts Limited,Consumer Discretionary
+MGM,MGM Resorts International,Consumer Discretionary
+LULU,Lululemon Athletica Inc.,Consumer Discretionary
+ULTA,Ulta Beauty Inc.,Consumer Discretionary
+DHI,D.R. Horton Inc.,Consumer Discretionary
+LEN,Lennar Corporation,Consumer Discretionary
+PHM,PulteGroup Inc.,Consumer Discretionary
+NVR,NVR Inc.,Consumer Discretionary
+KMX,CarMax Inc.,Consumer Discretionary
+AN,AutoNation Inc.,Consumer Discretionary
+BBWI,Bath & Body Works Inc.,Consumer Discretionary
+GPS,The Gap Inc.,Consumer Discretionary
+DKS,DICK'S Sporting Goods Inc.,Consumer Discretionary
+DECK,Deckers Outdoor Corporation,Consumer Discretionary
+CROX,Crocs Inc.,Consumer Discretionary
+
+# Financials (Banks)
+JPM,JPMorgan Chase & Co.,Financials
+BAC,Bank of America Corporation,Financials
+WFC,Wells Fargo & Company,Financials
+C,Citigroup Inc.,Financials
+MS,Morgan Stanley,Financials
+GS,The Goldman Sachs Group Inc.,Financials
+SCHW,The Charles Schwab Corporation,Financials
+USB,U.S. Bancorp,Financials
+PNC,The PNC Financial Services Group Inc.,Financials
+TFC,Truist Financial Corporation,Financials
+COF,Capital One Financial Corporation,Financials
+DFS,Discover Financial Services,Financials
+SYF,Synchrony Financial,Financials
+
+# Financials (Payments & Services)
+V,Visa Inc.,Financials
+MA,Mastercard Incorporated,Financials
+AXP,American Express Company,Financials
+PYPL,PayPal Holdings Inc.,Financials
+SQ,Block Inc.,Financials
+BLK,BlackRock Inc.,Financials
+SPGI,S&P Global Inc.,Financials
+MCO,Moody's Corporation,Financials
+MSCI,MSCI Inc.,Financials
+ICE,Intercontinental Exchange Inc.,Financials
+CME,CME Group Inc.,Financials
+COIN,Coinbase Global Inc.,Financials
+
+# Financials (Insurance)
+BRK-B,Berkshire Hathaway Inc. Class B,Financials
+CB,Chubb Limited,Financials
+PGR,The Progressive Corporation,Financials
+TRV,The Travelers Companies Inc.,Financials
+ALL,The Allstate Corporation,Financials
+MMC,Marsh & McLennan Companies Inc.,Financials
+AON,Aon plc,Financials
+AJG,Arthur J. Gallagher & Co.,Financials
+AFL,Aflac Incorporated,Financials
+MET,MetLife Inc.,Financials
+PRU,Prudential Financial Inc.,Financials
+AIG,American International Group Inc.,Financials
+HIG,The Hartford Financial Services Group Inc.,Financials
+
+# Health Care (Pharma)
+UNH,UnitedHealth Group Incorporated,Health Care
+JNJ,Johnson & Johnson,Health Care
+LLY,Eli Lilly and Company,Health Care
+ABBV,AbbVie Inc.,Health Care
+MRK,Merck & Co. Inc.,Health Care
+PFE,Pfizer Inc.,Health Care
+TMO,Thermo Fisher Scientific Inc.,Health Care
+ABT,Abbott Laboratories,Health Care
+DHR,Danaher Corporation,Health Care
+BMY,Bristol-Myers Squibb Company,Health Care
+AMGN,Amgen Inc.,Health Care
+GILD,Gilead Sciences Inc.,Health Care
+REGN,Regeneron Pharmaceuticals Inc.,Health Care
+VRTX,Vertex Pharmaceuticals Incorporated,Health Care
+BIIB,Biogen Inc.,Health Care
+MRNA,Moderna Inc.,Health Care
+
+# Health Care (Services & Devices)
+CVS,CVS Health Corporation,Health Care
+CI,The Cigna Group,Health Care
+HUM,Humana Inc.,Health Care
+ELV,Elevance Health Inc.,Health Care
+CNC,Centene Corporation,Health Care
+MOH,Molina Healthcare Inc.,Health Care
+ISRG,Intuitive Surgical Inc.,Health Care
+BSX,Boston Scientific Corporation,Health Care
+MDT,Medtronic plc,Health Care
+SYK,Stryker Corporation,Health Care
+EW,Edwards Lifesciences Corporation,Health Care
+ZBH,Zimmer Biomet Holdings Inc.,Health Care
+BAX,Baxter International Inc.,Health Care
+IDXX,IDEXX Laboratories Inc.,Health Care
+IQV,IQVIA Holdings Inc.,Health Care
+A,Agilent Technologies Inc.,Health Care
+MTD,Mettler-Toledo International Inc.,Health Care
+DGX,Quest Diagnostics Incorporated,Health Care
+LH,Laboratory Corporation of America Holdings,Health Care
+
+# Consumer Staples
+WMT,Walmart Inc.,Consumer Staples
+PG,The Procter & Gamble Company,Consumer Staples
+KO,The Coca-Cola Company,Consumer Staples
+PEP,PepsiCo Inc.,Consumer Staples
+COST,Costco Wholesale Corporation,Consumer Staples
+PM,Philip Morris International Inc.,Consumer Staples
+MO,Altria Group Inc.,Consumer Staples
+MDLZ,Mondelez International Inc.,Consumer Staples
+CL,Colgate-Palmolive Company,Consumer Staples
+GIS,General Mills Inc.,Consumer Staples
+K,Kellanova,Consumer Staples
+CPB,Campbell Soup Company,Consumer Staples
+KHC,The Kraft Heinz Company,Consumer Staples
+HSY,The Hershey Company,Consumer Staples
+SJM,The J.M. Smucker Company,Consumer Staples
+CAG,Conagra Brands Inc.,Consumer Staples
+KMB,Kimberly-Clark Corporation,Consumer Staples
+CHD,Church & Dwight Co. Inc.,Consumer Staples
+CLX,The Clorox Company,Consumer Staples
+EL,The Estée Lauder Companies Inc.,Consumer Staples
+TAP,Molson Coors Beverage Company,Consumer Staples
+STZ,Constellation Brands Inc.,Consumer Staples
+BF-B,Brown-Forman Corporation Class B,Consumer Staples
+KDP,Keurig Dr Pepper Inc.,Consumer Staples
+MNST,Monster Beverage Corporation,Consumer Staples
+
+# Energy
+XOM,Exxon Mobil Corporation,Energy
+CVX,Chevron Corporation,Energy
+COP,ConocoPhillips,Energy
+SLB,Schlumberger Limited,Energy
+EOG,EOG Resources Inc.,Energy
+PSX,Phillips 66,Energy
+MPC,Marathon Petroleum Corporation,Energy
+VLO,Valero Energy Corporation,Energy
+OXY,Occidental Petroleum Corporation,Energy
+HES,Hess Corporation,Energy
+DVN,Devon Energy Corporation,Energy
+HAL,Halliburton Company,Energy
+BKR,Baker Hughes Company,Energy
+FANG,Diamondback Energy Inc.,Energy
+MRO,Marathon Oil Corporation,Energy
+APA,APA Corporation,Energy
+NOV,NOV Inc.,Energy
+HP,Helmerich & Payne Inc.,Energy
+
+# Industrials
+BA,The Boeing Company,Industrials
+CAT,Caterpillar Inc.,Industrials
+GE,General Electric Company,Industrials
+UPS,United Parcel Service Inc.,Industrials
+RTX,RTX Corporation,Industrials
+HON,Honeywell International Inc.,Industrials
+UNP,Union Pacific Corporation,Industrials
+DE,Deere & Company,Industrials
+LMT,Lockheed Martin Corporation,Industrials
+MMM,3M Company,Industrials
+GD,General Dynamics Corporation,Industrials
+NOC,Northrop Grumman Corporation,Industrials
+TXT,Textron Inc.,Industrials
+ETN,Eaton Corporation plc,Industrials
+EMR,Emerson Electric Co.,Industrials
+ITW,Illinois Tool Works Inc.,Industrials
+PH,Parker-Hannifin Corporation,Industrials
+ROK,Rockwell Automation Inc.,Industrials
+CMI,Cummins Inc.,Industrials
+FDX,FedEx Corporation,Industrials
+NSC,Norfolk Southern Corporation,Industrials
+CSX,CSX Corporation,Industrials
+R,Ryder System Inc.,Industrials
+CARR,Carrier Global Corporation,Industrials
+OTIS,Otis Worldwide Corporation,Industrials
+PCAR,PACCAR Inc.,Industrials
+IR,Ingersoll Rand Inc.,Industrials
+AME,AMETEK Inc.,Industrials
+DOV,Dover Corporation,Industrials
+XYL,Xylem Inc.,Industrials
+FAST,Fastenal Company,Industrials
+CHRW,C.H. Robinson Worldwide Inc.,Industrials
+EXPD,Expeditors International of Washington Inc.,Industrials
+JBHT,J.B. Hunt Transport Services Inc.,Industrials
+ODFL,Old Dominion Freight Line Inc.,Industrials
+J,Jacobs Solutions Inc.,Industrials
+LUV,Southwest Airlines Co.,Industrials
+AAL,American Airlines Group Inc.,Industrials
+DAL,Delta Air Lines Inc.,Industrials
+UAL,United Airlines Holdings Inc.,Industrials
+SAVE,Spirit Airlines Inc.,Industrials
+
+# Utilities
+NEE,NextEra Energy Inc.,Utilities
+DUK,Duke Energy Corporation,Utilities
+SO,The Southern Company,Utilities
+D,Dominion Energy Inc.,Utilities
+AEP,American Electric Power Company Inc.,Utilities
+EXC,Exelon Corporation,Utilities
+SRE,Sempra,Utilities
+PEG,Public Service Enterprise Group Inc.,Utilities
+XEL,Xcel Energy Inc.,Utilities
+ED,Consolidated Edison Inc.,Utilities
+ES,Eversource Energy,Utilities
+FE,FirstEnergy Corp.,Utilities
+EIX,Edison International,Utilities
+PPL,PPL Corporation,Utilities
+WEC,WEC Energy Group Inc.,Utilities
+DTE,DTE Energy Company,Utilities
+ETR,Entergy Corporation,Utilities
+AES,The AES Corporation,Utilities
+CMS,CMS Energy Corporation,Utilities
+NI,NiSource Inc.,Utilities
+LNT,Alliant Energy Corporation,Utilities
+CNP,CenterPoint Energy Inc.,Utilities
+AWK,American Water Works Company Inc.,Utilities
+
+# Real Estate
+AMT,American Tower Corporation,Real Estate
+PLD,Prologis Inc.,Real Estate
+CCI,Crown Castle Inc.,Real Estate
+EQIX,Equinix Inc.,Real Estate
+PSA,Public Storage,Real Estate
+WELL,Welltower Inc.,Real Estate
+DLR,Digital Realty Trust Inc.,Real Estate
+SBAC,SBA Communications Corporation,Real Estate
+O,Realty Income Corporation,Real Estate
+AVB,AvalonBay Communities Inc.,Real Estate
+EQR,Equity Residential,Real Estate
+VTR,Ventas Inc.,Real Estate
+MAA,Mid-America Apartment Communities Inc.,Real Estate
+ESS,Essex Property Trust Inc.,Real Estate
+UDR,UDR Inc.,Real Estate
+HST,Host Hotels & Resorts Inc.,Real Estate
+VICI,VICI Properties Inc.,Real Estate
+BXP,Boston Properties Inc.,Real Estate
+ARE,Alexandria Real Estate Equities Inc.,Real Estate
+VNO,Vornado Realty Trust,Real Estate
+SLG,SL Green Realty Corp.,Real Estate
+KIM,Kimco Realty Corporation,Real Estate
+
+# Materials
+LIN,Linde plc,Materials
+APD,Air Products and Chemicals Inc.,Materials
+SHW,The Sherwin-Williams Company,Materials
+FCX,Freeport-McMoRan Inc.,Materials
+NEM,Newmont Corporation,Materials
+ECL,Ecolab Inc.,Materials
+DD,DuPont de Nemours Inc.,Materials
+DOW,Dow Inc.,Materials
+PPG,PPG Industries Inc.,Materials
+NUE,Nucor Corporation,Materials
+VMC,Vulcan Materials Company,Materials
+MLM,Martin Marietta Materials Inc.,Materials
+ALB,Albemarle Corporation,Materials
+CTVA,Corteva Inc.,Materials
+CE,Celanese Corporation,Materials
+FMC,FMC Corporation,Materials
+IFF,International Flavors & Fragrances Inc.,Materials
+LYB,LyondellBasell Industries N.V.,Materials
+MOS,The Mosaic Company,Materials
+CF,CF Industries Holdings Inc.,Materials
+EMN,Eastman Chemical Company,Materials
+IP,International Paper Company,Materials
+PKG,Packaging Corporation of America,Materials
+WRK,WestRock Company,Materials
+BALL,Ball Corporation,Materials
+AVY,Avery Dennison Corporation,Materials
+
