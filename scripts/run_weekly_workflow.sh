@@ -70,4 +70,3 @@ echo "  - S&P 500 list updated"
 echo "  - Opportunities scanned and sent"
 echo "  - Historical correlations updated"
 echo ""
-
