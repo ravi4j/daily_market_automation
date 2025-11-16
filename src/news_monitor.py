@@ -6,13 +6,23 @@ Yahoo Finance News Monitor - Identifies buying opportunities from market news
 import yfinance as yf
 import pandas as pd
 from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import List, Dict, Optional
 import re
+import os
+import sys
+
+# Import correlation tracker (optional - degrades gracefully if not available)
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+    from src.news_correlation import NewsCorrelationTracker
+    CORRELATION_AVAILABLE = True
+except ImportError:
+    CORRELATION_AVAILABLE = False
 
 class NewsMonitor:
     """Monitor Yahoo Finance news for trading opportunities"""
 
-    def __init__(self):
+    def __init__(self, enable_correlation: bool = True):
         # Keywords indicating potential buying opportunities
         self.opportunity_keywords = [
             'falls', 'drops', 'plunges', 'tumbles', 'declines', 'selloff', 'sell-off',
@@ -25,6 +35,14 @@ class NewsMonitor:
             'bankruptcy', 'fraud', 'scandal', 'investigation', 'lawsuit',
             'delisting', 'sec investigation', 'accounting issues', 'chapter 11'
         ]
+
+        # Initialize correlation tracker (optional)
+        self.correlation_tracker = None
+        if enable_correlation and CORRELATION_AVAILABLE:
+            try:
+                self.correlation_tracker = NewsCorrelationTracker()
+            except Exception as e:
+                print(f"⚠️  Correlation tracking disabled: {e}")
 
     def fetch_news(self, symbol: str) -> List[Dict]:
         """Fetch recent news for a symbol"""
