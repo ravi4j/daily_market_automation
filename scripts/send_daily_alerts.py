@@ -95,39 +95,51 @@ def main():
 
         return
 
-    # Send summary first
+    # Combine ALL alerts into ONE message
     buy_count = len([a for a in alerts if a.signal == 'BUY'])
     sell_count = len([a for a in alerts if a.signal == 'SELL'])
     high_conf = len([a for a in alerts if a.confidence == 'HIGH'])
 
-    summary_message = (
+    # Start with summary
+    message = (
         "🚨 <b>DAILY TRADING ALERTS</b> 🚨\n\n"
         f"<b>Total Alerts:</b> {len(alerts)}\n"
         f"  🟢 BUY: {buy_count}\n"
         f"  🔴 SELL: {sell_count}\n\n"
         f"<b>High Confidence:</b> ⭐⭐⭐ {high_conf}\n\n"
-        f"<i>Detailed alerts follow...</i>"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
     )
 
-    print("\n📱 Sending summary to Telegram...")
-    send_telegram_message(bot_token, chat_id, summary_message)
-
-    # Send individual alerts (HIGH confidence first)
+    # Sort alerts (HIGH confidence first)
     alerts_sorted = sorted(alerts, key=lambda x: (
         0 if x.confidence == 'HIGH' else 1 if x.confidence == 'MEDIUM' else 2,
         x.symbol
     ))
 
+    # Add each alert to the same message
     for i, alert in enumerate(alerts_sorted, 1):
-        print(f"📱 Sending alert {i}/{len(alerts)}: {alert.symbol} {alert.signal}...")
+        print(f"   Adding alert {i}/{len(alerts)}: {alert.symbol} {alert.signal}...")
+        
+        # Get the formatted message
+        alert_text = alert.to_telegram_message()
+        
+        # Add separator between alerts (but not before the first one)
+        if i > 1:
+            message += "\n━━━━━━━━━━━━━━━━━━━━\n\n"
+        
+        message += alert_text
+    
+    # Add footer
+    message += "\n\n⚠️ <i>Not financial advice. DYOR.</i>"
 
-        message = alert.to_telegram_message()
-        success = send_telegram_message(bot_token, chat_id, message)
+    # Send ONE combined message with all alerts
+    print(f"\n📱 Sending combined message with {len(alerts)} alerts to Telegram...")
+    success = send_telegram_message(bot_token, chat_id, message)
 
-        if success:
-            print(f"   ✅ Sent")
-        else:
-            print(f"   ❌ Failed")
+    if success:
+        print("✅ Message sent successfully!")
+    else:
+        print("❌ Failed to send message")
 
     print("\n" + "="*80)
     print("✅ All alerts processed!")
