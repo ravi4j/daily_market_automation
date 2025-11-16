@@ -117,6 +117,19 @@ if errorlevel 1 (
     echo [OK] News opportunities scanned and sent >> %LOG_FILE%
 )
 
+REM Step 5: Auto-Analyze High-Score Opportunities
+echo.
+echo === Step 5: Auto-Analyzing High-Score Opportunities ===
+echo === Step 5: Auto-Analyzing High-Score Opportunities === >> %LOG_FILE%
+python scripts\auto_add_portfolio.py >> %LOG_FILE% 2>&1
+if errorlevel 1 (
+    echo [!] Auto-analysis had errors (non-critical)
+    echo [!] Auto-analysis had errors >> %LOG_FILE%
+) else (
+    echo [OK] Auto-analysis complete
+    echo [OK] Auto-analysis complete >> %LOG_FILE%
+)
+
 REM ============================================================================
 REM END OF WORKFLOW
 REM Add new steps ABOVE this section

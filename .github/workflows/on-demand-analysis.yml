@@ -42,8 +42,41 @@ jobs:
 
       - name: Create directories
         run: |
-          mkdir -p data
+          mkdir -p data/market_data
+          mkdir -p data/metadata
+          mkdir -p data/cache
           mkdir -p temp
+          mkdir -p charts/breakouts
+          mkdir -p charts/indicators
+          mkdir -p charts/abc_patterns
+
+      - name: Fetch historical data
+        run: |
+          echo "📥 Fetching historical data for ${{ github.event.inputs.symbol }}..."
+          python -c "
+import yfinance as yf
+import pandas as pd
+from pathlib import Path
+
+symbol = '${{ github.event.inputs.symbol }}'
+print(f'Downloading data for {symbol}...')
+
+ticker = yf.Ticker(symbol)
+df = ticker.history(period='2y')  # Get 2 years of data
+
+if not df.empty:
+    # Ensure standard column names
+    df.columns = df.columns.str.title()
+    df.index.name = 'Date'
+
+    # Save to CSV
+    csv_path = Path('data/market_data') / f'{symbol}.csv'
+    df.to_csv(csv_path)
+    print(f'✅ Saved {len(df)} days of data to {csv_path}')
+else:
+    print(f'❌ No data found for {symbol}')
+    exit(1)
+"
 
       - name: Run comprehensive analysis
         id: analyze
@@ -74,7 +107,11 @@ jobs:
 
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
+
+          # Add both config and CSV data
           git add config/symbols.yaml
+          git add data/market_data/${{ github.event.inputs.symbol }}.csv
+
           git commit -m "Add ${{ github.event.inputs.symbol }} to daily tracking [skip ci]" || echo "Already in config"
           git push || echo "Push skipped"
 

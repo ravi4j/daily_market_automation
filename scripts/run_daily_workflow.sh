@@ -89,6 +89,16 @@ else
     exit 1
 fi
 
+echo ""
+echo -e "${BLUE}=== Step 5: Auto-Analyzing High-Score Opportunities ===${NC}"
+python scripts/auto_add_portfolio.py
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓${NC} Auto-analysis complete"
+else
+    echo -e "${RED}✗${NC} Failed to run auto-analysis"
+    # Don't exit - this is optional
+fi
+
 # ============================================================================
 # END OF WORKFLOW
 # Add new steps ABOVE this section
