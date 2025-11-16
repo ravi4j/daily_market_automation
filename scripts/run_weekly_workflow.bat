@@ -37,6 +37,12 @@ if exist ".env" (
     )
 )
 
+REM ============================================================================
+REM WEEKLY WORKFLOW STEPS
+REM When adding new weekly features, add them below
+REM See WORKFLOW_MAINTENANCE.md for details
+REM ============================================================================
+
 REM Step 1: Update S&P 500 List
 echo.
 echo === Step 1: Update S&P 500 List ===
@@ -78,6 +84,11 @@ if errorlevel 1 (
     echo [OK] News correlations updated
     echo [OK] News correlations updated >> %LOG_FILE%
 )
+
+REM ============================================================================
+REM END OF WEEKLY WORKFLOW
+REM Add new steps ABOVE this section
+REM ============================================================================
 
 REM Done!
 echo.

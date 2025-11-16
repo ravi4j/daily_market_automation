@@ -469,4 +469,3 @@ Your Windows 11 machine is now set up to run the Daily Market Automation system!
 - `QUICKSTART_CONFIG.md` - Configuration guide
 
 **Questions?** Open an issue on GitHub or check the logs!
-

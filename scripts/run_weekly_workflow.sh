@@ -30,6 +30,12 @@ else
     exit 1
 fi
 
+# ============================================================================
+# WEEKLY WORKFLOW STEPS
+# When adding new weekly features, add them below
+# See WORKFLOW_MAINTENANCE.md for details
+# ============================================================================
+
 echo ""
 echo -e "${BLUE}=== Step 1: Update S&P 500 List ===${NC}"
 python scripts/fetch_sp500_list.py
@@ -59,6 +65,11 @@ else
     echo -e "${RED}✗${NC} Failed to update correlations"
     exit 1
 fi
+
+# ============================================================================
+# END OF WEEKLY WORKFLOW
+# Add new steps ABOVE this section
+# ============================================================================
 
 echo ""
 echo -e "${GREEN}========================================${NC}"

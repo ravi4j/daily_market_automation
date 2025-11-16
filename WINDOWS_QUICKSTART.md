@@ -222,4 +222,3 @@ Your Windows 11 machine is now:
 - ✅ Learning from correlations
 
 **Enjoy automated trading insights!** 📈🚀
-

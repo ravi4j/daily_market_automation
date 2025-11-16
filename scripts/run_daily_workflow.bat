@@ -46,6 +46,12 @@ if "%TELEGRAM_CHAT_ID%"=="" (
     echo [!] Warning: TELEGRAM_CHAT_ID not set
 )
 
+REM ============================================================================
+REM DAILY WORKFLOW STEPS
+REM When adding new features, add them below in the appropriate sequence
+REM See WORKFLOW_MAINTENANCE.md for details
+REM ============================================================================
+
 REM Step 1: Fetch Market Data
 echo.
 echo === Step 1: Fetching Market Data ===
@@ -110,6 +116,11 @@ if errorlevel 1 (
     echo [OK] News opportunities scanned and sent
     echo [OK] News opportunities scanned and sent >> %LOG_FILE%
 )
+
+REM ============================================================================
+REM END OF WORKFLOW
+REM Add new steps ABOVE this section
+REM ============================================================================
 
 REM Done!
 echo.

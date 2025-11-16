@@ -38,6 +38,12 @@ if [ -z "$TELEGRAM_CHAT_ID" ]; then
     echo -e "${RED}⚠${NC}  TELEGRAM_CHAT_ID not set"
 fi
 
+# ============================================================================
+# DAILY WORKFLOW STEPS
+# When adding new features, add them below in the appropriate sequence
+# See WORKFLOW_MAINTENANCE.md for details
+# ============================================================================
+
 echo ""
 echo -e "${BLUE}=== Step 1: Fetching Market Data ===${NC}"
 python src/fetch_daily_prices.py
@@ -82,6 +88,11 @@ else
     echo -e "${RED}✗${NC} Failed to scan news opportunities"
     exit 1
 fi
+
+# ============================================================================
+# END OF WORKFLOW
+# Add new steps ABOVE this section
+# ============================================================================
 
 echo ""
 echo -e "${GREEN}========================================${NC}"

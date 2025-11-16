@@ -889,11 +889,11 @@ Score: 85/100
 
 ### Features
 
-✅ **Smart Filtering** - Avoids red flags (bankruptcy, fraud, scandals)  
-✅ **Fundamental Analysis** - Checks valuation, growth, profitability  
-✅ **Uses Your Config** - Scans symbols from `config/symbols.yaml`  
-✅ **Opportunity Scoring** - Ranks best risk/reward setups  
-✅ **GitHub Actions** - Fully automated, no manual work  
+✅ **Smart Filtering** - Avoids red flags (bankruptcy, fraud, scandals)
+✅ **Fundamental Analysis** - Checks valuation, growth, profitability
+✅ **Uses Your Config** - Scans symbols from `config/symbols.yaml`
+✅ **Opportunity Scoring** - Ranks best risk/reward setups
+✅ **GitHub Actions** - Fully automated, no manual work
 
 ### Real-World Use Case
 
@@ -906,7 +906,7 @@ The scanner detects:
 4. Score: 82/100 → 🟢 STRONG BUY recommendation
 5. Sends alert to your phone 📱
 
-**Quick Start Guide:** [NEWS_SCANNER_QUICKSTART.md](NEWS_SCANNER_QUICKSTART.md)  
+**Quick Start Guide:** [NEWS_SCANNER_QUICKSTART.md](NEWS_SCANNER_QUICKSTART.md)
 **Full Documentation:** [docs/NEWS_SCANNER_GUIDE.md](docs/NEWS_SCANNER_GUIDE.md)
 
 ---
@@ -1005,12 +1005,12 @@ python scripts/scan_sp500_news.py --top 10
 
 ### Features
 
-✅ **Finnhub API Integration** - Free tier: 60 calls/min  
-✅ **Rate Limiting** - Built-in protection (50 calls/min buffer)  
-✅ **Caching** - 24h cache for fundamentals  
-✅ **Pre-filtering** - Only scan dropped stocks  
-✅ **Fallback Strategies** - Works without API key  
-✅ **S&P 500 List** - Finnhub → Wikipedia → File fallback  
+✅ **Finnhub API Integration** - Free tier: 60 calls/min
+✅ **Rate Limiting** - Built-in protection (50 calls/min buffer)
+✅ **Caching** - 24h cache for fundamentals
+✅ **Pre-filtering** - Only scan dropped stocks
+✅ **Fallback Strategies** - Works without API key
+✅ **S&P 500 List** - Finnhub → Wikipedia → File fallback
 
 ### Real-World Example
 
@@ -1025,8 +1025,8 @@ python scripts/scan_sp500_news.py --top 10
 4. **Alert sent**: Top picks with insider confidence
 5. **You decide**: Buy NVDA and AAPL based on multiple signals
 
-**Quick Start:** [INSIDER_QUICKSTART.md](INSIDER_QUICKSTART.md)  
-**Full Guide:** [INSIDER_TRACKING_GUIDE.md](INSIDER_TRACKING_GUIDE.md)  
+**Quick Start:** [INSIDER_QUICKSTART.md](INSIDER_QUICKSTART.md)
+**Full Guide:** [INSIDER_TRACKING_GUIDE.md](INSIDER_TRACKING_GUIDE.md)
 **Test Script:** `python scripts/test_insider_tracking.py`
 
 ---
