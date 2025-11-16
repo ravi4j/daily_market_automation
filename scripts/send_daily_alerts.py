@@ -119,16 +119,16 @@ def main():
     # Add each alert to the same message
     for i, alert in enumerate(alerts_sorted, 1):
         print(f"   Adding alert {i}/{len(alerts)}: {alert.symbol} {alert.signal}...")
-        
+
         # Get the formatted message
         alert_text = alert.to_telegram_message()
-        
+
         # Add separator between alerts (but not before the first one)
         if i > 1:
             message += "\n━━━━━━━━━━━━━━━━━━━━\n\n"
-        
+
         message += alert_text
-    
+
     # Add footer
     message += "\n\n⚠️ <i>Not financial advice. DYOR.</i>"
 

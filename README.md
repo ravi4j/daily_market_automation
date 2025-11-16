@@ -4,25 +4,35 @@ Automated daily OHLCV (Open, High, Low, Close, Volume) data fetcher for multiple
 
 ## ⚡ TL;DR - Quick Setup on New Machine
 
+### macOS / Linux
+
 ```bash
-# 1. Clone repo
-git clone <your-repo-url>
-cd daily_market_automation
+# Run automated setup
+./scripts/setup_local.sh
 
-# 2. Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+# Configure credentials
+nano .env
 
-# 3. Install dependencies
-pip install -r requirements-fetch.txt
-
-# 4. Run!
-python src/fetch_daily_prices.py
-
-# Data will be in data/*.csv
+# Test it
+./scripts/run_daily_workflow.sh
 ```
 
-That's it! Run daily to get incremental updates (2-5 seconds).
+### Windows 11
+
+```powershell
+# Run automated setup
+.\scripts\setup_local.bat
+
+# Configure credentials
+notepad .env
+
+# Test it
+.\scripts\run_daily_workflow.bat
+```
+
+That's it! See detailed guides:
+- **macOS/Linux**: [`LOCAL_SETUP_GUIDE.md`](LOCAL_SETUP_GUIDE.md)
+- **Windows 11**: [`LOCAL_SETUP_WINDOWS.md`](LOCAL_SETUP_WINDOWS.md) / [`WINDOWS_QUICKSTART.md`](WINDOWS_QUICKSTART.md)
 
 ## 🎯 Features
 
