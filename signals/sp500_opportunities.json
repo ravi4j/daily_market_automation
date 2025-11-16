@@ -1,85 +1,9 @@
 {
-  "scan_date": "2025-11-15T16:49:04.868576",
+  "scan_date": "2025-11-16T18:22:48.396089",
   "scan_type": "S&P 500",
-  "symbols_scanned": 5,
-  "opportunities_found": 3,
+  "symbols_scanned": 22,
+  "opportunities_found": 22,
   "opportunities": [
-    {
-      "symbol": "NVDA",
-      "fundamentals": {
-        "symbol": "NVDA",
-        "company_name": "NVIDIA Corporation",
-        "current_price": 190.17,
-        "market_cap": 4630069116928,
-        "pe_ratio": 54.025566,
-        "forward_pe": 46.15777,
-        "peg_ratio": null,
-        "profit_margins": 0.52414,
-        "revenue_growth": 0.556,
-        "52w_high": 212.19,
-        "52w_low": 86.62,
-        "distance_from_52w_high": 10.38,
-        "5d_change": -4.46,
-        "analyst_target": 232.79439,
-        "recommendation": "strong_buy"
-      },
-      "news": [
-        {
-          "symbol": "NVDA",
-          "title": "",
-          "publisher": "",
-          "link": "",
-          "published": "1969-12-31 18:00:00",
-          "type": "STORY",
-          "sentiment": {
-            "is_opportunity": false,
-            "has_red_flag": false,
-            "drop_percentage": null,
-            "sentiment_score": 0
-          }
-        }
-      ],
-      "opportunity_score": 95,
-      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity"
-    },
-    {
-      "symbol": "AVGO",
-      "fundamentals": {
-        "symbol": "AVGO",
-        "company_name": "Broadcom Inc.",
-        "current_price": 342.46,
-        "market_cap": 1617220993024,
-        "pe_ratio": 87.81025,
-        "forward_pe": 55.50405,
-        "peg_ratio": null,
-        "profit_margins": 0.31592,
-        "revenue_growth": 0.164,
-        "52w_high": 386.48,
-        "52w_low": 138.1,
-        "distance_from_52w_high": 11.39,
-        "5d_change": -4.44,
-        "analyst_target": 394.82068,
-        "recommendation": "strong_buy"
-      },
-      "news": [
-        {
-          "symbol": "AVGO",
-          "title": "",
-          "publisher": "",
-          "link": "",
-          "published": "1969-12-31 18:00:00",
-          "type": "STORY",
-          "sentiment": {
-            "is_opportunity": false,
-            "has_red_flag": false,
-            "drop_percentage": null,
-            "sentiment_score": 0
-          }
-        }
-      ],
-      "opportunity_score": 95,
-      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity"
-    },
     {
       "symbol": "ORCL",
       "fundamentals": {
@@ -105,18 +29,1623 @@
           "title": "",
           "publisher": "",
           "link": "",
-          "published": "1969-12-31 18:00:00",
+          "published": "1969-12-31 19:00:00",
           "type": "STORY",
           "sentiment": {
             "is_opportunity": false,
-            "has_red_flag": false,
-            "drop_percentage": null,
-            "sentiment_score": 0
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 85,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "Oracle Corporation",
+      "insider_activity": {
+        "symbol": "ORCL",
+        "period_days": 26,
+        "num_buys": 1,
+        "num_sells": 7,
+        "total_buy_value": 40050.01,
+        "total_sell_value": 27839897.163,
+        "net_value": -27799847.152999997,
+        "total_buy_shares": 143,
+        "total_sell_shares": 99365,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": {
+          "name": "Levey Stuart",
+          "shares": 143,
+          "value": 40050.01,
+          "date": "2025-10-23"
+        },
+        "largest_sell": {
+          "name": "Magouyrk Clayton M.",
+          "shares": 40000,
+          "value": 11065508.0,
+          "date": "2025-10-21"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='BERG JEFFREY', change=-4226, filing_date='2025-10-30', transaction_date='2025-10-28', share_price=284.307, transaction_value=-1201481.382)",
+          "InsiderTransaction(name='BERG JEFFREY', change=-22724, filing_date='2025-10-30', transaction_date='2025-10-28', share_price=283.627, transaction_value=-6445139.948)",
+          "InsiderTransaction(name='BERG JEFFREY', change=-13373, filing_date='2025-10-30', transaction_date='2025-10-28', share_price=282.555, transaction_value=-3778608.015)",
+          "InsiderTransaction(name='BERG JEFFREY', change=-9042, filing_date='2025-10-30', transaction_date='2025-10-28', share_price=281.579, transaction_value=-2546037.318)",
+          "InsiderTransaction(name='Levey Stuart', change=143, filing_date='2025-10-27', transaction_date='2025-10-23', share_price=280.07, transaction_value=40050.01)",
+          "InsiderTransaction(name='Smith Maria', change=-5000, filing_date='2025-10-23', transaction_date='2025-10-23', share_price=280.6245, transaction_value=-1403122.5)",
+          "InsiderTransaction(name='Smith Maria', change=-5000, filing_date='2025-10-23', transaction_date='2025-10-21', share_price=280, transaction_value=-1400000)",
+          "InsiderTransaction(name='Magouyrk Clayton M.', change=-40000, filing_date='2025-10-23', transaction_date='2025-10-21', share_price=276.6377, transaction_value=-11065508.0)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "INTC",
+      "fundamentals": {
+        "symbol": "INTC",
+        "company_name": "Intel Corporation",
+        "current_price": 35.52,
+        "market_cap": 171290705920,
+        "pe_ratio": 592.0,
+        "forward_pe": 36.618557,
+        "peg_ratio": null,
+        "profit_margins": 0.0037099998,
+        "revenue_growth": 0.028,
+        "52w_high": 42.48,
+        "52w_low": 17.67,
+        "distance_from_52w_high": 16.38,
+        "5d_change": -7.62,
+        "analyst_target": 37.26639,
+        "recommendation": "hold"
+      },
+      "news": [
+        {
+          "symbol": "INTC",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 85,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "Intel Corporation"
+    },
+    {
+      "symbol": "LRCX",
+      "fundamentals": {
+        "symbol": "LRCX",
+        "company_name": "Lam Research Corporation",
+        "current_price": 148.26,
+        "market_cap": 192574504960,
+        "pe_ratio": 32.656387,
+        "forward_pe": 34.72131,
+        "peg_ratio": null,
+        "profit_margins": 0.29657,
+        "revenue_growth": 0.277,
+        "52w_high": 167.15,
+        "52w_low": 56.32,
+        "distance_from_52w_high": 11.3,
+        "5d_change": -10.89,
+        "analyst_target": 158.52232,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "LRCX",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 85,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "Lam Research Corporation",
+      "insider_activity": {
+        "symbol": "LRCX",
+        "period_days": 20,
+        "num_buys": 1,
+        "num_sells": 5,
+        "total_buy_value": 463004.39,
+        "total_sell_value": 1735780.6600000001,
+        "net_value": -1272776.27,
+        "total_buy_shares": 6010,
+        "total_sell_shares": 11002,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": {
+          "name": "Harter Ava",
+          "shares": 6010,
+          "value": 463004.39,
+          "date": "2025-10-27"
+        },
+        "largest_sell": {
+          "name": "Harter Ava",
+          "shares": 6010,
+          "value": 946334.6000000001,
+          "date": "2025-10-27"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Mayer Bethany', change=-30, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=159.52, transaction_value=-4785.6)",
+          "InsiderTransaction(name='Mayer Bethany', change=-1298, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=159.99, transaction_value=-207667.02000000002)",
+          "InsiderTransaction(name='Kang Ho Kyu', change=-664, filing_date='2025-11-03', transaction_date='2025-10-31', share_price=157.46, transaction_value=-104553.44)",
+          "InsiderTransaction(name='Harter Ava', change=-6010, filing_date='2025-10-28', transaction_date='2025-10-27', share_price=157.46, transaction_value=-946334.6000000001)",
+          "InsiderTransaction(name='Harter Ava', change=6010, filing_date='2025-10-28', transaction_date='2025-10-27', share_price=77.039, transaction_value=463004.39)",
+          "InsiderTransaction(name='Harter Ava', change=-3000, filing_date='2025-10-28', transaction_date='2025-10-27', share_price=157.48, transaction_value=-472439.99999999994)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "KLAC",
+      "fundamentals": {
+        "symbol": "KLAC",
+        "company_name": "KLA Corporation",
+        "current_price": 1134.32,
+        "market_cap": 152641093632,
+        "pe_ratio": 35.59209,
+        "forward_pe": 34.56185,
+        "peg_ratio": null,
+        "profit_margins": 0.33828998,
+        "revenue_growth": 0.13,
+        "52w_high": 1284.47,
+        "52w_low": 551.33,
+        "distance_from_52w_high": 11.69,
+        "5d_change": -6.87,
+        "analyst_target": 1287.2693,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "KLAC",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 85,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "KLA Corporation",
+      "insider_activity": {
+        "symbol": "KLAC",
+        "period_days": 5,
+        "num_buys": 0,
+        "num_sells": 1,
+        "total_buy_value": 0,
+        "total_sell_value": 12997089.299999999,
+        "net_value": -12997089.299999999,
+        "total_buy_shares": 0,
+        "total_sell_shares": 10803,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "WALLACE RICHARD P",
+          "shares": 10803,
+          "value": 12997089.299999999,
+          "date": "2025-11-11"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='WALLACE RICHARD P', change=-10803, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=1203.1, transaction_value=-12997089.299999999)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "PANW",
+      "fundamentals": {
+        "symbol": "PANW",
+        "company_name": "Palo Alto Networks, Inc.",
+        "current_price": 205.25,
+        "market_cap": 140387450880,
+        "pe_ratio": 128.28125,
+        "forward_pe": 28.506945,
+        "peg_ratio": null,
+        "profit_margins": 0.122959994,
+        "revenue_growth": 0.158,
+        "52w_high": 223.61,
+        "52w_low": 144.15,
+        "distance_from_52w_high": 8.21,
+        "5d_change": -5.21,
+        "analyst_target": 222.93958,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "PANW",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 75,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "Palo Alto Networks Inc.",
+      "insider_activity": {
+        "symbol": "PANW",
+        "period_days": 15,
+        "num_buys": 1,
+        "num_sells": 11,
+        "total_buy_value": 2967322.5,
+        "total_sell_value": 133439919.728,
+        "net_value": -130472597.228,
+        "total_buy_shares": 92010,
+        "total_sell_shares": 607144,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": {
+          "name": "Klarich Lee",
+          "shares": 92010,
+          "value": 2967322.5,
+          "date": "2025-11-03"
+        },
+        "largest_sell": {
+          "name": "Klarich Lee",
+          "shares": 232055,
+          "value": 51107793.2,
+          "date": "2025-11-01"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Paul Josh D.', change=-700, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=219.97, transaction_value=-153979.0)",
+          "InsiderTransaction(name='Klarich Lee', change=-30, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=220.4, transaction_value=-6612.0)",
+          "InsiderTransaction(name='Klarich Lee', change=-3554, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=219.759, transaction_value=-781023.4859999999)",
+          "InsiderTransaction(name='Klarich Lee', change=-43109, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=218.691, transaction_value=-9427550.319)",
+          "InsiderTransaction(name='Klarich Lee', change=-45515, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=218.004, transaction_value=-9922452.059999999)",
+          "InsiderTransaction(name='Klarich Lee', change=-20195, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=216.746, transaction_value=-4377185.47)",
+          "InsiderTransaction(name='Klarich Lee', change=-8371, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=215.883, transaction_value=-1807156.593)",
+          "InsiderTransaction(name='Klarich Lee', change=92010, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=32.25, transaction_value=2967322.5)",
+          "InsiderTransaction(name='Paul Josh D.', change=-15470, filing_date='2025-11-04', transaction_date='2025-11-01', share_price=220.24, transaction_value=-3407112.8000000003)",
+          "InsiderTransaction(name='Jenkins William D Jr', change=-164219, filing_date='2025-11-04', transaction_date='2025-11-01', share_price=220.24, transaction_value=-36167592.56)",
+          "InsiderTransaction(name='Klarich Lee', change=-232055, filing_date='2025-11-04', transaction_date='2025-11-01', share_price=220.24, transaction_value=-51107793.2)",
+          "InsiderTransaction(name='Golechha Dipak', change=-73926, filing_date='2025-11-04', transaction_date='2025-11-01', share_price=220.24, transaction_value=-16281462.24)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "DDOG",
+      "fundamentals": {
+        "symbol": "DDOG",
+        "company_name": "Datadog, Inc.",
+        "current_price": 185.01,
+        "market_cap": 65214234624,
+        "pe_ratio": 596.80646,
+        "forward_pe": 91.13793,
+        "peg_ratio": null,
+        "profit_margins": 0.033239998,
+        "revenue_growth": 0.284,
+        "52w_high": 201.69,
+        "52w_low": 81.63,
+        "distance_from_52w_high": 8.27,
+        "5d_change": -7.37,
+        "analyst_target": 210.90628,
+        "recommendation": "strong_buy"
+      },
+      "news": [
+        {
+          "symbol": "DDOG",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 75,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "Datadog Inc.",
+      "insider_activity": {
+        "symbol": "DDOG",
+        "period_days": 25,
+        "num_buys": 2,
+        "num_sells": 26,
+        "total_buy_value": 236031.8856,
+        "total_sell_value": 112086294.61749999,
+        "net_value": -111850262.73189999,
+        "total_buy_shares": 56868,
+        "total_sell_shares": 576405,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": {
+          "name": "Le-Quoc Alexis",
+          "shares": 18750,
+          "value": 201375.0,
+          "date": "2025-11-11"
+        },
+        "largest_sell": {
+          "name": "Jacobson Matthew",
+          "shares": 109819,
+          "value": 22025551.223699998,
+          "date": "2025-11-10"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Jacobson Matthew', change=-18951, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=200.1396, transaction_value=-3792845.5596)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-12859, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=200.1396, transaction_value=-2573595.1164)",
+          "InsiderTransaction(name='Le-Quoc Alexis', change=18750, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=10.74, transaction_value=201375.0)",
+          "InsiderTransaction(name='Le-Quoc Alexis', change=-380, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=201.4263, transaction_value=-76541.994)",
+          "InsiderTransaction(name='Le-Quoc Alexis', change=-2555, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=200.46, transaction_value=-512175.30000000005)",
+          "InsiderTransaction(name='Le-Quoc Alexis', change=-6143, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=199.7648, transaction_value=-1227155.1664)",
+          "InsiderTransaction(name='Le-Quoc Alexis', change=-5522, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=198.609, transaction_value=-1096718.898)",
+          "InsiderTransaction(name='Le-Quoc Alexis', change=-29407, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=197.6483, transaction_value=-5812243.5581)",
+          "InsiderTransaction(name='Le-Quoc Alexis', change=-9905, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=196.7772, transaction_value=-1949078.166)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-840, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=201.0687, transaction_value=-168897.708)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-566, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=201.0687, transaction_value=-113804.8842)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-109819, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=200.5623, transaction_value=-22025551.223699998)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-74427, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=200.5623, transaction_value=-14927250.302099999)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-39435, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=199.5981, transaction_value=-7871151.0735)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-26851, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=199.5981, transaction_value=-5359408.583099999)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-90760, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=198.4338, transaction_value=-18009851.688)",
+          "InsiderTransaction(name='Jacobson Matthew', change=-61608, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=198.4338, transaction_value=-12225109.5504)",
+          "InsiderTransaction(name='Callahan Michael James', change=-12500, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=187.47, transaction_value=-2343375.0)",
+          "InsiderTransaction(name='Pomel Olivier', change=38118, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=0.9092, transaction_value=34656.8856)",
+          "InsiderTransaction(name='Pomel Olivier', change=-30459, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=165.0073, transaction_value=-5025957.350699999)",
+          "InsiderTransaction(name='Pomel Olivier', change=-6577, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=163.9254, transaction_value=-1078137.3558)",
+          "InsiderTransaction(name='Pomel Olivier', change=-14338, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=163.0306, transaction_value=-2337532.7428)",
+          "InsiderTransaction(name='Pomel Olivier', change=-9308, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=162.1909, transaction_value=-1509672.8972)",
+          "InsiderTransaction(name='Pomel Olivier', change=-2000, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=161.1284, transaction_value=-322256.8)",
+          "InsiderTransaction(name='Pomel Olivier', change=-400, filing_date='2025-10-24', transaction_date='2025-10-22', share_price=155.9323, transaction_value=-62372.92)",
+          "InsiderTransaction(name='Pomel Olivier', change=-2786, filing_date='2025-10-24', transaction_date='2025-10-22', share_price=155.2042, transaction_value=-432398.90119999996)",
+          "InsiderTransaction(name='Pomel Olivier', change=-5885, filing_date='2025-10-24', transaction_date='2025-10-22', share_price=154.2219, transaction_value=-907595.8815)",
+          "InsiderTransaction(name='Pomel Olivier', change=-2124, filing_date='2025-10-24', transaction_date='2025-10-22', share_price=153.3032, transaction_value=-325615.9968)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "NET",
+      "fundamentals": {
+        "symbol": "NET",
+        "company_name": "Cloudflare, Inc.",
+        "current_price": 210.6,
+        "market_cap": 74799046656,
+        "pe_ratio": null,
+        "forward_pe": 244.88373,
+        "peg_ratio": null,
+        "profit_margins": -0.05118,
+        "revenue_growth": 0.307,
+        "52w_high": 260.0,
+        "52w_low": 89.42,
+        "distance_from_52w_high": 19.0,
+        "5d_change": -12.44,
+        "analyst_target": 239.35345,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "NET",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 85,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "Cloudflare Inc.",
+      "insider_activity": {
+        "symbol": "NET",
+        "period_days": 27,
+        "num_buys": 1,
+        "num_sells": 23,
+        "total_buy_value": 112694.4,
+        "total_sell_value": 6930791.4329,
+        "net_value": -6818097.0329,
+        "total_buy_shares": 2520,
+        "total_sell_shares": 31520,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": {
+          "name": "Graham-Cumming John",
+          "shares": 2520,
+          "value": 112694.4,
+          "date": "2025-11-03"
+        },
+        "largest_sell": {
+          "name": "Ledbetter Carl",
+          "shares": 7562,
+          "value": 1594178.4928000001,
+          "date": "2025-10-20"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Kramer Douglas James', change=-882, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=256.4072, transaction_value=-226151.15039999998)",
+          "InsiderTransaction(name='Kramer Douglas James', change=-1163, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=255.5833, transaction_value=-297243.3779)",
+          "InsiderTransaction(name='Kramer Douglas James', change=-955, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=254.6648, transaction_value=-243204.88400000002)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-129, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=257.2314, transaction_value=-33182.8506)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-224, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=256.3669, transaction_value=-57426.1856)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-84, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=255.3714, transaction_value=-21451.1976)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-74, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=254.3882, transaction_value=-18824.7268)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-50, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=252.8776, transaction_value=-12643.88)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-211, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=251.2125, transaction_value=-53005.8375)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-643, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=250.2815, transaction_value=-160931.0045)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-524, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=249.4058, transaction_value=-130688.6392)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-471, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=248.0286, transaction_value=-116821.4706)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-74, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=246.975, transaction_value=-18276.149999999998)",
+          "InsiderTransaction(name='Graham-Cumming John', change=-36, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=245.675, transaction_value=-8844.300000000001)",
+          "InsiderTransaction(name='Graham-Cumming John', change=2520, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=44.72, transaction_value=112694.4)",
+          "InsiderTransaction(name='Hawkins Mark J', change=-1000, filing_date='2025-11-03', transaction_date='2025-11-03', share_price=254.15, transaction_value=-254150.0)",
+          "InsiderTransaction(name='SEIFERT THOMAS J', change=-300, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=213.3967, transaction_value=-64019.01)",
+          "InsiderTransaction(name='SEIFERT THOMAS J', change=-3846, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=212.749, transaction_value=-818232.654)",
+          "InsiderTransaction(name='SEIFERT THOMAS J', change=-2754, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=211.7076, transaction_value=-583042.7304)",
+          "InsiderTransaction(name='SEIFERT THOMAS J', change=-2600, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=210.7816, transaction_value=-548032.16)",
+          "InsiderTransaction(name='SEIFERT THOMAS J', change=-500, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=209.6202, transaction_value=-104810.1)",
+          "InsiderTransaction(name='Ledbetter Carl', change=-2338, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=211.7595, transaction_value=-495093.711)",
+          "InsiderTransaction(name='Ledbetter Carl', change=-7562, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=210.8144, transaction_value=-1594178.4928000001)",
+          "InsiderTransaction(name='Ledbetter Carl', change=-5100, filing_date='2025-10-20', transaction_date='2025-10-20', share_price=209.9092, transaction_value=-1070536.92)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "ZS",
+      "fundamentals": {
+        "symbol": "ZS",
+        "company_name": "Zscaler, Inc.",
+        "current_price": 299.45,
+        "market_cap": 48851636224,
+        "pe_ratio": null,
+        "forward_pe": 84.11517,
+        "peg_ratio": null,
+        "profit_margins": -0.015520001,
+        "revenue_growth": 0.213,
+        "52w_high": 336.99,
+        "52w_low": 164.78,
+        "distance_from_52w_high": 11.14,
+        "5d_change": -8.95,
+        "analyst_target": 327.975,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "ZS",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 85,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "Zscaler Inc.",
+      "insider_activity": {
+        "symbol": "ZS",
+        "period_days": 23,
+        "num_buys": 0,
+        "num_sells": 1,
+        "total_buy_value": 0,
+        "total_sell_value": 1040000,
+        "net_value": -1040000,
+        "total_buy_shares": 0,
+        "total_sell_shares": 3200,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "Schlossman Robert",
+          "shares": 3200,
+          "value": 1040000,
+          "date": "2025-10-24"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Schlossman Robert', change=-3200, filing_date='2025-10-24', transaction_date='2025-10-24', share_price=325, transaction_value=-1040000)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "MDB",
+      "fundamentals": {
+        "symbol": "MDB",
+        "company_name": "MongoDB, Inc.",
+        "current_price": 352.61,
+        "market_cap": 28687253504,
+        "pe_ratio": null,
+        "forward_pe": 108.83024,
+        "peg_ratio": null,
+        "profit_margins": -0.03545,
+        "revenue_growth": 0.237,
+        "52w_high": 385.44,
+        "52w_low": 140.78,
+        "distance_from_52w_high": 8.52,
+        "5d_change": -5.69,
+        "analyst_target": 368.69162,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "MDB",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 75,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Information Technology",
+      "company_full": "MongoDB Inc.",
+      "insider_activity": {
+        "symbol": "MDB",
+        "period_days": 20,
+        "num_buys": 0,
+        "num_sells": 5,
+        "total_buy_value": 0,
+        "total_sell_value": 3998097.88,
+        "net_value": -3998097.88,
+        "total_buy_shares": 0,
+        "total_sell_shares": 10999,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "MERRIMAN DWIGHT A",
+          "shares": 4640,
+          "value": 1727100.8,
+          "date": "2025-11-12"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='MERRIMAN DWIGHT A', change=-1360, filing_date='2025-11-14', transaction_date='2025-11-12', share_price=373.28, transaction_value=-507660.8)",
+          "InsiderTransaction(name='MERRIMAN DWIGHT A', change=-4640, filing_date='2025-11-14', transaction_date='2025-11-12', share_price=372.22, transaction_value=-1727100.8)",
+          "InsiderTransaction(name='Hazard Charles M Jr', change=-166, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=383.72, transaction_value=-63697.520000000004)",
+          "InsiderTransaction(name='Hazard Charles M Jr', change=-833, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=383.72, transaction_value=-319638.76)",
+          "InsiderTransaction(name='MERRIMAN DWIGHT A', change=-4000, filing_date='2025-10-29', transaction_date='2025-10-27', share_price=345, transaction_value=-1380000)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "DIS",
+      "fundamentals": {
+        "symbol": "DIS",
+        "company_name": "The Walt Disney Company",
+        "current_price": 105.8,
+        "market_cap": 192114950144,
+        "pe_ratio": 15.445256,
+        "forward_pe": 20.54369,
+        "peg_ratio": null,
+        "profit_margins": 0.13136,
+        "revenue_growth": -0.005,
+        "52w_high": 124.69,
+        "52w_low": 80.1,
+        "distance_from_52w_high": 15.15,
+        "5d_change": -5.74,
+        "analyst_target": 133.00357,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "DIS",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
           }
         }
       ],
       "opportunity_score": 100,
-      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity"
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Communication Services",
+      "company_full": "The Walt Disney Company"
+    },
+    {
+      "symbol": "LYV",
+      "fundamentals": {
+        "symbol": "LYV",
+        "company_name": "Live Nation Entertainment, Inc.",
+        "current_price": 135.86,
+        "market_cap": 31770869760,
+        "pe_ratio": 97.741005,
+        "forward_pe": 56.140495,
+        "peg_ratio": null,
+        "profit_margins": 0.03659,
+        "revenue_growth": 0.111,
+        "52w_high": 175.25,
+        "52w_low": 112.88,
+        "distance_from_52w_high": 22.48,
+        "5d_change": -5.22,
+        "analyst_target": 170.2,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "LYV",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 100,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Communication Services",
+      "company_full": "Live Nation Entertainment Inc."
+    },
+    {
+      "symbol": "AMZN",
+      "fundamentals": {
+        "symbol": "AMZN",
+        "company_name": "Amazon.com, Inc.",
+        "current_price": 234.69,
+        "market_cap": 2539781357568,
+        "pe_ratio": 33.10155,
+        "forward_pe": 38.160976,
+        "peg_ratio": null,
+        "profit_margins": 0.11063,
+        "revenue_growth": 0.134,
+        "52w_high": 258.6,
+        "52w_low": 161.38,
+        "distance_from_52w_high": 9.25,
+        "5d_change": -5.52,
+        "analyst_target": 293.03067,
+        "recommendation": "strong_buy"
+      },
+      "news": [
+        {
+          "symbol": "AMZN",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 75,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Consumer Discretionary",
+      "company_full": "Amazon.com Inc.",
+      "insider_activity": {
+        "symbol": "AMZN",
+        "period_days": 16,
+        "num_buys": 0,
+        "num_sells": 3,
+        "total_buy_value": 0,
+        "total_sell_value": 8182755.1899999995,
+        "net_value": -8182755.1899999995,
+        "total_buy_shares": 0,
+        "total_sell_shares": 32673,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "Herrington Douglas J",
+          "shares": 22000,
+          "value": 5500660.0,
+          "date": "2025-10-31"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Herrington Douglas J', change=-2500, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=255.44, transaction_value=-638600.0)",
+          "InsiderTransaction(name='Herrington Douglas J', change=-22000, filing_date='2025-11-04', transaction_date='2025-10-31', share_price=250.03, transaction_value=-5500660.0)",
+          "InsiderTransaction(name='RUBINSTEIN JONATHAN', change=-8173, filing_date='2025-11-04', transaction_date='2025-10-31', share_price=250.03, transaction_value=-2043495.19)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "TSLA",
+      "fundamentals": {
+        "symbol": "TSLA",
+        "company_name": "Tesla, Inc.",
+        "current_price": 404.35,
+        "market_cap": 1344795049984,
+        "pe_ratio": 276.95206,
+        "forward_pe": 124.799385,
+        "peg_ratio": null,
+        "profit_margins": 0.05314,
+        "revenue_growth": 0.116,
+        "52w_high": 488.54,
+        "52w_low": 214.25,
+        "distance_from_52w_high": 17.23,
+        "5d_change": -9.18,
+        "analyst_target": 392.31805,
+        "recommendation": "hold"
+      },
+      "news": [
+        {
+          "symbol": "TSLA",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 100,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Consumer Discretionary",
+      "company_full": "Tesla Inc.",
+      "insider_activity": {
+        "symbol": "TSLA",
+        "period_days": 10,
+        "num_buys": 1,
+        "num_sells": 0,
+        "total_buy_value": 141568600887.36,
+        "total_sell_value": 0,
+        "net_value": 141568600887.36,
+        "total_buy_shares": 423743904,
+        "total_sell_shares": 0,
+        "sentiment": "STRONG_BUY",
+        "score_adjustment": 15,
+        "largest_buy": {
+          "name": "Musk Elon",
+          "shares": 423743904,
+          "value": 141568600887.36,
+          "date": "2025-11-06"
+        },
+        "largest_sell": null,
+        "all_transactions": [
+          "InsiderTransaction(name='Musk Elon', change=423743904, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=334.09, transaction_value=141568600887.36)"
+        ]
+      },
+      "insider_boost": 15
+    },
+    {
+      "symbol": "WYNN",
+      "fundamentals": {
+        "symbol": "WYNN",
+        "company_name": "Wynn Resorts, Limited",
+        "current_price": 120.73,
+        "market_cap": 12789901312,
+        "pe_ratio": 26.710178,
+        "forward_pe": 24.0498,
+        "peg_ratio": null,
+        "profit_margins": 0.07092,
+        "revenue_growth": 0.083,
+        "52w_high": 134.23,
+        "52w_low": 65.25,
+        "distance_from_52w_high": 10.06,
+        "5d_change": -6.32,
+        "analyst_target": 137.9706,
+        "recommendation": "strong_buy"
+      },
+      "news": [
+        {
+          "symbol": "WYNN",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 80,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Consumer Discretionary",
+      "company_full": "Wynn Resorts Limited",
+      "insider_activity": {
+        "symbol": "WYNN",
+        "period_days": 24,
+        "num_buys": 0,
+        "num_sells": 26,
+        "total_buy_value": 0,
+        "total_sell_value": 10412141.2,
+        "net_value": -10412141.2,
+        "total_buy_shares": 0,
+        "total_sell_shares": 1895500,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "FERTITTA TILMAN J",
+          "shares": 280000,
+          "value": 2281944.0,
+          "date": "2025-11-12"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=1.0421, transaction_value=-41684.0)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=1.1657, transaction_value=-46628.0)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=1.2892, transaction_value=-51567.99999999999)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=1.5464, transaction_value=-61856.0)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=1.9635, transaction_value=-78540.0)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=2.3506, transaction_value=-94024.0)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=2.9313, transaction_value=-117251.99999999999)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-40000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=3.5556, transaction_value=-142224.0)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-280000, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=8.1498, transaction_value=-2281944.0)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-26000, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=4.4815, transaction_value=-116518.99999999999)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-26000, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=5.5092, transaction_value=-143239.19999999998)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-26000, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=6.3853, transaction_value=-166017.8)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-136000, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=4.9452, transaction_value=-672547.2)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-137000, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=6.1752, transaction_value=-846002.4)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-137000, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=8.7352, transaction_value=-1196722.4000000001)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-2500, filing_date='2025-11-07', transaction_date='2025-11-05', share_price=4.7449, transaction_value=-11862.25)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-2500, filing_date='2025-11-07', transaction_date='2025-11-05', share_price=6.3508, transaction_value=-15876.999999999998)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-2500, filing_date='2025-11-07', transaction_date='2025-11-05', share_price=8.4435, transaction_value=-21108.75)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-13000, filing_date='2025-10-27', transaction_date='2025-10-24', share_price=1.3978, transaction_value=-18171.399999999998)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-53000, filing_date='2025-10-27', transaction_date='2025-10-24', share_price=2.9963, transaction_value=-158803.90000000002)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-67000, filing_date='2025-10-27', transaction_date='2025-10-24', share_price=4.2666, transaction_value=-285862.2)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-117000, filing_date='2025-10-27', transaction_date='2025-10-24', share_price=6.0607, transaction_value=-709101.9)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-37000, filing_date='2025-10-27', transaction_date='2025-10-23', share_price=1.9318, transaction_value=-71476.6)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-147000, filing_date='2025-10-27', transaction_date='2025-10-23', share_price=4.3071, transaction_value=-633143.7000000001)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-183000, filing_date='2025-10-27', transaction_date='2025-10-23', share_price=5.3878, transaction_value=-985967.4)",
+          "InsiderTransaction(name='FERTITTA TILMAN J', change=-183000, filing_date='2025-10-27', transaction_date='2025-10-23', share_price=7.8907, transaction_value=-1443998.0999999999)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "PYPL",
+      "fundamentals": {
+        "symbol": "PYPL",
+        "company_name": "PayPal Holdings, Inc.",
+        "current_price": 62.81,
+        "market_cap": 61126144000,
+        "pe_ratio": 12.61245,
+        "forward_pe": 12.844582,
+        "peg_ratio": null,
+        "profit_margins": 0.14963001,
+        "revenue_growth": 0.073,
+        "52w_high": 93.66,
+        "52w_low": 55.85,
+        "distance_from_52w_high": 32.94,
+        "5d_change": -5.19,
+        "analyst_target": 83.2697,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "PYPL",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 75,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Financials",
+      "company_full": "PayPal Holdings Inc.",
+      "insider_activity": {
+        "symbol": "PYPL",
+        "period_days": 17,
+        "num_buys": 0,
+        "num_sells": 10,
+        "total_buy_value": 0,
+        "total_sell_value": 2183555.7895,
+        "net_value": -2183555.7895,
+        "total_buy_shares": 0,
+        "total_sell_shares": 31994,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "Kereere Suzan",
+          "shares": 10000,
+          "value": 688535.0,
+          "date": "2025-11-03"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Webster Aaron', change=-1150, filing_date='2025-11-12', transaction_date='2025-11-10', share_price=66.295, transaction_value=-76239.25)",
+          "InsiderTransaction(name='Webster Aaron', change=-934, filing_date='2025-11-12', transaction_date='2025-11-10', share_price=66.2901, transaction_value=-61914.9534)",
+          "InsiderTransaction(name='Webster Aaron', change=-7198, filing_date='2025-11-12', transaction_date='2025-11-10', share_price=66.29, transaction_value=-477155.42000000004)",
+          "InsiderTransaction(name='Kereere Suzan', change=-2500, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=68.96, transaction_value=-172399.99999999997)",
+          "InsiderTransaction(name='Kereere Suzan', change=-10000, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=68.8535, transaction_value=-688535.0)",
+          "InsiderTransaction(name='Kereere Suzan', change=-5000, filing_date='2025-10-31', transaction_date='2025-10-30', share_price=69.5244, transaction_value=-347622.0)",
+          "InsiderTransaction(name='Natali Chris', change=-1374, filing_date='2025-10-31', transaction_date='2025-10-30', share_price=69.1318, transaction_value=-94987.0932)",
+          "InsiderTransaction(name='Scotti Diego', change=-141, filing_date='2025-10-31', transaction_date='2025-10-30', share_price=70.2049, transaction_value=-9898.890899999999)",
+          "InsiderTransaction(name='Scotti Diego', change=-1800, filing_date='2025-10-31', transaction_date='2025-10-30', share_price=69.465, transaction_value=-125037.0)",
+          "InsiderTransaction(name='Scotti Diego', change=-1897, filing_date='2025-10-31', transaction_date='2025-10-30', share_price=68.406, transaction_value=-129766.18200000002)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "COIN",
+      "fundamentals": {
+        "symbol": "COIN",
+        "company_name": "Coinbase Global, Inc.",
+        "current_price": 284.0,
+        "market_cap": 76346949632,
+        "pe_ratio": 24.567472,
+        "forward_pe": 79.55182,
+        "peg_ratio": null,
+        "profit_margins": 0.43664002,
+        "revenue_growth": 0.589,
+        "52w_high": 444.65,
+        "52w_low": 142.58,
+        "distance_from_52w_high": 36.13,
+        "5d_change": -10.67,
+        "analyst_target": 385.27036,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "COIN",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 85,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Financials",
+      "company_full": "Coinbase Global Inc.",
+      "insider_activity": {
+        "symbol": "COIN",
+        "period_days": 13,
+        "num_buys": 0,
+        "num_sells": 57,
+        "total_buy_value": 0,
+        "total_sell_value": 152084900.0061,
+        "net_value": -152084900.0061,
+        "total_buy_shares": 0,
+        "total_sell_shares": 487689,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "Ehrsam Frederick Ernest III",
+          "shares": 67663,
+          "value": 20906378.414,
+          "date": "2025-11-06"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Choi Emilie', change=-240, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=316.64, transaction_value=-75993.59999999999)",
+          "InsiderTransaction(name='Choi Emilie', change=-955, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=315.633, transaction_value=-301429.51499999996)",
+          "InsiderTransaction(name='Choi Emilie', change=-4594, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=314.4789, transaction_value=-1444716.0666)",
+          "InsiderTransaction(name='Choi Emilie', change=-8920, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=313.598, transaction_value=-2797294.16)",
+          "InsiderTransaction(name='Choi Emilie', change=-29424, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=312.3843, transaction_value=-9191595.6432)",
+          "InsiderTransaction(name='Choi Emilie', change=-28375, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=311.5784, transaction_value=-8841037.1)",
+          "InsiderTransaction(name='Choi Emilie', change=-5421, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=310.807, transaction_value=-1684884.747)",
+          "InsiderTransaction(name='Choi Emilie', change=-4241, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=309.6765, transaction_value=-1313338.0365)",
+          "InsiderTransaction(name='Choi Emilie', change=-916, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=308.1822, transaction_value=-282294.8952)",
+          "InsiderTransaction(name='Choi Emilie', change=-1886, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=307.261, transaction_value=-579494.246)",
+          "InsiderTransaction(name='Choi Emilie', change=-1520, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=306.3302, transaction_value=-465621.904)",
+          "InsiderTransaction(name='Choi Emilie', change=-2504, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=305.1829, transaction_value=-764177.9816)",
+          "InsiderTransaction(name='Choi Emilie', change=-11004, filing_date='2025-11-13', transaction_date='2025-11-11', share_price=304.0454, transaction_value=-3345715.5815999997)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-3071, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=324.191, transaction_value=-995590.5609999999)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-9898, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=323.4661, transaction_value=-3201667.4578)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-10202, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=322.4584, transaction_value=-3289720.5968)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-15605, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=321.3706, transaction_value=-5014988.213)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-16912, filing_date='2025-11-13', transaction_date='2025-11-10', share_price=320.4299, transaction_value=-5419110.4688)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-40, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=291.76, transaction_value=-11670.4)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-2187, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=291.2751, transaction_value=-637018.6437)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-2576, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=290.3519, transaction_value=-747946.4944)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-4887, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=289.1375, transaction_value=-1413014.9625)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-5756, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=288.1536, transaction_value=-1658612.1216)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-3178, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=287.2971, transaction_value=-913030.1838)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-1303, filing_date='2025-11-10', transaction_date='2025-11-07', share_price=286.2618, transaction_value=-372999.1254)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-2496, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=315.9341, transaction_value=-788571.5136)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-4978, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=314.844, transaction_value=-1567293.432)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-7481, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=313.9838, transaction_value=-2348912.8077999996)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-11644, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=312.8908, transaction_value=-3643300.4752)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-35288, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=311.8755, transaction_value=-11005462.644)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-40072, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=311.0004, transaction_value=-12462408.028800001)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-43221, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=309.966, transaction_value=-13397040.486)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-67663, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=308.978, transaction_value=-20906378.414)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-26889, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=308.0423, transaction_value=-8282949.404700001)",
+          "InsiderTransaction(name='Ehrsam Frederick Ernest III', change=-37342, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=307.104, transaction_value=-11467877.568)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-280, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=312.1371, transaction_value=-87398.38799999999)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-360, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=310.9378, transaction_value=-111937.608)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-360, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=309.7967, transaction_value=-111526.81199999999)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-320, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=308.59, transaction_value=-98748.79999999999)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-240, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=307.6317, transaction_value=-73831.60800000001)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-455, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=306.7487, transaction_value=-139570.6585)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-284, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=305.2789, transaction_value=-86699.20760000001)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-240, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=304.0933, transaction_value=-72982.39199999999)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-520, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=302.6669, transaction_value=-157386.788)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-1285, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=301.6344, transaction_value=-387600.204)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-1059, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=300.7743, transaction_value=-318519.9837)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-886, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=299.7166, transaction_value=-265548.90760000004)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-986, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=298.6877, transaction_value=-294506.0722)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-960, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=297.5808, transaction_value=-285677.568)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-1121, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=296.5158, transaction_value=-332394.2118)",
+          "InsiderTransaction(name='WILSON FREDERICK R', change=-644, filing_date='2025-11-10', transaction_date='2025-11-06', share_price=295.4307, transaction_value=-190257.3708)",
+          "InsiderTransaction(name='Armstrong Brian', change=-3071, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=340.1546, transaction_value=-1044614.7766000001)",
+          "InsiderTransaction(name='Armstrong Brian', change=-2600, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=339.2625, transaction_value=-882082.5)",
+          "InsiderTransaction(name='Armstrong Brian', change=-5080, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=338.2173, transaction_value=-1718143.884)",
+          "InsiderTransaction(name='Armstrong Brian', change=-5424, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=337.4478, transaction_value=-1830316.8671999997)",
+          "InsiderTransaction(name='Armstrong Brian', change=-4301, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=336.1785, transaction_value=-1445903.7285)",
+          "InsiderTransaction(name='Armstrong Brian', change=-4524, filing_date='2025-11-05', transaction_date='2025-11-03', share_price=335.1225, transaction_value=-1516094.19)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "ETN",
+      "fundamentals": {
+        "symbol": "ETN",
+        "company_name": "Eaton Corporation plc",
+        "current_price": 352.39,
+        "market_cap": 137520791552,
+        "pe_ratio": 35.345036,
+        "forward_pe": 29.243984,
+        "peg_ratio": null,
+        "profit_margins": 0.14741,
+        "revenue_growth": 0.101,
+        "52w_high": 399.56,
+        "52w_low": 231.85,
+        "distance_from_52w_high": 11.81,
+        "5d_change": -7.16,
+        "analyst_target": 410.6975,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "ETN",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 100,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Industrials",
+      "company_full": "Eaton Corporation plc",
+      "insider_activity": {
+        "symbol": "ETN",
+        "period_days": 16,
+        "num_buys": 1,
+        "num_sells": 0,
+        "total_buy_value": 38433.5,
+        "total_sell_value": 0,
+        "net_value": 38433.5,
+        "total_buy_shares": 100,
+        "total_sell_shares": 0,
+        "sentiment": "STRONG_BUY",
+        "score_adjustment": 15,
+        "largest_buy": {
+          "name": "Johnson Gerald",
+          "shares": 100,
+          "value": 38433.5,
+          "date": "2025-10-31"
+        },
+        "largest_sell": null,
+        "all_transactions": [
+          "InsiderTransaction(name='Johnson Gerald', change=100, filing_date='2025-11-04', transaction_date='2025-10-31', share_price=384.335, transaction_value=38433.5)"
+        ]
+      },
+      "insider_boost": 15
+    },
+    {
+      "symbol": "CARR",
+      "fundamentals": {
+        "symbol": "CARR",
+        "company_name": "Carrier Global Corporation",
+        "current_price": 54.1,
+        "market_cap": 46456291328,
+        "pe_ratio": 33.8125,
+        "forward_pe": 17.796053,
+        "peg_ratio": null,
+        "profit_margins": 0.18052,
+        "revenue_growth": -0.068,
+        "52w_high": 81.09,
+        "52w_low": 53.96,
+        "distance_from_52w_high": 33.28,
+        "5d_change": -5.63,
+        "analyst_target": 72.6925,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "CARR",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 90,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Industrials",
+      "company_full": "Carrier Global Corporation"
+    },
+    {
+      "symbol": "XYL",
+      "fundamentals": {
+        "symbol": "XYL",
+        "company_name": "Xylem Inc.",
+        "current_price": 142.73,
+        "market_cap": 35855687680,
+        "pe_ratio": 36.78608,
+        "forward_pe": 30.04842,
+        "peg_ratio": null,
+        "profit_margins": 0.10659,
+        "revenue_growth": 0.078,
+        "52w_high": 154.27,
+        "52w_low": 100.47,
+        "distance_from_52w_high": 7.48,
+        "5d_change": -5.51,
+        "analyst_target": 167.76471,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "XYL",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 65,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Industrials",
+      "company_full": "Xylem Inc.",
+      "insider_activity": {
+        "symbol": "XYL",
+        "period_days": 26,
+        "num_buys": 0,
+        "num_sells": 3,
+        "total_buy_value": 0,
+        "total_sell_value": 1966286.23,
+        "net_value": -1966286.23,
+        "total_buy_shares": 0,
+        "total_sell_shares": 12962,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "Toussaint Claudia S",
+          "shares": 10421,
+          "value": 1590661.44,
+          "date": "2025-10-30"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='Harker Victoria D', change=-1700, filing_date='2025-11-05', transaction_date='2025-11-04', share_price=148.14, transaction_value=-251837.99999999997)",
+          "InsiderTransaction(name='Toussaint Claudia S', change=-10421, filing_date='2025-10-31', transaction_date='2025-10-30', share_price=152.64, transaction_value=-1590661.44)",
+          "InsiderTransaction(name='Emmerich Meredith', change=-841, filing_date='2025-10-21', transaction_date='2025-10-21', share_price=147.19, transaction_value=-123786.79)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "EQIX",
+      "fundamentals": {
+        "symbol": "EQIX",
+        "company_name": "Equinix, Inc.",
+        "current_price": 785.57,
+        "market_cap": 77227278336,
+        "pe_ratio": 72.46956,
+        "forward_pe": 58.712257,
+        "peg_ratio": null,
+        "profit_margins": 0.118,
+        "revenue_growth": 0.066,
+        "52w_high": 994.03,
+        "52w_low": 701.41,
+        "distance_from_52w_high": 20.97,
+        "5d_change": -5.14,
+        "analyst_target": 964.8,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "EQIX",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 80,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Real Estate",
+      "company_full": "Equinix Inc.",
+      "insider_activity": {
+        "symbol": "EQIX",
+        "period_days": 13,
+        "num_buys": 0,
+        "num_sells": 1,
+        "total_buy_value": 0,
+        "total_sell_value": 84047.0,
+        "net_value": -84047.0,
+        "total_buy_shares": 0,
+        "total_sell_shares": 100,
+        "sentiment": "STRONG_SELL",
+        "score_adjustment": -15,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "MORANDI BRANDI GALVIN",
+          "shares": 100,
+          "value": 84047.0,
+          "date": "2025-11-03"
+        },
+        "all_transactions": [
+          "InsiderTransaction(name='MORANDI BRANDI GALVIN', change=-100, filing_date='2025-11-04', transaction_date='2025-11-03', share_price=840.47, transaction_value=-84047.0)"
+        ]
+      },
+      "insider_boost": -15
+    },
+    {
+      "symbol": "DLR",
+      "fundamentals": {
+        "symbol": "DLR",
+        "company_name": "Digital Realty Trust, Inc.",
+        "current_price": 158.18,
+        "market_cap": 55291785216,
+        "pe_ratio": 40.979275,
+        "forward_pe": 130.72726,
+        "peg_ratio": null,
+        "profit_margins": 0.23959999,
+        "revenue_growth": 0.111,
+        "52w_high": 198.0,
+        "52w_low": 129.95,
+        "distance_from_52w_high": 20.11,
+        "5d_change": -6.52,
+        "analyst_target": 199.1852,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "DLR",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 100,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Real Estate",
+      "company_full": "Digital Realty Trust Inc."
+    },
+    {
+      "symbol": "CE",
+      "fundamentals": {
+        "symbol": "CE",
+        "company_name": "Celanese Corporation",
+        "current_price": 38.94,
+        "market_cap": 4376910336,
+        "pe_ratio": null,
+        "forward_pe": 4.0478168,
+        "peg_ratio": null,
+        "profit_margins": -0.31813,
+        "revenue_growth": -0.086,
+        "52w_high": 77.43,
+        "52w_low": 35.48,
+        "distance_from_52w_high": 49.71,
+        "5d_change": -5.69,
+        "analyst_target": 52.5,
+        "recommendation": "buy"
+      },
+      "news": [
+        {
+          "symbol": "CE",
+          "title": "",
+          "publisher": "",
+          "link": "",
+          "published": "1969-12-31 19:00:00",
+          "type": "STORY",
+          "sentiment": {
+            "is_opportunity": false,
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
+          }
+        }
+      ],
+      "opportunity_score": 100,
+      "recommendation": "\ud83d\udfe2 STRONG BUY - Excellent opportunity",
+      "sector": "Materials",
+      "company_full": "Celanese Corporation",
+      "insider_activity": {
+        "symbol": "CE",
+        "period_days": 4,
+        "num_buys": 6,
+        "num_sells": 0,
+        "total_buy_value": 1095.36,
+        "total_sell_value": 0,
+        "net_value": 1095.36,
+        "total_buy_shares": 28,
+        "total_sell_shares": 0,
+        "sentiment": "STRONG_BUY",
+        "score_adjustment": 15,
+        "largest_buy": {
+          "name": "IHLENFELD JAY V",
+          "shares": 8,
+          "value": 312.96,
+          "date": "2025-11-12"
+        },
+        "largest_sell": null,
+        "all_transactions": [
+          "InsiderTransaction(name='Hill Kathryn', change=2, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=39.12, transaction_value=78.24)",
+          "InsiderTransaction(name='Rucker Kim K.W.', change=7, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=39.12, transaction_value=273.84)",
+          "InsiderTransaction(name='Kissire Deborah J.', change=5, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=39.12, transaction_value=195.6)",
+          "InsiderTransaction(name='Go Timothy', change=1, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=39.12, transaction_value=39.12)",
+          "InsiderTransaction(name='IHLENFELD JAY V', change=8, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=39.12, transaction_value=312.96)",
+          "InsiderTransaction(name='GALANTE EDWARD G', change=5, filing_date='2025-11-13', transaction_date='2025-11-12', share_price=39.12, transaction_value=195.6)"
+        ]
+      },
+      "insider_boost": 15
     }
   ]
 }
