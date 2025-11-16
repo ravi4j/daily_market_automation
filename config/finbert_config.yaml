@@ -1,0 +1,41 @@
+# FinBERT Sentiment Analysis Configuration
+
+finbert:
+  # Enable/disable FinBERT (if False, uses keyword-based sentiment)
+  enabled: true
+  
+  # Model to use (ProsusAI/finbert is financial-specific BERT)
+  model_name: "ProsusAI/finbert"
+  
+  # Confidence thresholds
+  high_confidence_threshold: 0.75  # 75%+ confidence = high confidence
+  medium_confidence_threshold: 0.60  # 60-75% = medium confidence
+  
+  # Sentiment thresholds for buying opportunities
+  negative_threshold: 0.60  # Must be 60%+ confident it's negative
+  
+  # Cache settings
+  cache_dir: null  # null = use default (~/.cache/huggingface)
+  # OR specify custom: "data/cache/finbert_models"
+  
+  # Performance settings
+  max_length: 512  # Maximum tokens to process
+  device: "cpu"  # Use CPU (no GPU needed for inference)
+  
+  # Fallback behavior
+  fallback_to_keywords: true  # If FinBERT fails, use keyword matching
+
+# Keyword-based sentiment (fallback)
+keywords:
+  # These are still used for filtering serious issues
+  avoid_keywords:
+    - bankruptcy
+    - fraud
+    - scandal
+    - investigation
+    - lawsuit
+    - delisting
+    - sec investigation
+    - accounting issues
+    - chapter 11
+

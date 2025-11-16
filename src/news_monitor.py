@@ -19,10 +19,17 @@ try:
 except ImportError:
     CORRELATION_AVAILABLE = False
 
+# Import FinBERT sentiment analyzer (optional - falls back to keywords)
+try:
+    from src.finbert_sentiment import get_sentiment_analyzer
+    FINBERT_AVAILABLE = True
+except ImportError:
+    FINBERT_AVAILABLE = False
+
 class NewsMonitor:
     """Monitor Yahoo Finance news for trading opportunities"""
 
-    def __init__(self, enable_correlation: bool = True):
+    def __init__(self, enable_correlation: bool = True, use_finbert: bool = True):
         # Keywords indicating potential buying opportunities
         self.opportunity_keywords = [
             'falls', 'drops', 'plunges', 'tumbles', 'declines', 'selloff', 'sell-off',
@@ -43,6 +50,20 @@ class NewsMonitor:
                 self.correlation_tracker = NewsCorrelationTracker()
             except Exception as e:
                 print(f"⚠️  Correlation tracking disabled: {e}")
+        
+        # Initialize FinBERT sentiment analyzer (optional)
+        self.use_finbert = use_finbert and FINBERT_AVAILABLE
+        self.sentiment_analyzer = None
+        
+        if self.use_finbert:
+            try:
+                print("🤖 Initializing FinBERT sentiment analyzer...")
+                self.sentiment_analyzer = get_sentiment_analyzer(use_finbert=True)
+                print("✅ FinBERT ready")
+            except Exception as e:
+                print(f"⚠️  FinBERT initialization failed: {e}")
+                print("   Using keyword-based sentiment")
+                self.use_finbert = False
 
     def fetch_news(self, symbol: str) -> List[Dict]:
         """Fetch recent news for a symbol"""
@@ -72,6 +93,87 @@ class NewsMonitor:
 
     def analyze_sentiment(self, article: Dict) -> Dict:
         """Analyze if article indicates a buying opportunity"""
+        title = article['title']
+        title_lower = title.lower()
+        
+        # Use FinBERT if available, otherwise fall back to keywords
+        if self.use_finbert and self.sentiment_analyzer:
+            return self._analyze_with_finbert(article)
+        else:
+            return self._analyze_with_keywords(article)
+    
+    def _analyze_with_finbert(self, article: Dict) -> Dict:
+        """Analyze sentiment using FinBERT ML model"""
+        title = article['title']
+        title_lower = title.lower()
+        
+        try:
+            # Get ML-based sentiment
+            sentiment_result = self.sentiment_analyzer.analyze(title)
+            
+            # Check if it's negative sentiment (potential buying opportunity)
+            is_negative = sentiment_result['sentiment'] == 'negative'
+            confidence = sentiment_result['confidence']
+            
+            # Still filter out serious issues with keywords
+            has_serious_issue = any(
+                keyword in title_lower for keyword in self.avoid_keywords
+            )
+            
+            if has_serious_issue:
+                return {
+                    'is_opportunity': False,
+                    'reason': 'Serious issue detected',
+                    'sentiment': 'very_negative',
+                    'sentiment_score': -50,
+                    'confidence': confidence,
+                    'method': 'finbert',
+                    'probabilities': sentiment_result['probabilities']
+                }
+            
+            # Negative sentiment = buying opportunity
+            if is_negative and confidence > 0.60:  # High confidence negative
+                sentiment_score = int(-25 - (confidence * 25))  # -25 to -50
+                return {
+                    'is_opportunity': True,
+                    'reason': 'ML-detected negative sentiment (high confidence)',
+                    'sentiment': 'negative',
+                    'sentiment_score': sentiment_score,
+                    'confidence': confidence,
+                    'method': 'finbert',
+                    'probabilities': sentiment_result['probabilities']
+                }
+            elif is_negative:  # Medium confidence negative
+                sentiment_score = int(-25 - (confidence * 25))
+                return {
+                    'is_opportunity': True,
+                    'reason': 'ML-detected negative sentiment',
+                    'sentiment': 'negative',
+                    'sentiment_score': sentiment_score,
+                    'confidence': confidence,
+                    'method': 'finbert',
+                    'probabilities': sentiment_result['probabilities']
+                }
+            else:
+                # Not negative = not an opportunity
+                sentiment_score = self.sentiment_analyzer.get_sentiment_score(title)
+                return {
+                    'is_opportunity': False,
+                    'reason': f"Sentiment: {sentiment_result['sentiment']}",
+                    'sentiment': sentiment_result['sentiment'],
+                    'sentiment_score': sentiment_score,
+                    'confidence': confidence,
+                    'method': 'finbert',
+                    'probabilities': sentiment_result['probabilities']
+                }
+                
+        except Exception as e:
+            print(f"⚠️  FinBERT analysis failed for '{title}': {e}")
+            print("   Falling back to keyword analysis")
+            return self._analyze_with_keywords(article)
+    
+    def _analyze_with_keywords(self, article: Dict) -> Dict:
+        """Analyze sentiment using keyword matching (fallback)"""
         title_lower = article['title'].lower()
 
         # Check if it's negative news (potential dip)
@@ -88,11 +190,24 @@ class NewsMonitor:
         drop_match = re.search(r'(\d+(?:\.\d+)?)\s*%', title_lower)
         drop_percentage = float(drop_match.group(1)) if drop_match else None
 
+        # Determine reason
+        if has_red_flag:
+            reason = "Serious issue - avoid"
+        elif has_opportunity_signal:
+            reason = "Negative keyword detected"
+        else:
+            reason = "No opportunity signal"
+        
         return {
             'is_opportunity': has_opportunity_signal and not has_red_flag,
+            'reason': reason,
+            'sentiment': 'negative' if has_opportunity_signal else 'neutral',
+            'sentiment_score': self._calculate_sentiment_score(title_lower, drop_percentage),
+            'confidence': 0.75 if has_opportunity_signal else 0.50,
+            'method': 'keyword',
+            'probabilities': None,
             'has_red_flag': has_red_flag,
-            'drop_percentage': drop_percentage,
-            'sentiment_score': self._calculate_sentiment_score(title_lower, drop_percentage)
+            'drop_percentage': drop_percentage
         }
 
     def _calculate_sentiment_score(self, title: str, drop_pct: float = None) -> int:

@@ -1,0 +1,22 @@
+# FinBERT Sentiment Analysis Dependencies
+# Optional ML-based sentiment analysis (fallback to keywords if not installed)
+
+# Transformers library for FinBERT model
+transformers>=4.35.0
+
+# PyTorch
+# Choose ONE of the following based on your system:
+
+# OPTION 1: CPU-only (macOS, Linux without GPU, or GitHub Actions)
+# torch>=2.1.0
+
+# OPTION 2: CUDA GPU (Windows/Linux with NVIDIA GPU) - RECOMMENDED for speed
+# Install with: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# (This installs CUDA 11.8 version for GPU acceleration)
+
+# OPTION 3: Universal (auto-detects GPU, works on all systems)
+torch>=2.1.0
+# Note: If you have CUDA GPU, uninstall torch and reinstall with:
+#   pip uninstall torch
+#   pip install torch --index-url https://download.pytorch.org/whl/cu118
+

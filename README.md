@@ -50,6 +50,7 @@ That's it! See detailed guides:
 - 📰 **News Scanner** - Monitors Yahoo Finance news to identify buying opportunities from price dips
 - 💼 **Insider Trading Tracker** - Follows corporate insider transactions to identify "smart money" movements
 - 🤖 **Auto-Add to Portfolio** - Automatically analyzes high-score opportunities (80+) and optionally adds them to tracking
+- 🧠 **FinBERT Sentiment Analysis** - ML-based financial sentiment (85-90% accuracy vs 60-70% keywords), optional GPU acceleration
 - 📱 **Telegram Notifications** - Get instant alerts on your phone after market close
 - 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
 - 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)

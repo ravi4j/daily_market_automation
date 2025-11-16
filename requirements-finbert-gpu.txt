@@ -1,0 +1,20 @@
+# FinBERT with GPU Support (Windows/Linux with NVIDIA GPU)
+# For faster sentiment analysis using CUDA acceleration
+
+# Transformers library
+transformers>=4.35.0
+
+# PyTorch with CUDA 11.8 support
+# Install with this command:
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+
+# Or for CUDA 12.1:
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# Note: The actual torch package will be installed via the pip command above,
+# not from this requirements file, to ensure proper CUDA version
+
+# After installing PyTorch with GPU support, verify with:
+# python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+# python -c "import torch; print(f'CUDA device: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else None}')"
+
