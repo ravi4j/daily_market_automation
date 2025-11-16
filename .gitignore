@@ -48,6 +48,12 @@ env/
 # Data backups
 data/*.backup
 data/*_test.csv
+data/market_data/*.backup
+data/market_data/*_test.csv
+
+# Cache directory (temporary data only)
+data/cache/*
+!data/cache/.gitkeep
 
 # Logs
 *.log

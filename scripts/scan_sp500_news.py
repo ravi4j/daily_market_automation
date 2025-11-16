@@ -200,7 +200,7 @@ def main():
     # Load S&P 500 symbols with sector info
     print("📊 Loading S&P 500 constituent list...")
     import json
-    json_file = 'data/sp500_symbols.json'
+    json_file = 'data/metadata/sp500_symbols.json'
     if not os.path.exists(json_file):
         print("❌ S&P 500 list not found!")
         print("   Run: python scripts/fetch_sp500_list.py")

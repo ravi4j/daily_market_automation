@@ -41,18 +41,18 @@ jobs:
         run: |
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
-          git add data/*.csv || true
-          git commit -m "Update daily data" || echo "No changes to commit"
+          git add data/market_data/*.csv || true
+          git commit -m "Update daily market data" || echo "No changes to commit"
           git push || echo "Push skipped"
 
       # (Optional) quick peek + artifacts for debugging
       - name: Show CSV head
         if: always()
-        run: head -n 5 data/*.csv || true
+        run: head -n 5 data/market_data/*.csv || true
 
       - name: Upload CSVs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: csv-output
-          path: data/*.csv
+          path: data/market_data/*.csv

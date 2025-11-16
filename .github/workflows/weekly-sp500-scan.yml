@@ -91,7 +91,7 @@ jobs:
         run: |
           git config user.name "automation-bot"
           git config user.email "bot@example.com"
-          git add signals/sp500_opportunities.json data/sp500_symbols.json || true
+          git add signals/sp500_opportunities.json data/metadata/sp500_symbols.json || true
           git commit -m "Update S&P 500 opportunities [skip ci]" || echo "No changes to commit"
           git push || echo "Push skipped"
       
@@ -102,7 +102,7 @@ jobs:
           name: sp500-opportunities
           path: |
             signals/sp500_opportunities.json
-            data/sp500_symbols.json
+            data/metadata/sp500_symbols.json
           retention-days: 30
       
       - name: Generate workflow summary

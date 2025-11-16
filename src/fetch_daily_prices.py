@@ -71,7 +71,7 @@ SYMBOLS = load_symbols_config()
 # Get project root (parent of src/ directory when moved, or current dir if not moved)
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR) if os.path.basename(SCRIPT_DIR) == "src" else SCRIPT_DIR
-DATA_DIR = os.path.join(PROJECT_ROOT, "data")
+DATA_DIR = os.path.join(PROJECT_ROOT, "data", "market_data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # Automatically create CSV paths from SYMBOLS

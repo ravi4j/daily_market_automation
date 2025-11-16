@@ -106,7 +106,7 @@ def load_comprehensive_list():
     """Load comprehensive S&P 500 list from file"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
-    comprehensive_file = os.path.join(project_root, 'data', 'sp500_comprehensive.txt')
+    comprehensive_file = os.path.join(project_root, 'data', 'metadata', 'sp500_comprehensive.txt')
 
     if os.path.exists(comprehensive_file):
         sp500_data = []
@@ -267,7 +267,7 @@ def get_inline_fallback_list():
     print(f"✅ Loaded {len(fallback_list)} major S&P 500 stocks from fallback list")
     return fallback_list
 
-def save_sp500_list(sp500_data, output_dir='data'):
+def save_sp500_list(sp500_data, output_dir='data/metadata'):
     """Save S&P 500 list to JSON file"""
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, 'sp500_symbols.json')
@@ -284,7 +284,7 @@ def save_sp500_list(sp500_data, output_dir='data'):
     print(f"💾 Saved to {output_file}")
     return output_file
 
-def load_sp500_list(data_dir='data'):
+def load_sp500_list(data_dir='data/metadata'):
     """Load S&P 500 list from JSON file"""
     json_file = os.path.join(data_dir, 'sp500_symbols.json')
 
@@ -298,7 +298,7 @@ def load_sp500_list(data_dir='data'):
 
     return [item['symbol'] for item in data['symbols']]
 
-def get_symbols_by_sector(sector_name=None, data_dir='data'):
+def get_symbols_by_sector(sector_name=None, data_dir='data/metadata'):
     """Get symbols filtered by sector"""
     json_file = os.path.join(data_dir, 'sp500_symbols.json')
 
