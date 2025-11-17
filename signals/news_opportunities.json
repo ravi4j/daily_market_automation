@@ -1,5 +1,5 @@
 {
-  "scan_date": "2025-11-15T16:40:57.087726",
+  "scan_date": "2025-11-17T09:16:10.559452",
   "symbols_scanned": 5,
   "scanned_symbols": [
     "TQQQ",
@@ -35,13 +35,20 @@
           "title": "",
           "publisher": "",
           "link": "",
-          "published": "1969-12-31 18:00:00",
+          "published": "1969-12-31 19:00:00",
           "type": "STORY",
           "sentiment": {
             "is_opportunity": false,
-            "has_red_flag": false,
-            "drop_percentage": null,
-            "sentiment_score": 0
+            "reason": "Sentiment: neutral",
+            "sentiment": "neutral",
+            "sentiment_score": 0,
+            "confidence": 0.5,
+            "method": "finbert",
+            "probabilities": {
+              "positive": 0.33,
+              "negative": 0.33,
+              "neutral": 0.34
+            }
           }
         }
       ],
