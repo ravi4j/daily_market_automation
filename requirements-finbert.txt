@@ -19,4 +19,3 @@ torch>=2.1.0
 # Note: If you have CUDA GPU, uninstall torch and reinstall with:
 #   pip uninstall torch
 #   pip install torch --index-url https://download.pytorch.org/whl/cu118
-

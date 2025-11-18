@@ -435,6 +435,27 @@ When adding a new feature, use this checklist:
 
 ---
 
+## 🎯 Recently Added Features
+
+### 1. Pre-Market Gap Monitor (✅ COMPLETED)
+**Added**: November 2025
+**Complexity**: Medium (~3-4 hours)
+**Impact**: New standalone workflow
+
+**Updated files:**
+- ✅ `src/premarket_monitor.py` (core gap detection)
+- ✅ `src/futures_monitor.py` (market sentiment)
+- ✅ `config/premarket_config.yaml` (position tracking)
+- ✅ `scripts/send_premarket_alerts.py` (main script)
+- ✅ `scripts/run_premarket_workflow.sh` (macOS/Linux)
+- ✅ `scripts/run_premarket_workflow.bat` (Windows)
+- ✅ `.github/workflows/premarket-alerts.yml` (GitHub Actions)
+- ✅ Documentation (PREMARKET_GAP_MONITOR_QUICKSTART.md)
+
+**Runs**: 7 AM, 8 AM, 9 AM ET (before market open)
+
+---
+
 ## 🎯 Upcoming Features
 
 Based on `ADVANCED_FEATURES_ROADMAP.md`, here are the next features to integrate:

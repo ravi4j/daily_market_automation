@@ -99,6 +99,16 @@ else
     # Don't exit - this is optional
 fi
 
+echo ""
+echo -e "${BLUE}=== Step 6: Daily Sector Trade Selection ===${NC}"
+python scripts/daily_sector_trades.py --max-per-sector 2
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓${NC} Daily sector trades identified and sent"
+else
+    echo -e "${RED}✗${NC} Failed to identify sector trades"
+    # Don't exit - this is optional
+fi
+
 # ============================================================================
 # END OF WORKFLOW
 # Add new steps ABOVE this section
@@ -114,10 +124,11 @@ echo "  - Market data updated"
 echo "  - Charts generated"
 echo "  - Trading alerts sent"
 echo "  - News opportunities scanned"
+echo "  - Daily sector trades identified"
 echo ""
 echo "📁 Check outputs in:"
 echo "  - data/market_data/*.csv"
 echo "  - charts/*/*.png"
-echo "  - signals/*.json"
+echo "  - signals/*.json (includes daily_sector_trades.json)"
 echo ""
 

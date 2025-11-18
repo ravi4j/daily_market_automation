@@ -51,7 +51,8 @@ That's it! See detailed guides:
 - 💼 **Insider Trading Tracker** - Follows corporate insider transactions to identify "smart money" movements
 - 🤖 **Auto-Add to Portfolio** - Automatically analyzes high-score opportunities (80+) and optionally adds them to tracking
 - 🧠 **FinBERT Sentiment Analysis** - ML-based financial sentiment (85-90% accuracy vs 60-70% keywords), optional GPU acceleration
-- 📱 **Telegram Notifications** - Get instant alerts on your phone after market close
+- 🌅 **Pre-Market Gap Monitor** - DUAL: Protect positions from gaps + Find new gap opportunities (oversold/breakout) with ML scoring
+- 📱 **Telegram Notifications** - Get instant alerts on your phone after market close and before market open
 - 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
 - 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)
 - 🤖 **GitHub Actions Automation** - Daily data fetch, chart generation, alerts, and signal exports
@@ -1033,7 +1034,178 @@ python scripts/scan_sp500_news.py --top 10
 
 ---
 
-## 9) Testing
+## 9) Pre-Market Gap Monitor 🌅
+
+**NEW!** Get morning alerts with **DUAL FUNCTIONALITY**:
+1. 🛡️ **Protect** your positions from gaps
+2. 🎯 **Find** new buying opportunities
+
+Runs at 7, 8, 9 AM ET (before 9:30 AM market open)!
+
+### What It Does
+
+**🛡️ Position Protection:**
+- 📉 **Gap Detection** - Identifies gaps up/down in your positions
+- 🚨 **Risk Assessment** - CRITICAL/HIGH/MEDIUM/LOW based on proximity to stop loss
+- 💡 **Action Recommendations** - "HOLD", "WATCH", "PREPARE_TO_EXIT", "EXIT_NOW"
+
+**🎯 Opportunity Detection (NEW!):**
+- 📉 **Gap Down Scanner** - Finds oversold stocks ready to bounce (70% gap fill rate)
+- 📈 **Gap Up Scanner** - Finds breakout stocks with momentum (80% continuation rate)
+- 🔢 **Smart Scoring** - 0-100 score based on fundamentals + technicals
+- 💰 **Trade Setups** - Complete entry/stop/target for each opportunity
+
+**📊 Market Context:**
+- S&P 500, Nasdaq, Dow futures sentiment
+- VIX volatility index
+- 📱 **Telegram Alerts** - Everything in ONE comprehensive morning report
+
+### Quick Start
+
+```bash
+# 1. Add your positions to config/premarket_config.yaml
+# 2. Test it
+python scripts/send_premarket_alerts.py
+
+# 3. Set up automation (runs at 7, 8, 9 AM ET)
+# GitHub Actions: Already configured!
+# Local (cron/Task Scheduler): See PREMARKET_GAP_MONITOR_QUICKSTART.md
+```
+
+### Example Telegram Alert
+
+```
+🌅 PRE-MARKET ALERT
+07:00 AM ET
+
+📊 MARKET FUTURES
+🔴 S&P 500: -0.85%
+🔴 Nasdaq: -1.12%
+
+🔴 Market likely opens red
+━━━━━━━━━━━━━━━━━━━━
+
+📈 YOUR POSITIONS
+
+⚠️ ETN
+🔴 Pre-Market: $340.33 (-0.71%)
+Previous Close: $342.76
+Your Entry: $341.49
+Your Stop: $340.00
+
+Distance: 0.10% from stop
+
+💡 VERY CLOSE TO STOP! Be ready to exit at open.
+━━━━━━━━━━━━━━━━━━━━
+
+⚠️ ACTION REQUIRED
+• Be at computer at 9:25 AM
+• Market opens in 150 minutes
+```
+
+### Gap Types Detected
+
+| Gap Type | Description | Typical Action |
+|----------|-------------|----------------|
+| **Common Gap** (< 2%) | Small overnight move | Usually fills, monitor normally |
+| **Breakaway Gap** (> 5%) | Major news-driven move | Rarely fills, take action |
+| **Gap Up** | Opens higher | Consider taking profits |
+| **Gap Down** | Opens lower | Prepare to exit if near stop |
+
+### Risk Levels
+
+| Level | When | What To Do |
+|-------|------|------------|
+| 🚨 **CRITICAL** | Below stop loss | Exit immediately at open |
+| ⚠️ **HIGH** | Within 1% of stop | Be ready to exit |
+| 🟡 **MEDIUM** | 2-5% gap, not near stop | Watch closely |
+| ✅ **LOW** | Small gap, far from stop | Normal monitoring |
+
+### Configuration
+
+Edit `config/premarket_config.yaml`:
+
+```yaml
+positions:
+  AAPL:
+    shares: 10
+    avg_entry: 230.00
+    stop_loss: 225.00
+    target1: 240.00
+    notes: "Swing trade from Nov 18"
+
+alerts:
+  gap_threshold: 0.5          # Alert if gap > 0.5%
+  stop_proximity_threshold: 1.0  # Alert if within 1% of stop
+
+telegram:
+  include_market_sentiment: true
+  include_vix: true           # Volatility index
+  include_recommendations: true
+```
+
+### GitHub Actions
+
+Workflow runs automatically at 7, 8, 9 AM ET:
+- ✅ `.github/workflows/premarket-alerts.yml`
+- ✅ No setup needed (uses existing Telegram credentials)
+- ✅ Update `config/premarket_config.yaml` to track your positions
+
+### Local Automation
+
+```bash
+# macOS/Linux (cron)
+0 12 * * 1-5 cd $PROJECT && venv/bin/python scripts/send_premarket_alerts.py
+
+# Windows (Task Scheduler)
+# See PREMARKET_GAP_MONITOR_QUICKSTART.md for setup
+
+# Or use master workflow script:
+./scripts/run_premarket_workflow.sh   # macOS/Linux
+.\scripts\run_premarket_workflow.bat  # Windows
+```
+
+### Features
+
+✅ **Gap Classification** - Common, breakaway, runaway, exhaustion
+✅ **Futures Monitoring** - S&P 500, Nasdaq, Dow Jones
+✅ **VIX Tracking** - Volatility index (fear gauge)
+✅ **Risk Assessment** - Automatic severity calculation
+✅ **Action Suggestions** - Clear recommendations for each position
+✅ **Pre-Market Volume** - Shows trading activity before open
+✅ **Potential Loss Calculation** - Estimates loss if stopped out
+
+### Real-World Example
+
+**Your ETN Trade:**
+
+```
+Nov 17 Evening:
+• Bought ETN at $341.49
+• Set stop at $340.00
+• Closed at $342.76 (+$25 profit)
+
+Nov 18 Morning:
+• 7:00 AM Alert: "ETN pre-market $340.33, NEAR STOP!"
+• 8:00 AM Alert: "ETN still at $340.40, watch closely"
+• 9:00 AM Alert: "ETN at $340.33, prepare to exit"
+• 9:30 AM: Opens at $340.33, stop triggers at $340.00
+
+Result: Loss -$29.70 (controlled)
+
+Without Pre-Market Alerts:
+• You wake up at 10 AM
+• ETN already at $335 (continued falling)
+• Stop triggered, but you didn't know
+• More stress, less control
+```
+
+**Quick Start:** [PREMARKET_GAP_MONITOR_QUICKSTART.md](PREMARKET_GAP_MONITOR_QUICKSTART.md)
+**Test Script:** `python scripts/send_premarket_alerts.py`
+
+---
+
+## 10) Testing
 
 ### Test Incremental Fetching
 To verify that incremental fetching works correctly:

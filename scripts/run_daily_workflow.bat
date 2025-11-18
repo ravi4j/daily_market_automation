@@ -130,6 +130,18 @@ if errorlevel 1 (
     echo [OK] Auto-analysis complete >> %LOG_FILE%
 )
 
+echo.
+echo === Step 6: Daily Sector Trade Selection ===
+echo [%TIME%] Running daily sector trade selector... >> %LOG_FILE%
+python scripts\daily_sector_trades.py --max-per-sector 2
+if errorlevel 1 (
+    echo [ERROR] Failed to identify sector trades
+    echo [ERROR] Failed to identify sector trades >> %LOG_FILE%
+) else (
+    echo [OK] Daily sector trades identified and sent
+    echo [OK] Daily sector trades identified and sent >> %LOG_FILE%
+)
+
 REM ============================================================================
 REM END OF WORKFLOW
 REM Add new steps ABOVE this section
@@ -146,11 +158,12 @@ echo   - Market data updated
 echo   - Charts generated
 echo   - Trading alerts sent
 echo   - News opportunities scanned
+echo   - Daily sector trades identified
 echo.
 echo Check outputs in:
 echo   - data\market_data\*.csv
 echo   - charts\*\*.png
-echo   - signals\*.json
+echo   - signals\*.json (includes daily_sector_trades.json)
 echo.
 echo Log saved to: %LOG_FILE%
 echo.

@@ -50,11 +50,11 @@ class NewsMonitor:
                 self.correlation_tracker = NewsCorrelationTracker()
             except Exception as e:
                 print(f"⚠️  Correlation tracking disabled: {e}")
-        
+
         # Initialize FinBERT sentiment analyzer (optional)
         self.use_finbert = use_finbert and FINBERT_AVAILABLE
         self.sentiment_analyzer = None
-        
+
         if self.use_finbert:
             try:
                 print("🤖 Initializing FinBERT sentiment analyzer...")
@@ -95,31 +95,31 @@ class NewsMonitor:
         """Analyze if article indicates a buying opportunity"""
         title = article['title']
         title_lower = title.lower()
-        
+
         # Use FinBERT if available, otherwise fall back to keywords
         if self.use_finbert and self.sentiment_analyzer:
             return self._analyze_with_finbert(article)
         else:
             return self._analyze_with_keywords(article)
-    
+
     def _analyze_with_finbert(self, article: Dict) -> Dict:
         """Analyze sentiment using FinBERT ML model"""
         title = article['title']
         title_lower = title.lower()
-        
+
         try:
             # Get ML-based sentiment
             sentiment_result = self.sentiment_analyzer.analyze(title)
-            
+
             # Check if it's negative sentiment (potential buying opportunity)
             is_negative = sentiment_result['sentiment'] == 'negative'
             confidence = sentiment_result['confidence']
-            
+
             # Still filter out serious issues with keywords
             has_serious_issue = any(
                 keyword in title_lower for keyword in self.avoid_keywords
             )
-            
+
             if has_serious_issue:
                 return {
                     'is_opportunity': False,
@@ -130,7 +130,7 @@ class NewsMonitor:
                     'method': 'finbert',
                     'probabilities': sentiment_result['probabilities']
                 }
-            
+
             # Negative sentiment = buying opportunity
             if is_negative and confidence > 0.60:  # High confidence negative
                 sentiment_score = int(-25 - (confidence * 25))  # -25 to -50
@@ -166,12 +166,12 @@ class NewsMonitor:
                     'method': 'finbert',
                     'probabilities': sentiment_result['probabilities']
                 }
-                
+
         except Exception as e:
             print(f"⚠️  FinBERT analysis failed for '{title}': {e}")
             print("   Falling back to keyword analysis")
             return self._analyze_with_keywords(article)
-    
+
     def _analyze_with_keywords(self, article: Dict) -> Dict:
         """Analyze sentiment using keyword matching (fallback)"""
         title_lower = article['title'].lower()
@@ -197,7 +197,7 @@ class NewsMonitor:
             reason = "Negative keyword detected"
         else:
             reason = "No opportunity signal"
-        
+
         return {
             'is_opportunity': has_opportunity_signal and not has_red_flag,
             'reason': reason,
