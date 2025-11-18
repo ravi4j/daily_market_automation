@@ -1,0 +1,112 @@
+name: Daily ETF Trading & Rebalancing
+
+on:
+  # Run after market close (4:30 PM ET = 9:30 PM UTC)
+  schedule:
+    - cron: '30 21 * * 1-5'  # Mon-Fri at 9:30 PM UTC (4:30 PM ET)
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      skip_rebalancing:
+        description: 'Skip rebalancing check'
+        required: false
+        default: 'false'
+
+jobs:
+  etf-analysis:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-base.txt
+        pip install -r requirements-fetch.txt
+    
+    - name: Create necessary directories
+      run: |
+        mkdir -p data/market_data
+        mkdir -p data/metadata
+        mkdir -p data/cache
+        mkdir -p signals
+    
+    - name: Update daily data
+      run: |
+        python src/fetch_daily_prices.py
+      continue-on-error: true
+    
+    - name: Run ETF trade scanner
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+      run: |
+        echo "📊 Scanning ETFs for daily trades..."
+        python scripts/daily_etf_trades.py --category recommended_daily_trading
+    
+    - name: Run portfolio rebalancer
+      if: ${{ github.event.inputs.skip_rebalancing != 'true' }}
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        echo "🔄 Checking portfolio rebalancing needs..."
+        python scripts/portfolio_rebalancer.py
+      continue-on-error: true
+    
+    - name: Commit results
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add signals/*.json signals/*.txt data/market_data/*.csv || true
+        git diff --quiet && git diff --staged --quiet || git commit -m "chore: Update ETF trades and rebalancing (automated)"
+    
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+    
+    - name: Upload results
+      uses: actions/upload-artifact@v3
+      with:
+        name: etf-trading-results
+        path: |
+          signals/daily_etf_trades.json
+          signals/rebalancing_report.txt
+          signals/rebalancing_orders.json
+    
+    - name: Workflow summary
+      run: |
+        echo "## 📊 Daily ETF Trading Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f signals/daily_etf_trades.json ]; then
+          TRADES=$(jq '.total_trades // 0' signals/daily_etf_trades.json)
+          CATEGORIES=$(jq '.categories_covered // 0' signals/daily_etf_trades.json)
+          echo "✅ **ETF Trades:** $TRADES opportunities across $CATEGORIES categories" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "⚠️ No ETF trade results found" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f signals/rebalancing_orders.json ]; then
+          ORDERS=$(jq '.total_orders // 0' signals/rebalancing_orders.json)
+          echo "🔄 **Rebalancing:** $ORDERS orders generated" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "✅ **Rebalancing:** Portfolio balanced, no orders needed" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📅 Completed: $(date)" >> $GITHUB_STEP_SUMMARY
+

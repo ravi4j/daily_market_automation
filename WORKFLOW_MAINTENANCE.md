@@ -437,7 +437,41 @@ When adding a new feature, use this checklist:
 
 ## 🎯 Recently Added Features
 
-### 1. Pre-Market Gap Monitor (✅ COMPLETED)
+### 1. ETF Trading & Portfolio Rebalancing (✅ COMPLETED - Nov 18, 2024)
+
+**Scripts:**
+- `scripts/daily_etf_trades.py` - ETF-only trading scanner
+- `scripts/portfolio_rebalancer.py` - Portfolio rebalancing engine
+
+**GitHub Actions Workflows:**
+- `.github/workflows/daily-etf-workflow.yml` - Daily ETF + rebalancing
+  * Runs: 4:30 PM ET (after market close)
+  * Scans: Recommended daily trading ETFs
+  * Checks: Portfolio rebalancing needs
+  * Outputs: daily_etf_trades.json, rebalancing_orders.json
+
+- `.github/workflows/weekly-rebalancing.yml` - Weekly comprehensive
+  * Runs: Monday 6 PM ET
+  * Rebalances: Full portfolio analysis
+  * Scans: All 11 sector ETFs
+  * Generates: Buy/sell orders
+
+**Configuration Files:**
+- `config/etf_universe.yaml` - 60+ ETFs across categories
+- `config/portfolio_allocation.yaml` - Target allocations
+
+**Manual Commands:**
+```bash
+# Daily ETF scan
+python scripts/daily_etf_trades.py
+
+# Portfolio rebalancing
+python scripts/portfolio_rebalancer.py
+```
+
+---
+
+### 2. Pre-Market Gap Monitor (✅ COMPLETED)
 **Added**: November 2025
 **Complexity**: Medium (~3-4 hours)
 **Impact**: New standalone workflow

@@ -1,0 +1,126 @@
+name: Weekly Portfolio Rebalancing
+
+on:
+  # Run every Monday at 6 PM ET (11 PM UTC)
+  schedule:
+    - cron: '0 23 * * 1'  # Monday at 11 PM UTC (6 PM ET)
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      force_rebalancing:
+        description: 'Force rebalancing even if within threshold'
+        required: false
+        default: 'false'
+
+jobs:
+  weekly-rebalancing:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-base.txt
+        pip install -r requirements-fetch.txt
+    
+    - name: Create necessary directories
+      run: |
+        mkdir -p data/market_data
+        mkdir -p data/metadata
+        mkdir -p data/cache
+        mkdir -p signals
+    
+    - name: Update latest data
+      run: |
+        python src/fetch_daily_prices.py
+      continue-on-error: true
+    
+    - name: Run portfolio rebalancer
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        echo "🔄 Running weekly portfolio rebalancing check..."
+        
+        if [ "${{ github.event.inputs.force_rebalancing }}" = "true" ]; then
+          echo "⚠️  Force rebalancing enabled"
+          python scripts/portfolio_rebalancer.py --force
+        else
+          python scripts/portfolio_rebalancer.py
+        fi
+    
+    - name: Scan sector ETFs for best opportunities
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+      run: |
+        echo "📊 Scanning all 11 sector ETFs..."
+        python scripts/daily_etf_trades.py --category recommended_sector_rotation --max-per-category 2
+    
+    - name: Commit results
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add signals/*.json signals/*.txt data/market_data/*.csv || true
+        git diff --quiet && git diff --staged --quiet || git commit -m "chore: Weekly rebalancing and sector analysis (automated)"
+    
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+    
+    - name: Upload results
+      uses: actions/upload-artifact@v3
+      with:
+        name: weekly-rebalancing-results
+        path: |
+          signals/rebalancing_report.txt
+          signals/rebalancing_orders.json
+          signals/daily_etf_trades.json
+    
+    - name: Workflow summary
+      run: |
+        echo "## 🔄 Weekly Rebalancing Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📅 Date: $(date)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f signals/rebalancing_orders.json ]; then
+          ORDERS=$(jq '.total_orders // 0' signals/rebalancing_orders.json)
+          
+          if [ "$ORDERS" -gt 0 ]; then
+            echo "### 📋 Rebalancing Orders: $ORDERS" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract sell orders
+            SELLS=$(jq '[.orders[] | select(.action == "SELL")] | length' signals/rebalancing_orders.json)
+            echo "- 📉 **Sell orders:** $SELLS (take profits)" >> $GITHUB_STEP_SUMMARY
+            
+            # Extract buy orders
+            BUYS=$(jq '[.orders[] | select(.action == "BUY")] | length' signals/rebalancing_orders.json)
+            echo "- 📈 **Buy orders:** $BUYS (buy opportunities)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Portfolio is balanced** - No trades needed!" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "ℹ️  No rebalancing data available" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f signals/daily_etf_trades.json ]; then
+          ETF_TRADES=$(jq '.total_trades // 0' signals/daily_etf_trades.json)
+          echo "### 📊 Sector ETF Analysis: $ETF_TRADES opportunities" >> $GITHUB_STEP_SUMMARY
+        fi
+

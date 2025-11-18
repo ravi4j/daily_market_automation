@@ -14,15 +14,15 @@ target_allocation:
   financials: 10      # XLF, VFH
   energy: 10          # XLE, VDE
   industrials: 5      # XLI, VIS
-  
+
   # Index ETFs (20% total)
   sp500: 10           # SPY, VOO
   nasdaq: 10          # QQQ
-  
+
   # Leveraged ETFs (10% total - HIGH RISK)
   leveraged_long: 5   # TQQQ, UPRO
   leveraged_short: 5  # SQQQ, SPXU (hedge)
-  
+
   # Conservative (10% total)
   bonds: 5            # TLT, BND
   defensive: 5        # XLU, XLP
@@ -72,24 +72,24 @@ etf_mappings:
 rebalancing:
   # How often to check for rebalancing
   check_frequency: weekly  # daily, weekly, monthly
-  
+
   # Rebalance when drift exceeds this percentage
   drift_threshold: 5  # If allocation drifts 5%+ from target
-  
+
   # Minimum trade size (to avoid tiny trades)
   min_trade_dollars: 100  # Don't trade less than $100
-  
+
   # Maximum trades per rebalancing session
   max_trades_per_session: 5
-  
+
   # Rebalancing method
   method: threshold  # threshold, calendar, or hybrid
-  
+
   # Calendar rebalancing (if method is calendar or hybrid)
   calendar_schedule:
     - day: Monday
       frequency: weekly
-  
+
   # Trading preferences
   prefer_etfs_with_score_above: 70  # When buying, prefer high-score ETFs
   avoid_selling_winners: true  # Don't sell positions up >20%
@@ -119,10 +119,10 @@ current_holdings:
 alerts:
   # Send alert when rebalancing is needed
   send_telegram_alert: true
-  
+
   # Send detailed rebalancing plan
   include_trade_details: true
-  
+
   # Alert when allocation drifts significantly
   alert_on_drift_threshold: 7  # Alert at 7%+ drift
 
@@ -130,13 +130,13 @@ alerts:
 risk_management:
   # Maximum allocation to any single position
   max_single_position: 25  # No more than 25% in one ETF
-  
+
   # Maximum allocation to leveraged ETFs
   max_leveraged_total: 15  # No more than 15% in 3x ETFs
-  
+
   # Stop loss for individual positions
   position_stop_loss: -15  # Sell if down 15% from avg cost
-  
+
   # Trailing stop for winners
   trailing_stop: 10  # Sell if drops 10% from peak
 
@@ -145,4 +145,3 @@ risk_management:
 # - Adjust target_allocation based on market conditions
 # - Rebalancing automatically "buys low, sells high"
 # - System will generate specific buy/sell orders
-
