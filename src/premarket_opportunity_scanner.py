@@ -321,24 +321,27 @@ class PreMarketOpportunityScanner:
             'reasons': reasons
         }
     
-    def scan_for_opportunities(self, min_gap_pct: float = 2.0, 
-                              max_symbols: int = 10) -> List[Dict]:
+    def scan_for_opportunities(self, symbols: List[str] = None, min_gap_pct: float = 2.0, 
+                              max_opportunities: int = 10) -> List[Dict]:
         """
         Scan symbols for gap opportunities
         
         Args:
+            symbols: List of symbols to scan (overrides self.symbols_to_scan if provided)
             min_gap_pct: Minimum gap percentage to consider (default 2%)
-            max_symbols: Maximum opportunities to return
+            max_opportunities: Maximum opportunities to return
         
         Returns:
             List of opportunities sorted by score
         """
+        # Use provided symbols or fall back to initialized list
+        scan_symbols = symbols if symbols is not None else self.symbols_to_scan
         opportunities = []
         
-        print(f"\n🔍 Scanning {len(self.symbols_to_scan)} symbols for gap opportunities...")
+        print(f"\n🔍 Scanning {len(scan_symbols)} symbols for gap opportunities...")
         print(f"   (Looking for gaps >= {min_gap_pct}%)")
         
-        for symbol in self.symbols_to_scan:
+        for symbol in scan_symbols:
             # Get gap data
             gap_data = self.get_gap_data(symbol)
             
@@ -374,8 +377,10 @@ class PreMarketOpportunityScanner:
         # Sort by score (highest first)
         opportunities.sort(key=lambda x: x['score'], reverse=True)
         
+        print(f"✅ Found {len(opportunities)} opportunities (returning top {max_opportunities})")
+        
         # Return top N
-        return opportunities[:max_symbols]
+        return opportunities[:max_opportunities]
 
 
 # Example usage and testing
