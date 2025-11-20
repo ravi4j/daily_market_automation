@@ -179,7 +179,7 @@ scoring:
 # Portfolio (optional - monitors YOUR existing positions)
 portfolio:
   positions: {}  # Leave empty for pure opportunity scanning
-  
+
   # Example: Add your actual positions to monitor
   # positions:
   #   TQQQ: 100    # 100 shares

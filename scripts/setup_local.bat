@@ -156,13 +156,14 @@ echo Next Steps:
 echo.
 echo 1. Configure environment variables:
 echo    notepad .env
-echo    (Add your TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID)
+echo    (Add your FINNHUB_API_KEY, TELEGRAM_BOT_TOKEN, and TELEGRAM_CHAT_ID)
 echo.
-echo 2. Configure symbols to track:
-echo    notepad config\symbols.yaml
+echo 2. (Optional) Configure portfolio positions to monitor:
+echo    notepad config\master_config.yaml
+echo    (Edit portfolio.positions section - leave empty for pure opportunity scanning)
 echo.
 echo 3. Test the system:
-echo    scripts\run_daily_workflow.bat
+echo    scripts\run_master_scan.bat
 echo.
 echo 4. Set up automated scheduling:
 echo    - Run: scripts\setup_scheduled_tasks.ps1 (as Administrator)
@@ -170,9 +171,8 @@ echo    - OR see LOCAL_SETUP_WINDOWS.md for manual Task Scheduler setup
 echo.
 echo Quick Commands:
 echo    venv\Scripts\activate.bat              - Activate virtual environment
-echo    scripts\run_daily_workflow.bat         - Run complete daily workflow
-echo    scripts\run_weekly_workflow.bat        - Run weekly S&P 500 scan
-echo    python scripts\analyze_symbol.py AAPL  - Analyze specific symbol
+echo    scripts\run_master_scan.bat            - Run daily market scan
+echo    scripts\run_premarket_scan.bat         - Run pre-market gap monitor
 echo.
 echo Documentation:
 echo    LOCAL_SETUP_WINDOWS.md - Complete Windows guide

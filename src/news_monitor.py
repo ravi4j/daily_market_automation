@@ -418,20 +418,25 @@ def main():
 
     monitor = NewsMonitor()
 
-    # Load symbols from config
+    # Load portfolio positions from master_config.yaml
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
-    config_path = os.path.join(project_root, "config", "symbols.yaml")
+    config_path = os.path.join(project_root, "config", "master_config.yaml")
 
     symbols = []
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
-            symbols = list(config.get('symbols', {}).keys())
-    else:
-        symbols = ['AAPL', 'TQQQ', 'UBER']  # Fallback
+            # Get portfolio positions from master_config.yaml
+            positions = config.get('portfolio', {}).get('positions', {})
+            symbols = list(positions.keys()) if positions else []
+    
+    if not symbols:
+        print("ℹ️  No portfolio positions defined in master_config.yaml")
+        print("   Use master_daily_scan.py for automatic market-wide scanning.")
+        return
 
-    print(f"📰 Scanning {len(symbols)} symbols from config for opportunities...")
+    print(f"📰 Scanning {len(symbols)} portfolio positions for news opportunities...")
     opportunities = monitor.identify_opportunities(symbols, min_drop=3.0)
 
     print(f"\n✅ Found {len(opportunities)} opportunities\n")

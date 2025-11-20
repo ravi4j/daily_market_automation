@@ -33,37 +33,40 @@ except ImportError:
 
 # --- Config ---
 def load_symbols_config():
-    """Load symbols from config/symbols.yaml"""
+    """Load portfolio positions from config/master_config.yaml"""
     # Get project root
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir) if os.path.basename(script_dir) == "src" else script_dir
-    config_path = os.path.join(project_root, "config", "symbols.yaml")
+    config_path = os.path.join(project_root, "config", "master_config.yaml")
 
-    # Fallback to hardcoded symbols if config file doesn't exist
-    default_symbols = {
-        "TQQQ": "TQQQ",
-        "SP500": "^GSPC",
-        "AAPL": "AAPL",
-        "UBER": "UBER",
-    }
+    # Fallback: If no portfolio positions defined, return empty dict
+    # (master scanner will handle symbol selection automatically)
+    default_symbols = {}
 
     if not os.path.exists(config_path):
         print(f"⚠️  Config file not found: {config_path}")
-        print("   Using default symbols. Create config/symbols.yaml to customize.")
+        print("   No portfolio positions to fetch. Master scanner handles symbol selection.")
         return default_symbols
 
     try:
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
-            symbols = config.get('symbols', {})
-            if not symbols:
-                print("⚠️  No symbols found in config file, using defaults")
+            # Load portfolio positions from master_config.yaml
+            positions = config.get('portfolio', {}).get('positions', {})
+            
+            if not positions:
+                print("ℹ️  No portfolio positions defined in master_config.yaml")
+                print("   Master scanner will select symbols automatically.")
                 return default_symbols
-            print(f"✅ Loaded {len(symbols)} symbols from {config_path}")
+                
+            # Convert positions dict to symbols dict (positions may have share counts)
+            # Format: {symbol: shares} → {symbol: symbol}
+            symbols = {sym: sym for sym in positions.keys()}
+            print(f"✅ Loaded {len(symbols)} portfolio positions from {config_path}")
             return symbols
     except Exception as e:
         print(f"⚠️  Error loading config file: {e}")
-        print("   Using default symbols")
+        print("   No portfolio positions to fetch.")
         return default_symbols
 
 SYMBOLS = load_symbols_config()
