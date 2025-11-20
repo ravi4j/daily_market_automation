@@ -56,7 +56,7 @@ def fetch_and_save(symbol: str, asset_type: str) -> bool:
         # Round to 2 decimals for prices, 0 for volume
         df = df.round({
             "Open": 2, "High": 2, "Low": 2, "Close": 2,
-            "Volume": 0, "Dividends": 2, "Stock Splits": 2
+            "Volume": 0, "Dividends": 2, "Stock Splits": 2, "Capital Gains": 2
         })
         
         # Sort descending (newest first)
