@@ -430,7 +430,7 @@ def main():
             # Get portfolio positions from master_config.yaml
             positions = config.get('portfolio', {}).get('positions', {})
             symbols = list(positions.keys()) if positions else []
-    
+
     if not symbols:
         print("ℹ️  No portfolio positions defined in master_config.yaml")
         print("   Use master_daily_scan.py for automatic market-wide scanning.")

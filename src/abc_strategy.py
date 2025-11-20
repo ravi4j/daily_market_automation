@@ -11,7 +11,7 @@ import numpy as np
 from typing import List, Dict, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from abc_pattern_detector import ABCPatternDetector, ABCPattern
+from src.abc_pattern_detector import ABCPatternDetector, ABCPattern
 
 
 @dataclass
