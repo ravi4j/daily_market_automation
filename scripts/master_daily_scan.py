@@ -319,23 +319,14 @@ class MasterScanner:
         """
         print("  🧠 Smart filtering: Selecting best symbols to scan...")
 
-        # Prioritize by quality (large cap, high volume, diverse)
-        # This ensures we scan high-quality opportunities
         max_symbols = self.config['scanning'].get('max_symbols_per_run', 600)
 
-        # For now, return first N (will enhance with real-time volume/cap filtering)
-        return symbols[:max_symbols]
-
-    def _filter_tier_weekly(self, symbols: List[Dict]) -> List[Dict]:
-        """Weekly tier: More comprehensive scan"""
-        return symbols[:2000]
-
-    def _apply_filters(self, symbols: List[Dict]) -> List[str]:
-        """Apply quality filters (volume, price, exchange)"""
+        # Filter by exchange FIRST, then take top N
+        # This ensures we get 600 quality symbols from NYSE/NASDAQ/AMEX
         filters = self.config['scanning']['intelligent_filters']
+        valid_exchanges = set(filters.get('exchanges', ['NYSE', 'NASDAQ', 'AMEX']))
 
         # Map Finnhub exchange codes to filter names
-        # XNAS = NASDAQ, XNYS = NYSE, XASE = AMEX, ARCX = NYSE Arca, BATS = BATS
         exchange_mapping = {
             'XNAS': 'NASDAQ',
             'XNYS': 'NYSE',
@@ -344,25 +335,40 @@ class MasterScanner:
             'BATS': 'BATS',
         }
 
-        valid_exchanges = set(filters.get('exchanges', ['NYSE', 'NASDAQ', 'AMEX']))
-
         filtered = []
         for sym in symbols:
             exchange = sym.get('exchange', '')
 
             # If exchange is empty (fallback data), assume it's valid
             if not exchange:
-                filtered.append(sym['symbol'])
+                filtered.append(sym)
                 continue
 
             # Map Finnhub code to standard name
             mapped_exchange = exchange_mapping.get(exchange, exchange)
 
-            # Check if mapped exchange is in valid list
-            if any(valid in mapped_exchange for valid in valid_exchanges):
-                filtered.append(sym['symbol'])
+            # Check if mapped exchange is in valid list, exclude OTC
+            if exchange != 'OOTC' and any(valid in mapped_exchange for valid in valid_exchanges):
+                filtered.append(sym)
 
-        return filtered[:self.config['scanning'].get('max_symbols_per_run', 600)]
+            # Stop once we have enough
+            if len(filtered) >= max_symbols:
+                break
+
+        print(f"  ✅ Selected {len(filtered)} symbols from major exchanges")
+        return filtered
+
+    def _filter_tier_weekly(self, symbols: List[Dict]) -> List[Dict]:
+        """Weekly tier: More comprehensive scan"""
+        return symbols[:2000]
+
+    def _apply_filters(self, symbols: List[Dict]) -> List[str]:
+        """
+        Extract symbol strings from filtered list
+        Exchange filtering already done in _filter_tier_daily()
+        """
+        # Simply extract symbol names from the pre-filtered list
+        return [sym['symbol'] if isinstance(sym, dict) else sym for sym in symbols]
 
     def _count_by_type(self, asset_type: str) -> int:
         """Count symbols by type"""
@@ -621,14 +627,14 @@ class MasterScanner:
                     return match.iloc[0]['type']
         except:
             pass
-        
+
         # Default to stock if unknown
         return 'stock'
-    
+
     def _get_csv_path(self, symbol: str) -> Path:
         """Get CSV file path, organized by type if configured"""
         organize_by_type = self.config.get('data', {}).get('organize_by_type', True)
-        
+
         if organize_by_type:
             # Organize into subdirectories: stocks/, etfs/, indices/
             symbol_type = self._get_symbol_type(symbol)
@@ -647,7 +653,7 @@ class MasterScanner:
         This is MUCH faster than re-downloading everything!
         """
         csv_file = self._get_csv_path(symbol)
-        
+
         # Also check legacy flat location for backwards compatibility
         legacy_csv = MARKET_DATA_DIR / f'{symbol}.csv'
 
@@ -679,7 +685,7 @@ class MasterScanner:
                                 # Save updated CSV to new location
                                 csv_file.parent.mkdir(parents=True, exist_ok=True)
                                 df.to_csv(csv_file)
-                                
+
                                 # Remove legacy file if we're organizing by type
                                 if check_file == legacy_csv and csv_file != legacy_csv:
                                     try:
@@ -1014,65 +1020,39 @@ class MasterScanner:
         return alert
 
     def _format_alert_message(self) -> str:
-        """Format single consolidated alert message with GitHub table link"""
+        """Format simple alert message - just symbols and actions"""
         msg = []
 
         # Header
-        msg.append("🔍 DAILY MARKET SCAN")
+        msg.append("📈 DAILY PICKS")
         msg.append(f"{datetime.now().strftime('%Y-%m-%d %H:%M ET')}")
-        msg.append("=" * 40)
+        msg.append("")
 
-        # Scan summary
-        msg.append(f"\n📊 SCAN SUMMARY")
-        msg.append(f"Scanned: {len(self.universe)} symbols")
-        msg.append(f"Found: {len(self.opportunities)} opportunities")
+        # Just the symbols and key info
+        if self.opportunities:
+            for i, opp in enumerate(self.opportunities, 1):
+                score = opp['composite_score']
+                conf_badge = "🟢" if score >= 80 else "🟡" if score >= 60 else "🔴"
 
-        # GitHub table link
-        date_str = datetime.now().strftime('%Y%m%d')
-        github_url = f"https://github.com/ravi4j/daily_market_automation/blob/main/signals/full_scan_{date_str}.md"
-        msg.append(f"\n📊 FULL TABLE (sortable on GitHub):")
-        msg.append(f"👉 {github_url}")
+                trade = opp['trade_setup']
 
-        # Top opportunities (compact format)
-        msg.append(f"\n🚀 TOP {len(self.opportunities)} PICKS\n")
-
-        for i, opp in enumerate(self.opportunities, 1):
-            # Compact one-line format
-            score = opp['composite_score']
-            conf_badge = "🟢" if score >= 80 else "🟡" if score >= 60 else "🔴"
-
-            trade = opp['trade_setup']
-            rr = trade['risk_reward']
-
-            # Count strategy confirmations
-            strat_count = len(opp.get('strategy_signals', []))
-            strat_badge = f"🎯{strat_count}" if strat_count > 0 else ""
-
-            msg.append(f"{i}. **{opp['symbol']}** {conf_badge} {score:.0f}/100 {strat_badge}")
-            msg.append(f"   ${trade['entry']:.2f} → ${trade['target']:.2f} (R/R: {rr:.1f})")
-
-            # Brief reason
-            if opp.get('reasons'):
-                msg.append(f"   {opp['reasons'][0]}")
+                # Simple format: Symbol, Action, Entry, Stop, Target
+                msg.append(f"{i}. {conf_badge} **{opp['recommendation']}** {opp['symbol']}")
+                msg.append(f"   Entry: ${trade['entry']:.2f} | Stop: ${trade['stop_loss']:.2f} | Target: ${trade['target']:.2f}")
+                msg.append("")
+        else:
+            msg.append("No opportunities found today.")
             msg.append("")
 
         # Portfolio status (if any)
         if self.portfolio_status:
-            msg.append("⚖️ YOUR PORTFOLIO")
+            msg.append("💼 YOUR POSITIONS")
             for symbol, status in self.portfolio_status.items():
                 emoji = "✅" if status['healthy'] else "⚠️"
                 msg.append(f"{emoji} {symbol}: {status['message']}")
             msg.append("")
 
-        # Quick legend
-        msg.append("🟢 HIGH confidence (80+)")
-        msg.append("🟡 MEDIUM confidence (60-79)")
-        msg.append("🎯 Strategy confirmation count")
-
-        # Footer
-        msg.append("\n" + "=" * 40)
-        msg.append("📋 View full sortable table on GitHub")
-        msg.append("🤖 Master Scanner v1.0")
+        msg.append("Scanned: {0} symbols".format(len(self.universe)))
 
         return "\n".join(msg)
 

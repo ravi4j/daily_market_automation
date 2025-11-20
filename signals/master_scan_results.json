@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-11-19T23:17:23.050042",
+  "timestamp": "2025-11-19T23:35:55.069156",
   "scan_config": {
     "tier": "daily",
-    "symbols_scanned": 207
+    "symbols_scanned": 600
   },
   "opportunities": [
     {
@@ -27,7 +27,31 @@
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-11-19T23:17:21.616429"
+      "timestamp": "2025-11-19T23:35:51.057385"
+    },
+    {
+      "symbol": "ESI",
+      "composite_score": 70.0,
+      "confidence": 70.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 24.15999984741211,
+        "stop_loss": 22.468799858093263,
+        "target": 28.99199981689453,
+        "risk_reward": 2.8571428571428585
+      },
+      "strategy_signals": [],
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-11-19T23:35:54.479045"
     }
   ],
   "portfolio_status": {}
