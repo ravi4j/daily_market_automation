@@ -34,6 +34,7 @@ from src.premarket_monitor import PreMarketMonitor
 from src.premarket_opportunity_scanner import PreMarketOpportunityScanner
 from src.strategy_runner import StrategyRunner
 from src.abc_strategy import ABCStrategy
+from src.symbol_selector import SymbolSelector
 
 # Paths
 CONFIG_FILE = PROJECT_ROOT / 'config' / 'master_config.yaml'
@@ -308,55 +309,63 @@ class MasterScanner:
 
     def _filter_tier_daily(self, symbols: List[Dict]) -> List[Dict]:
         """
-        Daily tier: SMART filtering based on quality metrics
-        Automatically selects best symbols to scan (no manual lists!)
-
-        Criteria:
-        - Market cap > $1B (liquid, established companies)
-        - Average volume > 1M (tradeable)
-        - Mix of stocks and ETFs
-        - Diverse sectors
+        INTELLIGENT 600 SELECTION SYSTEM - Pluggable Strategies
+        
+        Uses SymbolSelector with configurable strategies (NO HARDCODED SYMBOLS!)
+        
+        Strategies configured in master_config.yaml:
+        - News-driven (20%): Symbols with breaking news
+        - Volume spikes (20%): 2x+ volume
+        - Price moves (20%): 5%+ price change
+        - High liquidity (40%): ETFs + high-volume stocks
+        
+        100% configurable - add/remove/adjust strategies without code changes!
         """
-        print("  🧠 Smart filtering: Selecting best symbols to scan...")
+        print("  🧠 Using pluggable intelligent selection strategies...")
 
         max_symbols = self.config['scanning'].get('max_symbols_per_run', 600)
-
-        # Filter by exchange FIRST, then take top N
-        # This ensures we get 600 quality symbols from NYSE/NASDAQ/AMEX
+        
+        # Exchange filtering first (quality baseline)
         filters = self.config['scanning']['intelligent_filters']
         valid_exchanges = set(filters.get('exchanges', ['NYSE', 'NASDAQ', 'AMEX']))
-
-        # Map Finnhub exchange codes to filter names
         exchange_mapping = {
-            'XNAS': 'NASDAQ',
-            'XNYS': 'NYSE',
-            'XASE': 'AMEX',
-            'ARCX': 'NYSE',  # NYSE Arca (ETFs)
-            'BATS': 'BATS',
+            'XNAS': 'NASDAQ', 'XNYS': 'NYSE', 'XASE': 'AMEX',
+            'ARCX': 'NYSE', 'BATS': 'BATS',
         }
 
-        filtered = []
+        quality_symbols = []
         for sym in symbols:
             exchange = sym.get('exchange', '')
-
-            # If exchange is empty (fallback data), assume it's valid
-            if not exchange:
-                filtered.append(sym)
+            
+            if exchange == 'OOTC':
                 continue
-
-            # Map Finnhub code to standard name
-            mapped_exchange = exchange_mapping.get(exchange, exchange)
-
-            # Check if mapped exchange is in valid list, exclude OTC
-            if exchange != 'OOTC' and any(valid in mapped_exchange for valid in valid_exchanges):
-                filtered.append(sym)
-
-            # Stop once we have enough
-            if len(filtered) >= max_symbols:
-                break
-
-        print(f"  ✅ Selected {len(filtered)} symbols from major exchanges")
-        return filtered
+            
+            if not exchange:
+                quality_symbols.append(sym)
+            else:
+                mapped = exchange_mapping.get(exchange, exchange)
+                if any(valid in mapped for valid in valid_exchanges):
+                    quality_symbols.append(sym)
+        
+        print(f"     Quality baseline: {len(quality_symbols)} symbols from major exchanges")
+        
+        # Use SymbolSelector with pluggable strategies
+        selector = SymbolSelector(
+            config=self.config.get('scanning', {}),
+            finnhub_client=self.finnhub,
+            data_dir=MARKET_DATA_DIR
+        )
+        
+        selected_symbols = selector.select_intelligent(quality_symbols, max_symbols)
+        
+        # Convert back to dict format
+        result = [sym for sym in quality_symbols if sym['symbol'] in selected_symbols]
+        
+        return result
+    
+    # NOTE: _score_and_prioritize_symbols() and _has_recent_activity() methods
+    # have been replaced by the pluggable SymbolSelector class in src/symbol_selector.py
+    # See master_config.yaml for configurable selection strategies
 
     def _filter_tier_weekly(self, symbols: List[Dict]) -> List[Dict]:
         """Weekly tier: More comprehensive scan"""
@@ -1185,33 +1194,29 @@ class MasterScanner:
         print("=" * 80)
         print(f"\n🔍 Scanning market for gap-based opportunities...\n")
 
-        # Get symbols to scan (use portfolio positions + S&P 500 top 50)
+        # Use the SAME intelligent universe from daily scan
+        print(f"  🧠 Reusing intelligent universe (600 quality symbols)...")
+        
+        if not hasattr(self, 'universe') or not self.universe:
+            # Fetch universe if not already loaded
+            self.fetch_market_universe()
+        
+        # Take first 50 from intelligent universe
+        # (Already prioritized: news-driven + ETFs + high-volume stocks)
         scan_symbols = []
         
-        # Add portfolio positions if any
+        # Add portfolio positions first (highest priority)
         if positions:
             scan_symbols.extend(positions.keys())
         
-        # Add top 50 from S&P 500 for more coverage
-        sp500_file = METADATA_DIR / 'sp500_comprehensive.txt'
-        if sp500_file.exists():
-            try:
-                with open(sp500_file, 'r') as f:
-                    for line in f:
-                        line = line.strip()
-                        if not line or line.startswith('#'):
-                            continue
-                        symbol = line.split(',')[0].strip()
-                        if symbol and symbol not in scan_symbols:
-                            scan_symbols.append(symbol)
-                        if len(scan_symbols) >= 50:  # Limit to 50 total
-                            break
-            except Exception as e:
-                print(f"  ⚠️  Could not load S&P 500 list: {e}")
+        # Add from intelligent universe up to 50 total
+        for symbol in self.universe:
+            if symbol not in scan_symbols:
+                scan_symbols.append(symbol)
+            if len(scan_symbols) >= 50:
+                break
         
-        # Fallback if no symbols found
-        if not scan_symbols:
-            scan_symbols = ['SPY', 'QQQ', 'AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META', 'NFLX']
+        print(f"  ✅ Using {len(scan_symbols)} symbols from intelligent 600")
 
         opportunities = self.premarket_scanner.scan_for_opportunities(
             symbols=scan_symbols,  # Already limited to 50

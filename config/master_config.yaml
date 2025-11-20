@@ -54,6 +54,43 @@ scanning:
     - insider_buying_dips       # Insider buying during price drops
     - sector_rotation           # Money moving between sectors
 
+  # ============================================================================
+  # INTELLIGENT SYMBOL SELECTION - Pluggable Strategies (NO HARDCODED SYMBOLS!)
+  # ============================================================================
+  intelligent_selection:
+    enabled: true               # Use intelligent selection vs simple alphabetical
+
+    # Pluggable strategies with weights (must add up to 100%)
+    # Each strategy selects symbols based on specific criteria
+    strategies:
+      # Strategy 1: BUY-THE-DIP (20% of 600 = ~120 symbols)
+      # Contrarian/Value approach: Bad news + Good fundamentals = Opportunity!
+      # Looks for: Price drops 3-10% + Negative news + Solid fundamentals + Oversold technicals
+      - name: news
+        weight: 20
+        config:
+          min_price_drop_pct: 3.0   # Minimum price drop to consider
+          max_price_drop_pct: 10.0  # Maximum (avoid falling knives)
+
+      # Strategy 2: Volume Spikes (20% of 600 = ~120 symbols)
+      - name: volume_spikes
+        weight: 20
+        config:
+          min_volume_ratio: 2.0     # 2x average volume
+          lookback_days: 20         # Compare to 20-day average
+
+      # Strategy 3: Price Moves (20% of 600 = ~120 symbols)
+      - name: price_moves
+        weight: 20
+        config:
+          min_price_move_pct: 5.0   # 5%+ price move
+
+      # Strategy 4: High Liquidity (40% of 600 = ~240 symbols)
+      - name: liquidity
+        weight: 40
+        config:
+          prefer_etfs: true         # Prioritize ETFs for lower risk
+
 # ============================================================================
 # 2. YOUR PORTFOLIO - Positions to monitor (OPTIONAL)
 # ============================================================================
