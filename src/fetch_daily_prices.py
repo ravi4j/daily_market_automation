@@ -253,10 +253,18 @@ def main():
             combined = coerce_numeric(combined)
             combined = combined.dropna(subset=["Open", "High", "Low", "Close", "Adj Close"])
 
-            # Round prices to 2 decimals (leave Volume as-is)
+            # Round prices to 2 decimals, volumes to integers
             combined = combined.round({
                 "Open": 2, "High": 2, "Low": 2, "Close": 2, "Adj Close": 2
             })
+            
+            # Round Volume and dividend/split columns to integers (no decimals)
+            if "Volume" in combined.columns:
+                combined["Volume"] = combined["Volume"].round(0).astype('int64')
+            if "Dividends" in combined.columns:
+                combined["Dividends"] = combined["Dividends"].round(2)
+            if "Stock Splits" in combined.columns:
+                combined["Stock Splits"] = combined["Stock Splits"].round(2)
 
             # Sort descending (newest first) for easier viewing
             combined = combined.sort_index(ascending=False)

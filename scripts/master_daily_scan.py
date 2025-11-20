@@ -380,68 +380,65 @@ class MasterScanner:
         except Exception as e:
             print(f"  ⚠️  Cache save failed: {e}")
 
-    def _sort_by_market_cap(self, symbols: List[Dict]) -> List[Dict]:
+    def _sort_by_volume(self, symbols: List[Dict]) -> List[Dict]:
         """
-        Sort symbols by market cap (largest first)
-        
-        Uses Finnhub's marketCapitalization data (free tier, already fetched)
-        Falls back to estimate based on type if not available
-        
+        Sort symbols by trading volume (highest first)
+
+        Uses volume from FIRST ROW of existing CSV files (latest day's volume).
+        Symbols without CSVs get volume = 0 (placed at end, will be created during pre-screening).
+
+        This is SUPER FAST - only reads first row of each CSV!
+
         Args:
-            symbols: List of symbol dicts (already have Finnhub data)
-            
+            symbols: List of symbol dicts
+
         Returns:
-            Sorted list (largest market cap first)
+            Sorted list (highest volume first)
         """
-        from concurrent.futures import ThreadPoolExecutor, as_completed
         from tqdm import tqdm
-        
-        print(f"     Fetching market caps from Finnhub for {len(symbols)} symbols...")
-        
-        def fetch_finnhub_market_cap(sym_dict):
-            """Get market cap from Finnhub API"""
+
+        print(f"     Reading volumes from CSV first rows for {len(symbols)} symbols...")
+
+        # Get volume for each symbol from first row of CSV
+        for sym_dict in tqdm(symbols, desc="     Volumes", unit="symbol", ncols=100, disable=len(symbols) < 100):
             symbol = sym_dict.get('symbol', '')
-            if not symbol:
-                return sym_dict
-            
-            try:
-                # Finnhub provides market cap in profile2 endpoint
-                profile = self.finnhub_client.company_profile2(symbol=symbol)
-                if profile and 'marketCapitalization' in profile:
-                    # Finnhub returns market cap in millions, convert to actual value
-                    mcap_millions = profile['marketCapitalization']
-                    sym_dict['market_cap'] = int(mcap_millions * 1_000_000)
-                else:
-                    sym_dict['market_cap'] = 0
-            except:
-                # Fallback: estimate based on type
-                if sym_dict.get('type') == 'etf':
-                    sym_dict['market_cap'] = 1_000_000_000  # 1B default for ETFs
-                else:
-                    sym_dict['market_cap'] = 0
-            
-            return sym_dict
-        
-        # Fetch market caps in parallel (fast!)
-        updated_symbols = []
-        with ThreadPoolExecutor(max_workers=60) as executor:  # Finnhub free tier: 60 calls/min
-            futures = {executor.submit(fetch_finnhub_market_cap, sym): sym for sym in symbols}
-            
-            with tqdm(total=len(futures), desc="     Market caps", unit="symbol", ncols=100) as pbar:
-                for future in as_completed(futures):
-                    updated_symbols.append(future.result())
-                    pbar.update(1)
-        
-        # Sort by market cap (descending)
-        sorted_symbols = sorted(updated_symbols, key=lambda x: x.get('market_cap', 0), reverse=True)
-        
-        # Show top symbol
-        if sorted_symbols and sorted_symbols[0].get('market_cap', 0) > 0:
-            top_sym = sorted_symbols[0]
-            print(f"     ✅ Sorted by market cap")
-            print(f"        Top: {top_sym.get('symbol')} (${top_sym.get('market_cap', 0):,.0f})")
-        
-        return sorted_symbols
+            asset_type = sym_dict.get('type', 'stock')
+
+            # Determine CSV path
+            if asset_type.lower() == 'etf':
+                csv_path = MARKET_DATA_DIR / 'etfs' / f"{symbol}.csv"
+            else:
+                csv_path = MARKET_DATA_DIR / 'stocks' / f"{symbol}.csv"
+
+            # Read ONLY first row to get latest volume (FAST!)
+            if csv_path.exists():
+                try:
+                    df = pd.read_csv(csv_path, nrows=1)  # Only read first data row
+                    if 'Volume' in df.columns and len(df) > 0:
+                        volume = int(df['Volume'].iloc[0])
+                        sym_dict['volume'] = volume
+                    else:
+                        sym_dict['volume'] = 0
+                except:
+                    sym_dict['volume'] = 0
+            else:
+                # No CSV yet - will be created during pre-screening
+                sym_dict['volume'] = 0
+
+        # Sort by volume (descending)
+        symbols.sort(key=lambda x: x.get('volume', 0), reverse=True)
+
+        print(f"     ✅ Sorted {len(symbols)} symbols by volume")
+
+        # Show top symbols
+        with_volume = [s for s in symbols if s.get('volume', 0) > 0]
+        if with_volume:
+            top_symbol = with_volume[0]
+            print(f"        Top: {top_symbol['symbol']} (volume: {top_symbol.get('volume', 0):,.0f})")
+            print(f"        Symbols with CSV data: {len(with_volume):,}")
+            print(f"        Symbols needing fetch: {len(symbols) - len(with_volume):,}")
+
+        return symbols
 
     def _filter_tier_daily(self, symbols: List[Dict]) -> List[Dict]:
         """
@@ -485,10 +482,10 @@ class MasterScanner:
 
         print(f"     Quality baseline: {len(quality_symbols)} symbols from major exchanges")
 
-        # Sort by market cap (largest companies first)
-        # Use Finnhub API to get REAL market caps for ALL symbols
-        print(f"  📊 Sorting by market cap (largest companies first)...")
-        quality_symbols_sorted = self._sort_by_market_cap(quality_symbols)
+        # Sort by volume (highest activity first)
+        # Uses volume from CSV first row - FAST!
+        print(f"  📊 Sorting by volume (highest activity first)...")
+        quality_symbols_sorted = self._sort_by_volume(quality_symbols)
 
         # Use SymbolSelector with pluggable strategies
         selector = SymbolSelector(
@@ -555,26 +552,20 @@ class MasterScanner:
         with tqdm(total=len(symbols), desc="     Pre-screening", unit="symbol", ncols=100) as pbar:
             for symbol in symbols:
                 try:
-                    # Try to load from CSV first (has today's data)
-                    # Fall back to live fetch if CSV doesn't exist
+                    # Load price data (uses CSV if available, fetches & saves if needed)
                     df = self._load_price_data(symbol)
-                    
+
                     if df is None or len(df) < 5:
-                        # Fall back to live fetch
-                        ticker = yf.Ticker(symbol)
-                        df = ticker.history(period='10d')
-                    
-                    if len(df) < 5:
                         pbar.update(1)
                         continue
 
-                    # Calculate quick metrics (CSV is descending, so iloc[0] is latest)
-                    recent_close = df['Close'].iloc[0]
-                    prev_close = df['Close'].iloc[1]
+                    # Calculate quick metrics (df is sorted ascending, so iloc[-1] is latest)
+                    recent_close = df['Close'].iloc[-1]
+                    prev_close = df['Close'].iloc[-2]
                     pct_change = ((recent_close - prev_close) / prev_close) * 100
 
-                    avg_volume = df['Volume'].head(10).mean()
-                    recent_volume = df['Volume'].iloc[0]
+                    avg_volume = df['Volume'].tail(10).mean()
+                    recent_volume = df['Volume'].iloc[-1]
                     volume_ratio = recent_volume / avg_volume if avg_volume > 0 else 0
 
                     # INTELLIGENT FILTERING RULES
@@ -866,7 +857,20 @@ class MasterScanner:
                                 df = pd.concat([df, new_data]).sort_index()
                                 df = df[~df.index.duplicated(keep='last')]
 
-                                # Save updated CSV to new location
+                                # Round prices to 2 decimals, volumes to integers
+                                price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
+                                for col in price_cols:
+                                    if col in df.columns:
+                                        df[col] = df[col].round(2)
+
+                                if 'Volume' in df.columns:
+                                    df['Volume'] = df['Volume'].round(0).astype('int64')
+                                if 'Dividends' in df.columns:
+                                    df['Dividends'] = df['Dividends'].round(2)
+                                if 'Stock Splits' in df.columns:
+                                    df['Stock Splits'] = df['Stock Splits'].round(2)
+
+                                # Save updated CSV to new location (sorted ascending for easier append)
                                 csv_file.parent.mkdir(parents=True, exist_ok=True)
                                 df.to_csv(csv_file)
 

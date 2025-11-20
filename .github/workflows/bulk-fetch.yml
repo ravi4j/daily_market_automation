@@ -1,0 +1,73 @@
+name: Bulk Fetch All Symbols (One-Time)
+
+on:
+  workflow_dispatch:  # Manual trigger only
+
+jobs:
+  bulk-fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 480  # 8 hours max
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run bulk fetch
+      run: |
+        echo "🚀 Starting bulk fetch of ~23,888 symbols..."
+        echo "⏱️  This will take 6-8 hours"
+        echo "💾 Will download 2 years of data for each symbol"
+        echo ""
+        python scripts/initial_bulk_fetch.py
+    
+    - name: Show statistics
+      run: |
+        echo "📊 Fetch Statistics:"
+        echo "Total Stock CSVs: $(ls data/market_data/stocks/*.csv 2>/dev/null | wc -l)"
+        echo "Total ETF CSVs: $(ls data/market_data/etfs/*.csv 2>/dev/null | wc -l)"
+        echo "Total CSVs: $(find data/market_data -name '*.csv' 2>/dev/null | wc -l)"
+        echo "Disk usage: $(du -sh data/market_data)"
+    
+    - name: Commit and push data
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions@github.com"
+        git add data/market_data/stocks/*.csv
+        git add data/market_data/etfs/*.csv
+        git commit -m "🎉 Initial bulk fetch: $(find data/market_data -name '*.csv' | wc -l) symbols with 2y historical data
+
+        - Downloaded 2 years of OHLCV data for all US symbols
+        - Stocks: $(ls data/market_data/stocks/*.csv 2>/dev/null | wc -l) CSVs
+        - ETFs: $(ls data/market_data/etfs/*.csv 2>/dev/null | wc -l) CSVs
+        - Ready for volume-based intelligent sorting
+        - Daily scanner will now detect NVDA, ORCL, and all major stocks
+        
+        Run by: GitHub Actions (bulk-fetch.yml)
+        Timestamp: $(date -u)"
+        git push
+    
+    - name: Send notification (if Telegram configured)
+      if: always()
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
+          TOTAL_CSVS=$(find data/market_data -name '*.csv' 2>/dev/null | wc -l)
+          MESSAGE="🎉 *Bulk Fetch Complete!*%0A%0A📊 Downloaded $TOTAL_CSVS symbols%0A✅ Volume-based sorting ready%0A%0APull latest changes to get all data!"
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=${MESSAGE}" \
+            -d "parse_mode=Markdown"
+        fi
+
