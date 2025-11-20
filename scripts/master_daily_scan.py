@@ -609,6 +609,36 @@ class MasterScanner:
             'timestamp': datetime.now().isoformat()
         }
 
+    def _get_symbol_type(self, symbol: str) -> str:
+        """Determine if symbol is stock, ETF, or index from cached metadata"""
+        try:
+            # Check cached metadata first
+            cache_file = METADATA_DIR / 'all_us_symbols.csv'
+            if cache_file.exists():
+                df = pd.read_csv(cache_file)
+                match = df[df['symbol'] == symbol]
+                if not match.empty:
+                    return match.iloc[0]['type']
+        except:
+            pass
+        
+        # Default to stock if unknown
+        return 'stock'
+    
+    def _get_csv_path(self, symbol: str) -> Path:
+        """Get CSV file path, organized by type if configured"""
+        organize_by_type = self.config.get('data', {}).get('organize_by_type', True)
+        
+        if organize_by_type:
+            # Organize into subdirectories: stocks/, etfs/, indices/
+            symbol_type = self._get_symbol_type(symbol)
+            type_dir = MARKET_DATA_DIR / f'{symbol_type}s'  # stocks, etfs, indices
+            type_dir.mkdir(parents=True, exist_ok=True)
+            return type_dir / f'{symbol}.csv'
+        else:
+            # Flat structure (legacy)
+            return MARKET_DATA_DIR / f'{symbol}.csv'
+
     def _load_price_data(self, symbol: str) -> Optional[pd.DataFrame]:
         """
         Load historical price data with INCREMENTAL fetching
@@ -616,40 +646,51 @@ class MasterScanner:
         Uses existing CSV if available, only fetches new data incrementally.
         This is MUCH faster than re-downloading everything!
         """
-        csv_file = MARKET_DATA_DIR / f'{symbol}.csv'
+        csv_file = self._get_csv_path(symbol)
+        
+        # Also check legacy flat location for backwards compatibility
+        legacy_csv = MARKET_DATA_DIR / f'{symbol}.csv'
 
-        # Try to load existing CSV
-        if csv_file.exists():
-            try:
-                df = pd.read_csv(csv_file, index_col=0, parse_dates=True)
-                df = df.sort_index()
+        # Try to load existing CSV (check both locations)
+        for check_file in [csv_file, legacy_csv]:
+            if check_file.exists():
+                try:
+                    df = pd.read_csv(check_file, index_col=0, parse_dates=True)
+                    df = df.sort_index()
 
-                # Check if data is recent (within last 7 days)
-                if not df.empty:
-                    last_date = df.index[-1]
-                    days_old = (pd.Timestamp.today() - last_date).days
+                    # Check if data is recent (within last 7 days)
+                    if not df.empty:
+                        last_date = df.index[-1]
+                        days_old = (pd.Timestamp.today() - last_date).days
 
-                    if days_old <= 7:
-                        # Recent enough, use cached data
-                        return df
-                    else:
-                        # Data is old, fetch incremental update
-                        start_date = (last_date + pd.Timedelta(days=1)).strftime('%Y-%m-%d')
-                        new_data = self._fetch_incremental(symbol, start_date)
+                        if days_old <= 7:
+                            # Recent enough, use cached data
+                            return df
+                        else:
+                            # Data is old, fetch incremental update
+                            start_date = (last_date + pd.Timedelta(days=1)).strftime('%Y-%m-%d')
+                            new_data = self._fetch_incremental(symbol, start_date)
 
-                        if not new_data.empty:
-                            # Combine old + new data
-                            df = pd.concat([df, new_data]).sort_index()
-                            df = df[~df.index.duplicated(keep='last')]
+                            if not new_data.empty:
+                                # Combine old + new data
+                                df = pd.concat([df, new_data]).sort_index()
+                                df = df[~df.index.duplicated(keep='last')]
 
-                            # Save updated CSV
-                            MARKET_DATA_DIR.mkdir(parents=True, exist_ok=True)
-                            df.to_csv(csv_file)
+                                # Save updated CSV to new location
+                                csv_file.parent.mkdir(parents=True, exist_ok=True)
+                                df.to_csv(csv_file)
+                                
+                                # Remove legacy file if we're organizing by type
+                                if check_file == legacy_csv and csv_file != legacy_csv:
+                                    try:
+                                        legacy_csv.unlink()
+                                    except:
+                                        pass
 
-                        return df
-            except Exception as e:
-                # If error loading/parsing, fall through to full fetch
-                pass
+                            return df
+                except Exception as e:
+                    # If error loading/parsing, try next location
+                    continue
 
         # No CSV or error - fetch all historical data (one-time)
         try:
@@ -664,7 +705,7 @@ class MasterScanner:
                 df.index.name = 'Date'
 
                 # Save for next time (enables incremental updates later)
-                MARKET_DATA_DIR.mkdir(parents=True, exist_ok=True)
+                csv_file.parent.mkdir(parents=True, exist_ok=True)
                 df.to_csv(csv_file)
 
                 return df
