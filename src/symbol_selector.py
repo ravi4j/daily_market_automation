@@ -141,8 +141,9 @@ class NewsBasedStrategy(SelectionStrategy):
                     try:
                         df = pd.read_csv(csv_file)
                         if len(df) >= 2:
-                            prev_close = df['Close'].iloc[-2]
-                            latest_close = df['Close'].iloc[-1]
+                            # CSV is descending (newest first): [0] = latest, [1] = previous
+                            latest_close = df['Close'].iloc[0]
+                            prev_close = df['Close'].iloc[1]
                             
                             if prev_close > 0:
                                 pct_change = ((latest_close - prev_close) / prev_close * 100)
@@ -216,20 +217,21 @@ class NewsBasedStrategy(SelectionStrategy):
                         if len(df) < 20:
                             continue
                         
-                        df = df.tail(20)
+                        # CSV is descending (newest first), take first 20 rows
+                        df = df.head(20)
                         
                         # Volume spike?
                         if 'Volume' in df.columns:
-                            avg_vol = df['Volume'].iloc[:-1].mean()
-                            latest_vol = df['Volume'].iloc[-1]
+                            avg_vol = df['Volume'].iloc[1:].mean()  # Skip [0] (latest) for average
+                            latest_vol = df['Volume'].iloc[0]
                             if avg_vol > 0 and latest_vol / avg_vol >= min_volume_ratio:
                                 active.add(symbol)
                                 break
                         
                         # Price move?
                         if 'Close' in df.columns and len(df) >= 2:
-                            prev_close = df['Close'].iloc[-2]
-                            latest_close = df['Close'].iloc[-1]
+                            latest_close = df['Close'].iloc[0]  # Newest
+                            prev_close = df['Close'].iloc[1]  # Previous
                             if prev_close > 0:
                                 pct_change = abs((latest_close - prev_close) / prev_close * 100)
                                 if pct_change >= min_price_move:
@@ -312,11 +314,12 @@ class VolumeSpikesStrategy(SelectionStrategy):
                     try:
                         df = pd.read_csv(csv_file)
                         if len(df) >= lookback_days + 1:
-                            df = df.tail(lookback_days + 1)
+                            # CSV is descending (newest first), take first N rows
+                            df = df.head(lookback_days + 1)
                             
                             if 'Volume' in df.columns:
-                                avg_volume = df['Volume'].iloc[:-1].mean()
-                                latest_volume = df['Volume'].iloc[-1]
+                                avg_volume = df['Volume'].iloc[1:].mean()  # Skip [0] (latest)
+                                latest_volume = df['Volume'].iloc[0]
                                 
                                 if avg_volume > 0:
                                     spike_ratio = latest_volume / avg_volume
@@ -360,8 +363,9 @@ class PriceMoveStrategy(SelectionStrategy):
                     try:
                         df = pd.read_csv(csv_file)
                         if len(df) >= 2:
-                            prev_close = df['Close'].iloc[-2]
-                            latest_close = df['Close'].iloc[-1]
+                            # CSV is descending (newest first): [0] = latest, [1] = previous
+                            latest_close = df['Close'].iloc[0]
+                            prev_close = df['Close'].iloc[1]
                             
                             if prev_close > 0:
                                 pct_change = abs((latest_close - prev_close) / prev_close * 100)
@@ -410,6 +414,135 @@ class LiquidityStrategy(SelectionStrategy):
         return selected[:max_symbols]
 
 
+class SectorRotationStrategy(SelectionStrategy):
+    """
+    Select symbols based on sector rotation analysis
+    Uses TradingView-style heatmap data to identify:
+    - Hot sectors (momentum plays)
+    - Cold sectors (buy-the-dip opportunities)
+    - Sector rotation patterns
+    """
+    
+    def __init__(self, data_dir: Path = None):
+        self.data_dir = data_dir or Path('data/market_data')
+        self.sector_performance = {}
+        
+    def name(self) -> str:
+        return "Sector Rotation"
+    
+    def _fetch_sector_performance(self) -> Dict:
+        """Fetch sector performance using sector ETFs"""
+        import yfinance as yf
+        
+        # S&P 500 Sector ETFs
+        sector_etfs = {
+            'Technology': 'XLK',
+            'Healthcare': 'XLV',
+            'Financials': 'XLF',
+            'Consumer Discretionary': 'XLY',
+            'Industrials': 'XLI',
+            'Communication Services': 'XLC',
+            'Consumer Staples': 'XLP',
+            'Energy': 'XLE',
+            'Utilities': 'XLU',
+            'Real Estate': 'XLRE',
+            'Materials': 'XLB'
+        }
+        
+        performance = {}
+        
+        for sector, etf in sector_etfs.items():
+            try:
+                ticker = yf.Ticker(etf)
+                hist = ticker.history(period='5d')
+                
+                if len(hist) >= 2:
+                    first_close = hist['Close'].iloc[0]
+                    last_close = hist['Close'].iloc[-1]
+                    change_pct = ((last_close - first_close) / first_close) * 100
+                    
+                    performance[sector] = {
+                        'etf': etf,
+                        'change_pct': round(change_pct, 2)
+                    }
+            except:
+                continue
+        
+        return performance
+    
+    def select(self, symbols: List[Dict], max_symbols: int, config: Dict) -> List[Dict]:
+        """
+        Select symbols from hot/cold sectors
+        
+        Config options:
+        - hot_sector_weight: % allocated to hot sectors (default: 40%)
+        - cold_sector_weight: % allocated to cold sectors (default: 40%)
+        - neutral_weight: % allocated to neutral sectors (default: 20%)
+        """
+        print(f"  📊 Analyzing sector rotation...")
+        
+        # Fetch sector performance
+        self.sector_performance = self._fetch_sector_performance()
+        
+        if not self.sector_performance:
+            print(f"  ⚠️  No sector data available, using all symbols")
+            return symbols[:max_symbols]
+        
+        # Sort sectors by performance
+        sorted_sectors = sorted(
+            self.sector_performance.items(),
+            key=lambda x: x[1]['change_pct'],
+            reverse=True
+        )
+        
+        # Identify hot/cold sectors
+        hot_sectors = [s[0] for s in sorted_sectors[:3]]  # Top 3
+        cold_sectors = [s[0] for s in sorted_sectors[-3:]]  # Bottom 3
+        
+        print(f"  🔥 Hot sectors: {', '.join(hot_sectors)}")
+        print(f"  🥶 Cold sectors: {', '.join(cold_sectors)}")
+        
+        # Get weights from config
+        hot_weight = config.get('hot_sector_weight', 0.40)
+        cold_weight = config.get('cold_sector_weight', 0.40)
+        neutral_weight = config.get('neutral_weight', 0.20)
+        
+        # Calculate symbol allocation
+        hot_count = int(max_symbols * hot_weight)
+        cold_count = int(max_symbols * cold_weight)
+        neutral_count = max_symbols - hot_count - cold_count
+        
+        # Group symbols by sector
+        hot_symbols = []
+        cold_symbols = []
+        neutral_symbols = []
+        
+        for sym in symbols:
+            sector = sym.get('sector', '')
+            
+            if sector in hot_sectors:
+                hot_symbols.append(sym)
+            elif sector in cold_sectors:
+                cold_symbols.append(sym)
+            else:
+                neutral_symbols.append(sym)
+        
+        # Select from each group
+        selected = []
+        selected.extend(hot_symbols[:hot_count])
+        selected.extend(cold_symbols[:cold_count])
+        selected.extend(neutral_symbols[:neutral_count])
+        
+        # Fill remaining if needed
+        if len(selected) < max_symbols:
+            remaining = [s for s in symbols if s not in selected]
+            selected.extend(remaining[:max_symbols - len(selected)])
+        
+        print(f"  ✅ Selected: {len(hot_symbols[:hot_count])} hot, {len(cold_symbols[:cold_count])} cold, {len(neutral_symbols[:neutral_count])} neutral")
+        
+        return selected[:max_symbols]
+
+
 class SymbolSelector:
     """
     Main orchestrator for intelligent symbol selection
@@ -427,6 +560,7 @@ class SymbolSelector:
             'volume_spikes': VolumeSpikesStrategy(self.data_dir),
             'price_moves': PriceMoveStrategy(self.data_dir),
             'liquidity': LiquidityStrategy(),
+            'sector_rotation': SectorRotationStrategy(self.data_dir),
         }
     
     def select_intelligent(self, all_symbols: List[Dict], max_symbols: int = 600) -> List[str]:

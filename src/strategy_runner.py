@@ -82,7 +82,8 @@ class StrategyRunner:
             return pd.DataFrame()
 
         df = pd.read_csv(file_path, index_col='Date', parse_dates=True)
-        df = df.sort_index()
+        # CSV is stored descending (newest first), sort ascending for analysis
+        df = df.sort_index(ascending=True)
         return df
 
     # ==================== STRATEGY DEFINITIONS ====================

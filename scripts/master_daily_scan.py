@@ -185,18 +185,18 @@ class MasterScanner:
         """
         # Get crash detection config
         crash_config = self.config.get('scanning', {}).get('crash_detection', {})
-        
+
         if not crash_config.get('enabled', True):
             self.market_crash = False
             return
-        
+
         try:
             # Get configuration
             indices = crash_config.get('indices', ['SPY', 'QQQ', 'IWM', 'DIA'])
             crash_threshold = crash_config.get('crash_threshold_pct', 2.0)
             correction_threshold = crash_config.get('correction_threshold_pct', 1.0)
             require_all_negative = crash_config.get('check_all_negative', False)
-            
+
             total_drop = 0
             count = 0
             changes = []
@@ -212,7 +212,7 @@ class MasterScanner:
                         prev_close = data['Close'].iloc[-2]
                         current = data['Close'].iloc[-1]
                         change_pct = ((current - prev_close) / prev_close * 100)
-                        
+
                         changes.append(change_pct)
                         total_drop += min(0, change_pct)  # Only negative changes
                         count += 1
@@ -221,10 +221,10 @@ class MasterScanner:
 
             if count > 0:
                 avg_drop = abs(total_drop / count)
-                
+
                 # Check if all indices must be negative (if configured)
                 all_negative = all(c < 0 for c in changes)
-                
+
                 if require_all_negative and not all_negative:
                     print(f"  ✅ Mixed market (some indices up, some down)")
                     self.market_crash = False
@@ -380,6 +380,69 @@ class MasterScanner:
         except Exception as e:
             print(f"  ⚠️  Cache save failed: {e}")
 
+    def _sort_by_market_cap(self, symbols: List[Dict]) -> List[Dict]:
+        """
+        Sort symbols by market cap (largest first)
+        
+        Uses Finnhub's marketCapitalization data (free tier, already fetched)
+        Falls back to estimate based on type if not available
+        
+        Args:
+            symbols: List of symbol dicts (already have Finnhub data)
+            
+        Returns:
+            Sorted list (largest market cap first)
+        """
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        from tqdm import tqdm
+        
+        print(f"     Fetching market caps from Finnhub for {len(symbols)} symbols...")
+        
+        def fetch_finnhub_market_cap(sym_dict):
+            """Get market cap from Finnhub API"""
+            symbol = sym_dict.get('symbol', '')
+            if not symbol:
+                return sym_dict
+            
+            try:
+                # Finnhub provides market cap in profile2 endpoint
+                profile = self.finnhub_client.company_profile2(symbol=symbol)
+                if profile and 'marketCapitalization' in profile:
+                    # Finnhub returns market cap in millions, convert to actual value
+                    mcap_millions = profile['marketCapitalization']
+                    sym_dict['market_cap'] = int(mcap_millions * 1_000_000)
+                else:
+                    sym_dict['market_cap'] = 0
+            except:
+                # Fallback: estimate based on type
+                if sym_dict.get('type') == 'etf':
+                    sym_dict['market_cap'] = 1_000_000_000  # 1B default for ETFs
+                else:
+                    sym_dict['market_cap'] = 0
+            
+            return sym_dict
+        
+        # Fetch market caps in parallel (fast!)
+        updated_symbols = []
+        with ThreadPoolExecutor(max_workers=60) as executor:  # Finnhub free tier: 60 calls/min
+            futures = {executor.submit(fetch_finnhub_market_cap, sym): sym for sym in symbols}
+            
+            with tqdm(total=len(futures), desc="     Market caps", unit="symbol", ncols=100) as pbar:
+                for future in as_completed(futures):
+                    updated_symbols.append(future.result())
+                    pbar.update(1)
+        
+        # Sort by market cap (descending)
+        sorted_symbols = sorted(updated_symbols, key=lambda x: x.get('market_cap', 0), reverse=True)
+        
+        # Show top symbol
+        if sorted_symbols and sorted_symbols[0].get('market_cap', 0) > 0:
+            top_sym = sorted_symbols[0]
+            print(f"     ✅ Sorted by market cap")
+            print(f"        Top: {top_sym.get('symbol')} (${top_sym.get('market_cap', 0):,.0f})")
+        
+        return sorted_symbols
+
     def _filter_tier_daily(self, symbols: List[Dict]) -> List[Dict]:
         """
         INTELLIGENT 600 SELECTION SYSTEM - Pluggable Strategies
@@ -422,6 +485,11 @@ class MasterScanner:
 
         print(f"     Quality baseline: {len(quality_symbols)} symbols from major exchanges")
 
+        # Sort by market cap (largest companies first)
+        # Use Finnhub API to get REAL market caps for ALL symbols
+        print(f"  📊 Sorting by market cap (largest companies first)...")
+        quality_symbols_sorted = self._sort_by_market_cap(quality_symbols)
+
         # Use SymbolSelector with pluggable strategies
         selector = SymbolSelector(
             config=self.config.get('scanning', {}),
@@ -429,10 +497,10 @@ class MasterScanner:
             data_dir=MARKET_DATA_DIR
         )
 
-        selected_symbols = selector.select_intelligent(quality_symbols, max_symbols)
+        selected_symbols = selector.select_intelligent(quality_symbols_sorted, max_symbols)
 
         # Convert back to dict format
-        result = [sym for sym in quality_symbols if sym['symbol'] in selected_symbols]
+        result = [sym for sym in quality_symbols_sorted if sym['symbol'] in selected_symbols]
 
         return result
 
@@ -464,47 +532,56 @@ class MasterScanner:
         INTELLIGENT PRE-SCREENING
 
         Quickly filter entire market for promising candidates based on:
-        1. Price action: Recent drops (3-10%) = potential buy opportunity
+        1. Price action: Recent drops (2%+) = potential buy opportunity
         2. Volume: Above average volume = something happening
         3. Volatility: Movement without crash (not bankruptcy/fraud)
         4. Technical: Not in death spiral (avoid catching falling knives)
 
         This is FAST - can scan 1000s of symbols in minutes
         Then we do DEEP analysis on the 50-100 that pass
+
+        Also tracks ALL fallers (2%+) for comprehensive report
         """
         print(f"     Screening {len(symbols)} symbols for:")
-        print(f"     • Price drops (3-10% = opportunity)")
+        print(f"     • Price drops (2%+ = all fallers)")
         print(f"     • Volume spikes (interest)")
         print(f"     • Healthy technical structure (no knives)")
         print()
 
         candidates = []
+        self.all_fallers = []  # Track ALL symbols with 2%+ drops
 
         # Progress bar for screening
         with tqdm(total=len(symbols), desc="     Pre-screening", unit="symbol", ncols=100) as pbar:
             for symbol in symbols:
                 try:
-                    # Quick check: Fetch last 10 days only
-                    ticker = yf.Ticker(symbol)
-                    df = ticker.history(period='10d')
-
+                    # Try to load from CSV first (has today's data)
+                    # Fall back to live fetch if CSV doesn't exist
+                    df = self._load_price_data(symbol)
+                    
+                    if df is None or len(df) < 5:
+                        # Fall back to live fetch
+                        ticker = yf.Ticker(symbol)
+                        df = ticker.history(period='10d')
+                    
                     if len(df) < 5:
                         pbar.update(1)
                         continue
 
-                    # Calculate quick metrics
-                    recent_close = df['Close'].iloc[-1]
-                    week_ago_close = df['Close'].iloc[0]
-                    pct_change = ((recent_close - week_ago_close) / week_ago_close) * 100
+                    # Calculate quick metrics (CSV is descending, so iloc[0] is latest)
+                    recent_close = df['Close'].iloc[0]
+                    prev_close = df['Close'].iloc[1]
+                    pct_change = ((recent_close - prev_close) / prev_close) * 100
 
-                    avg_volume = df['Volume'].mean()
-                    recent_volume = df['Volume'].iloc[-1]
+                    avg_volume = df['Volume'].head(10).mean()
+                    recent_volume = df['Volume'].iloc[0]
                     volume_ratio = recent_volume / avg_volume if avg_volume > 0 else 0
 
                     # INTELLIGENT FILTERING RULES
 
                     # Rule 1: Price drop (but not crash)
-                    price_drop = -10 <= pct_change <= -3  # 3-10% drop
+                    significant_drop = pct_change <= -2  # 2%+ drop (user wants to see all)
+                    opportunity_drop = -10 <= pct_change <= -3  # 3-10% sweet spot
 
                     # Rule 2: Volume spike (interest)
                     volume_spike = volume_ratio > 1.2  # 20%+ above average
@@ -518,8 +595,32 @@ class MasterScanner:
                     # Rule 5: Not in death spiral (price not down >20% in 10 days)
                     not_crashing = pct_change > -20
 
-                    # Pass if it meets criteria
-                    if price_drop and volume_spike and price_filter and volume_filter and not_crashing:
+                    # Track ALL fallers 2%+ for comprehensive report
+                    if significant_drop and price_filter and not_crashing:
+                        # Get actual asset type from universe metadata
+                        asset_type = 'Stock'  # Default
+                        for sym_dict in self.universe:
+                            if isinstance(sym_dict, dict) and sym_dict.get('symbol') == symbol:
+                                asset_type = sym_dict.get('type', 'Stock').capitalize()
+                                break
+
+                        self.all_fallers.append({
+                            'symbol': symbol,
+                            'type': asset_type,
+                            'pct_change': pct_change,
+                            'price': recent_close,
+                            'volume': recent_volume,
+                            'avg_volume': avg_volume,
+                            'volume_ratio': volume_ratio
+                        })
+
+                    # Pass if it meets criteria for deep analysis (3-10% drop)
+                    if opportunity_drop and volume_spike and price_filter and volume_filter and not_crashing:
+                        candidates.append(symbol)
+                        pbar.set_postfix({"candidates": len(candidates)})
+
+                    # Also track significant fallers for deep analysis
+                    elif significant_drop and volume_spike and price_filter and volume_filter and not_crashing:
                         candidates.append(symbol)
                         pbar.set_postfix({"candidates": len(candidates)})
 
@@ -744,7 +845,8 @@ class MasterScanner:
             if check_file.exists():
                 try:
                     df = pd.read_csv(check_file, index_col=0, parse_dates=True)
-                    df = df.sort_index()
+                    # CSV is stored descending (newest first), sort ascending for analysis
+                    df = df.sort_index(ascending=True)
 
                     # Check if data is recent (within last 7 days)
                     if not df.empty:
@@ -1407,6 +1509,9 @@ class MasterScanner:
             # Generate detailed review report
             self._generate_review_report()
 
+            # Generate comprehensive fallers report (ALL 2%+ drops)
+            self._generate_all_fallers_report()
+
         except Exception as e:
             print(f"⚠️  Save failed: {e}")
 
@@ -1584,6 +1689,79 @@ class MasterScanner:
             return "MEDIUM - Moderate conviction"
         else:
             return "LOW - Proceed with caution"
+
+    def _generate_all_fallers_report(self):
+        """
+        Generate comprehensive report of ALL symbols that fell 2%+ today
+        Includes both stocks and ETFs
+        Sorted by percentage drop (worst first)
+        """
+        try:
+            if not hasattr(self, 'all_fallers') or not self.all_fallers:
+                print("  ℹ️  No fallers (2%+) found to report")
+                return
+
+            fallers_file = SIGNALS_DIR / f'all_fallers_{datetime.now().strftime("%Y%m%d")}.md'
+
+            # Sort by percentage drop (worst first)
+            sorted_fallers = sorted(self.all_fallers, key=lambda x: x['pct_change'])
+
+            with open(fallers_file, 'w') as f:
+                # Header
+                f.write("# 📉 ALL MARKET FALLERS - 2%+ Drops\n\n")
+                f.write(f"**Date**: {datetime.now().strftime('%Y-%m-%d %H:%M ET')}\n")
+                f.write(f"**Total Fallers**: {len(sorted_fallers)}\n")
+                f.write(f"**Stocks**: {sum(1 for x in sorted_fallers if x['type'] == 'Stock')}\n")
+                f.write(f"**ETFs**: {sum(1 for x in sorted_fallers if x['type'] == 'ETF')}\n\n")
+
+                f.write("---\n\n")
+
+                f.write("## 📊 COMPLETE LIST (Sortable)\n\n")
+                f.write("**Click column headers to sort on GitHub!**\n\n")
+
+                # Table Header
+                f.write("| Rank | Symbol | Type | Drop % | Price | Volume | Avg Volume | Vol Ratio |\n")
+                f.write("|------|--------|------|--------|-------|--------|------------|----------|\n")
+
+                # Table Rows
+                for i, faller in enumerate(sorted_fallers, 1):
+                    symbol = faller['symbol']
+                    asset_type = faller['type']
+                    pct = f"{faller['pct_change']:.2f}%"
+                    price = f"${faller['price']:.2f}"
+                    volume = f"{faller['volume']:,.0f}"
+                    avg_vol = f"{faller['avg_volume']:,.0f}"
+                    vol_ratio = f"{faller['volume_ratio']:.2f}x"
+
+                    f.write(f"| {i} | **{symbol}** | {asset_type} | {pct} | {price} | {volume} | {avg_vol} | {vol_ratio} |\n")
+
+                f.write("\n---\n\n")
+
+                # Statistics
+                f.write("## 📈 Statistics\n\n")
+
+                # Worst fallers
+                f.write("### 🔴 Top 10 Worst Fallers\n\n")
+                for i, faller in enumerate(sorted_fallers[:10], 1):
+                    f.write(f"{i}. **{faller['symbol']}** ({faller['type']}): {faller['pct_change']:.2f}%\n")
+
+                f.write("\n### 📊 Drop Distribution\n\n")
+                drops_2_5 = sum(1 for x in sorted_fallers if -5 < x['pct_change'] <= -2)
+                drops_5_10 = sum(1 for x in sorted_fallers if -10 < x['pct_change'] <= -5)
+                drops_10_plus = sum(1 for x in sorted_fallers if x['pct_change'] <= -10)
+
+                f.write(f"- **2-5% drops**: {drops_2_5} symbols\n")
+                f.write(f"- **5-10% drops**: {drops_5_10} symbols\n")
+                f.write(f"- **10%+ drops**: {drops_10_plus} symbols\n\n")
+
+                f.write("---\n\n")
+                f.write("*This report shows ALL symbols that fell 2% or more today.*\n")
+                f.write("*For detailed analysis of top opportunities, see `daily_review_YYYYMMDD.md`*\n")
+
+            print(f"📉 All fallers report saved: {fallers_file}")
+
+        except Exception as e:
+            print(f"⚠️  Failed to generate all fallers report: {e}")
 
     def _generate_full_scan_table(self):
         """

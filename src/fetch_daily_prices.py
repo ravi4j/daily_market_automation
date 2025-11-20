@@ -53,12 +53,12 @@ def load_symbols_config():
             config = yaml.safe_load(f)
             # Load portfolio positions from master_config.yaml
             positions = config.get('portfolio', {}).get('positions', {})
-            
+
             if not positions:
                 print("ℹ️  No portfolio positions defined in master_config.yaml")
                 print("   Master scanner will select symbols automatically.")
                 return default_symbols
-                
+
             # Convert positions dict to symbols dict (positions may have share counts)
             # Format: {symbol: shares} → {symbol: symbol}
             symbols = {sym: sym for sym in positions.keys()}
@@ -202,10 +202,11 @@ def main():
 
             if os.path.exists(path):
                 try:
-                    old = pd.read_csv(path, parse_dates=["Date"]).set_index("Date").sort_index()
+                    # Load CSV (may be in descending order, so don't assume order)
+                    old = pd.read_csv(path, parse_dates=["Date"]).set_index("Date")
                     if not old.empty:
-                        # Get the last date in the existing CSV
-                        last_date = old.index[-1]
+                        # Get the ACTUAL last date (newest), regardless of sort order
+                        last_date = old.index.max()
                         # Fetch from the day after the last date (to avoid duplicates)
                         start_date = (last_date + pd.Timedelta(days=1)).strftime('%Y-%m-%d')
                         log(f"CSV exists for {sym_key}. Fetching incrementally from {start_date}...")
@@ -224,8 +225,10 @@ def main():
             if df.empty:
                 log(f"No new data for {sym_key}. CSV is up to date.")
                 if not old.empty:
-                    last_row_old = old.iloc[-1]
-                    last_date_old = old.index[-1].date()
+                    # Get newest row (regardless of CSV sort order)
+                    newest_idx = old.index.max()
+                    last_row_old = old.loc[newest_idx]
+                    last_date_old = newest_idx.date()
                     summaries.append(f"{sym_key}: {last_date_old}  AdjClose={float(last_row_old['Adj Close']):.2f}  Close={float(last_row_old['Close']):.2f} (no new data)")
                     any_success = True
                 continue
@@ -235,13 +238,15 @@ def main():
             df = df[df.index >= cutoff]
 
             # --- summary values taken from *fresh* data (avoid legacy CSV issues) ---
-            last_row_new = df.iloc[-1]  # one row as a Series (scalar fields)
-            last_date_new = df.index[-1].date()
+            # Get the newest row from fresh data (sort ascending first to ensure [-1] is newest)
+            df_sorted = df.sort_index()
+            last_row_new = df_sorted.iloc[-1]  # one row as a Series (scalar fields)
+            last_date_new = df_sorted.index[-1].date()
             adj_close_val = float(last_row_new["Adj Close"])
             close_val     = float(last_row_new["Close"])
 
-            # Combine old and new data, de-dup by date, sort
-            combined = pd.concat([old, df]).sort_index(ascending=False)
+            # Combine old and new data, de-dup by date
+            combined = pd.concat([old, df])
             combined = combined[~combined.index.duplicated(keep="first")]
 
             # Sanitize numeric types and drop any bogus rows
@@ -252,6 +257,9 @@ def main():
             combined = combined.round({
                 "Open": 2, "High": 2, "Low": 2, "Close": 2, "Adj Close": 2
             })
+
+            # Sort descending (newest first) for easier viewing
+            combined = combined.sort_index(ascending=False)
 
             # Save CSV
             combined.reset_index().to_csv(path, index=False)

@@ -367,7 +367,8 @@ def main():
         return
     
     df = pd.read_csv(data_file, parse_dates=['Date']).set_index('Date')
-    df = df.sort_index()
+    # CSV is stored descending (newest first), sort ascending for analysis
+    df = df.sort_index(ascending=True)
     df.columns = df.columns.str.title()
     
     # Add indicators

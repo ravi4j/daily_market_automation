@@ -66,36 +66,50 @@ scanning:
   # INTELLIGENT SYMBOL SELECTION - Pluggable Strategies (NO HARDCODED SYMBOLS!)
   # ============================================================================
   intelligent_selection:
-    enabled: true               # Use intelligent selection vs simple alphabetical
+    enabled: false              # DISABLED: CSV-dependent strategies limit to 44 symbols
+                                 # Instead: Use simple random sampling, let pre-screening filter
 
-    # Pluggable strategies with weights (must add up to 100%)
-    # Each strategy selects symbols based on specific criteria
+    # NOTE: These strategies are DISABLED because they rely on existing CSVs
+    # which limits scanning to only 44 symbols (missing ORCL and other fallers)
+    #
+    # The pre-screening phase will fetch fresh data for all 600 symbols
+    # and identify TODAY's actual fallers (not just symbols with CSVs)
     strategies:
-      # Strategy 1: BUY-THE-DIP (20% of 600 = ~120 symbols)
+      # Strategy 1: SECTOR ROTATION (25% of 600 = ~150 symbols)
+      # TradingView heatmap-inspired: Select from hot/cold sectors
+      # Hot sectors = Momentum plays, Cold sectors = Buy-the-dip
+      - name: sector_rotation
+        weight: 25
+        config:
+          hot_sector_weight: 0.40   # 40% from hot sectors (momentum)
+          cold_sector_weight: 0.40  # 40% from cold sectors (contrarian)
+          neutral_weight: 0.20      # 20% from neutral sectors
+
+      # Strategy 2: BUY-THE-DIP (15% of 600 = ~90 symbols)
       # Contrarian/Value approach: Bad news + Good fundamentals = Opportunity!
       # Looks for: Price drops 3-10% + Negative news + Solid fundamentals + Oversold technicals
       - name: news
-        weight: 20
+        weight: 15
         config:
           min_price_drop_pct: 3.0   # Minimum price drop to consider
           max_price_drop_pct: 10.0  # Maximum (avoid falling knives)
 
-      # Strategy 2: Volume Spikes (20% of 600 = ~120 symbols)
+      # Strategy 3: Volume Spikes (20% of 600 = ~120 symbols)
       - name: volume_spikes
         weight: 20
         config:
           min_volume_ratio: 2.0     # 2x average volume
           lookback_days: 20         # Compare to 20-day average
 
-      # Strategy 3: Price Moves (20% of 600 = ~120 symbols)
+      # Strategy 4: Price Moves (20% of 600 = ~120 symbols)
       - name: price_moves
         weight: 20
         config:
           min_price_move_pct: 5.0   # 5%+ price move
 
-      # Strategy 4: High Liquidity (40% of 600 = ~240 symbols)
+      # Strategy 5: High Liquidity (20% of 600 = ~120 symbols)
       - name: liquidity
-        weight: 40
+        weight: 20
         config:
           prefer_etfs: true         # Prioritize ETFs for lower risk
 
