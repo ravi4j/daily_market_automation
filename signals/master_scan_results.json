@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-11-19T22:55:04.057289",
+  "timestamp": "2025-11-19T23:11:33.611295",
   "scan_config": {
     "tier": "daily",
-    "symbols_scanned": 331
+    "symbols_scanned": 207
   },
   "opportunities": [
     {
-      "symbol": "BLK",
+      "symbol": "PCG",
       "composite_score": 72.0,
       "confidence": 72.0,
       "recommendation": "BUY",
@@ -17,89 +17,17 @@
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 1014.6799926757812,
-        "stop_loss": 943.6523931884766,
-        "target": 1217.6159912109374,
-        "risk_reward": 2.857142857142857
+        "entry": 15.720000267028809,
+        "stop_loss": 14.619600248336793,
+        "target": 18.86400032043457,
+        "risk_reward": 2.85714285714286
       },
       "strategy_signals": [],
       "reasons": [
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-11-19T22:54:58.073462"
-    },
-    {
-      "symbol": "ES",
-      "composite_score": 72.0,
-      "confidence": 72.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 85.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 65.26000213623047,
-        "stop_loss": 60.69180198669434,
-        "target": 78.31200256347655,
-        "risk_reward": 2.857142857142856
-      },
-      "strategy_signals": [],
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-19T22:55:02.415589"
-    },
-    {
-      "symbol": "AMZN",
-      "composite_score": 70.0,
-      "confidence": 70.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 222.69000244140625,
-        "stop_loss": 207.10170227050781,
-        "target": 267.2280029296875,
-        "risk_reward": 2.8571428571428563
-      },
-      "strategy_signals": [],
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-19T22:54:53.797304"
-    },
-    {
-      "symbol": "HD",
-      "composite_score": 70.0,
-      "confidence": 70.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 334.5,
-        "stop_loss": 311.08500000000004,
-        "target": 401.4,
-        "risk_reward": 2.8571428571428608
-      },
-      "strategy_signals": [],
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-19T22:54:54.650376"
+      "timestamp": "2025-11-19T23:11:32.260935"
     }
   ],
   "portfolio_status": {}

@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 from collections import defaultdict
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -333,16 +334,32 @@ class MasterScanner:
         """Apply quality filters (volume, price, exchange)"""
         filters = self.config['scanning']['intelligent_filters']
 
-        # For now, just return symbols
-        # TODO: Fetch real-time data and filter by volume/price
+        # Map Finnhub exchange codes to filter names
+        # XNAS = NASDAQ, XNYS = NYSE, XASE = AMEX, ARCX = NYSE Arca, BATS = BATS
+        exchange_mapping = {
+            'XNAS': 'NASDAQ',
+            'XNYS': 'NYSE',
+            'XASE': 'AMEX',
+            'ARCX': 'NYSE',  # NYSE Arca (ETFs)
+            'BATS': 'BATS',
+        }
+
         valid_exchanges = set(filters.get('exchanges', ['NYSE', 'NASDAQ', 'AMEX']))
 
         filtered = []
         for sym in symbols:
             exchange = sym.get('exchange', '')
-            # Basic exchange filter
+
             # If exchange is empty (fallback data), assume it's valid
-            if not exchange or any(ex in exchange for ex in valid_exchanges):
+            if not exchange:
+                filtered.append(sym['symbol'])
+                continue
+
+            # Map Finnhub code to standard name
+            mapped_exchange = exchange_mapping.get(exchange, exchange)
+
+            # Check if mapped exchange is in valid list
+            if any(valid in mapped_exchange for valid in valid_exchanges):
                 filtered.append(sym['symbol'])
 
         return filtered[:self.config['scanning'].get('max_symbols_per_run', 600)]
@@ -374,19 +391,17 @@ class MasterScanner:
         print()
 
         candidates = []
-        batch_size = 50
 
-        for i in range(0, len(symbols), batch_size):
-            batch = symbols[i:i+batch_size]
-
-            # Fetch recent data for batch
-            for symbol in batch:
+        # Progress bar for screening
+        with tqdm(total=len(symbols), desc="     Pre-screening", unit="symbol", ncols=100) as pbar:
+            for symbol in symbols:
                 try:
                     # Quick check: Fetch last 10 days only
                     ticker = yf.Ticker(symbol)
                     df = ticker.history(period='10d')
 
                     if len(df) < 5:
+                        pbar.update(1)
                         continue
 
                     # Calculate quick metrics
@@ -418,19 +433,19 @@ class MasterScanner:
                     # Pass if it meets criteria
                     if price_drop and volume_spike and price_filter and volume_filter and not_crashing:
                         candidates.append(symbol)
+                        pbar.set_postfix({"candidates": len(candidates)})
 
                     # Also include symbols that just had volume spike (even without drop)
                     elif volume_ratio > 2.0 and price_filter and volume_filter and not_crashing:
                         # 2x volume = something interesting happening
                         candidates.append(symbol)
+                        pbar.set_postfix({"candidates": len(candidates)})
 
                 except:
                     # Skip symbols we can't fetch data for
-                    continue
-
-            # Progress indicator
-            if i % 200 == 0 and i > 0:
-                print(f"     Screened {i}/{len(symbols)} symbols... ({len(candidates)} candidates so far)")
+                    pass
+                finally:
+                    pbar.update(1)
 
         return candidates
 
@@ -471,21 +486,20 @@ class MasterScanner:
         print(f"     • Insider Activity: {weights['insider_activity']}%\n")
 
         opportunities = []
-        scanned = 0
 
-        for symbol in candidates:
-            try:
-                opp = self._analyze_symbol(symbol)
-                if opp:
-                    opportunities.append(opp)
-                scanned += 1
-
-                if scanned % 10 == 0:
-                    print(f"     Progress: {scanned}/{len(candidates)} ({scanned/len(candidates)*100:.1f}%)")
-
-            except Exception as e:
-                # Silent errors during scanning (too noisy otherwise)
-                continue
+        # Progress bar for deep analysis
+        with tqdm(total=len(candidates), desc="     Deep analysis", unit="symbol", ncols=100) as pbar:
+            for symbol in candidates:
+                try:
+                    opp = self._analyze_symbol(symbol)
+                    if opp:
+                        opportunities.append(opp)
+                        pbar.set_postfix({"opportunities": len(opportunities)})
+                except Exception as e:
+                    # Silent errors during scanning (too noisy otherwise)
+                    pass
+                finally:
+                    pbar.update(1)
 
         # Sort by composite score
         opportunities.sort(key=lambda x: x['composite_score'], reverse=True)
@@ -495,7 +509,7 @@ class MasterScanner:
         self.opportunities = opportunities[:max_opps]
 
         print(f"\n✅ Scan complete:")
-        print(f"   Scanned: {scanned} symbols")
+        print(f"   Scanned: {len(candidates)} symbols")
         print(f"   Found: {len(opportunities)} opportunities")
         print(f"   Top {len(self.opportunities)} selected\n")
 
