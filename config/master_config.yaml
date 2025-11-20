@@ -46,6 +46,14 @@ scanning:
   max_deep_analysis: 100        # Max symbols for deep analysis
   parallel_workers: 10          # Parallel processing threads
 
+  # Market Crash Detection (auto-adjusts buy-the-dip strategy)
+  crash_detection:
+    enabled: true               # Auto-detect market crashes
+    indices: ["SPY", "QQQ", "IWM", "DIA"]  # Indices to monitor
+    crash_threshold_pct: 2.0    # >2% average drop = crash
+    correction_threshold_pct: 1.0  # >1% average drop = correction
+    check_all_negative: false   # Require all indices to be negative?
+
   # What to look for (system automatically finds these)
   opportunity_signals:
     - price_drops_with_volume   # Price drop + volume spike = opportunity

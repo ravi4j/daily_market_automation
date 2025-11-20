@@ -178,14 +178,87 @@ class MasterScanner:
     # PHASE 1: FETCH MARKET UNIVERSE
     # =========================================================================
 
+    def _detect_market_crash(self):
+        """
+        Auto-detect market crashes by checking major indices
+        Fully configurable via master_config.yaml
+        """
+        # Get crash detection config
+        crash_config = self.config.get('scanning', {}).get('crash_detection', {})
+        
+        if not crash_config.get('enabled', True):
+            self.market_crash = False
+            return
+        
+        try:
+            # Get configuration
+            indices = crash_config.get('indices', ['SPY', 'QQQ', 'IWM', 'DIA'])
+            crash_threshold = crash_config.get('crash_threshold_pct', 2.0)
+            correction_threshold = crash_config.get('correction_threshold_pct', 1.0)
+            require_all_negative = crash_config.get('check_all_negative', False)
+            
+            total_drop = 0
+            count = 0
+            changes = []
+
+            print(f"\n  🔍 Market health check ({len(indices)} indices)...")
+
+            for symbol in indices:
+                try:
+                    ticker = yf.Ticker(symbol)
+                    data = ticker.history(period='2d')
+
+                    if len(data) >= 2:
+                        prev_close = data['Close'].iloc[-2]
+                        current = data['Close'].iloc[-1]
+                        change_pct = ((current - prev_close) / prev_close * 100)
+                        
+                        changes.append(change_pct)
+                        total_drop += min(0, change_pct)  # Only negative changes
+                        count += 1
+                except Exception:
+                    continue
+
+            if count > 0:
+                avg_drop = abs(total_drop / count)
+                
+                # Check if all indices must be negative (if configured)
+                all_negative = all(c < 0 for c in changes)
+                
+                if require_all_negative and not all_negative:
+                    print(f"  ✅ Mixed market (some indices up, some down)")
+                    self.market_crash = False
+                elif avg_drop > crash_threshold:
+                    print(f"  🚨 MARKET CRASH DETECTED: {avg_drop:.1f}% average drop")
+                    print(f"     → Threshold: {crash_threshold}% | Prioritizing buy-the-dip!")
+                    self.market_crash = True
+                elif avg_drop > correction_threshold:
+                    print(f"  ⚠️  Market correction: {avg_drop:.1f}% average drop")
+                    print(f"     → Threshold: {correction_threshold}% | Watching closely")
+                    self.market_crash = False
+                else:
+                    print(f"  ✅ Normal market: {avg_drop:.1f}% average change")
+                    self.market_crash = False
+            else:
+                self.market_crash = False
+
+        except Exception as e:
+            print(f"  ⚠️  Market check failed: {e}")
+            self.market_crash = False
+
     def fetch_market_universe(self) -> List[str]:
         """
         Fetch complete list of US market symbols from Finnhub
         Returns tiered list based on scan strategy
+
+        AUTO-DETECTS market crashes and adjusts selection
         """
         print("\n" + "=" * 80)
         print("PHASE 1: FETCHING MARKET UNIVERSE")
         print("=" * 80)
+
+        # Auto-detect market crash
+        self._detect_market_crash()
 
         tier = self.config['scanning']['strategy']['tier']
         print(f"📊 Scan tier: {tier.upper()}")
@@ -310,21 +383,21 @@ class MasterScanner:
     def _filter_tier_daily(self, symbols: List[Dict]) -> List[Dict]:
         """
         INTELLIGENT 600 SELECTION SYSTEM - Pluggable Strategies
-        
+
         Uses SymbolSelector with configurable strategies (NO HARDCODED SYMBOLS!)
-        
+
         Strategies configured in master_config.yaml:
         - News-driven (20%): Symbols with breaking news
         - Volume spikes (20%): 2x+ volume
         - Price moves (20%): 5%+ price change
         - High liquidity (40%): ETFs + high-volume stocks
-        
+
         100% configurable - add/remove/adjust strategies without code changes!
         """
         print("  🧠 Using pluggable intelligent selection strategies...")
 
         max_symbols = self.config['scanning'].get('max_symbols_per_run', 600)
-        
+
         # Exchange filtering first (quality baseline)
         filters = self.config['scanning']['intelligent_filters']
         valid_exchanges = set(filters.get('exchanges', ['NYSE', 'NASDAQ', 'AMEX']))
@@ -336,33 +409,33 @@ class MasterScanner:
         quality_symbols = []
         for sym in symbols:
             exchange = sym.get('exchange', '')
-            
+
             if exchange == 'OOTC':
                 continue
-            
+
             if not exchange:
                 quality_symbols.append(sym)
             else:
                 mapped = exchange_mapping.get(exchange, exchange)
                 if any(valid in mapped for valid in valid_exchanges):
                     quality_symbols.append(sym)
-        
+
         print(f"     Quality baseline: {len(quality_symbols)} symbols from major exchanges")
-        
+
         # Use SymbolSelector with pluggable strategies
         selector = SymbolSelector(
             config=self.config.get('scanning', {}),
             finnhub_client=self.finnhub,
             data_dir=MARKET_DATA_DIR
         )
-        
+
         selected_symbols = selector.select_intelligent(quality_symbols, max_symbols)
-        
+
         # Convert back to dict format
         result = [sym for sym in quality_symbols if sym['symbol'] in selected_symbols]
-        
+
         return result
-    
+
     # NOTE: _score_and_prioritize_symbols() and _has_recent_activity() methods
     # have been replaced by the pluggable SymbolSelector class in src/symbol_selector.py
     # See master_config.yaml for configurable selection strategies
@@ -1197,14 +1270,14 @@ class MasterScanner:
         # SMART: Only check gaps for yesterday's top opportunities!
         # These are the symbols you're actually considering to trade
         print(f"  🎯 Loading yesterday's top opportunities...")
-        
+
         scan_symbols = []
-        
+
         # Add portfolio positions (highest priority - monitor your holdings)
         if positions:
             scan_symbols.extend(positions.keys())
             print(f"     → {len(positions)} portfolio positions")
-        
+
         # Load yesterday's top opportunities from saved results
         results_file = SIGNALS_DIR / 'master_scan_results.json'
         if results_file.exists():
@@ -1212,7 +1285,7 @@ class MasterScanner:
                 import json
                 with open(results_file, 'r') as f:
                     results = json.load(f)
-                
+
                 opportunities = results.get('opportunities', [])
                 if opportunities:
                     # Add top opportunities (these are your trade candidates!)
@@ -1220,7 +1293,7 @@ class MasterScanner:
                         symbol = opp.get('symbol')
                         if symbol and symbol not in scan_symbols:
                             scan_symbols.append(symbol)
-                    
+
                     print(f"     → {len(opportunities[:10])} top opportunities from yesterday")
                 else:
                     print(f"     ⚠️  No opportunities in results file")
@@ -1228,12 +1301,12 @@ class MasterScanner:
                 print(f"     ⚠️  Could not load results: {e}")
         else:
             print(f"     ⚠️  No results file found (run daily scan first)")
-        
+
         # Fallback: if no symbols, use major indices
         if not scan_symbols:
             scan_symbols = ['SPY', 'QQQ', 'IWM', 'DIA', 'VTI']
             print(f"     → Using fallback: major indices")
-        
+
         print(f"\n  ✅ Checking gaps for {len(scan_symbols)} symbols")
 
         opportunities = self.premarket_scanner.scan_for_opportunities(
