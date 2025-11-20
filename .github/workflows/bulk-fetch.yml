@@ -7,23 +7,23 @@ jobs:
   bulk-fetch:
     runs-on: ubuntu-latest
     timeout-minutes: 480  # 8 hours max
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.12'
-    
+
     - name: Install dependencies
       run: |
         pip install --upgrade pip
         pip install -r requirements-base.txt
         pip install -r requirements-fetch.txt
         pip install tqdm
-    
+
     - name: Run bulk fetch
       run: |
         echo "🚀 Starting bulk fetch of ~23,888 symbols..."
@@ -31,26 +31,35 @@ jobs:
         echo "💾 Will download 2 years of data for each symbol"
         echo ""
         python scripts/initial_bulk_fetch.py --no-prompt
-    
+
     - name: Show statistics
+      if: success()
       run: |
         echo "📊 Fetch Statistics:"
-        echo "Total Stock CSVs: $(ls data/market_data/stocks/*.csv 2>/dev/null | wc -l)"
-        echo "Total ETF CSVs: $(ls data/market_data/etfs/*.csv 2>/dev/null | wc -l)"
-        echo "Total CSVs: $(find data/market_data -name '*.csv' 2>/dev/null | wc -l)"
+        STOCK_COUNT=$(ls data/market_data/stocks/*.csv 2>/dev/null | wc -l)
+        ETF_COUNT=$(ls data/market_data/etfs/*.csv 2>/dev/null | wc -l)
+        TOTAL_COUNT=$(find data/market_data -name '*.csv' 2>/dev/null | wc -l)
+        echo "Total Stock CSVs: $STOCK_COUNT"
+        echo "Total ETF CSVs: $ETF_COUNT"
+        echo "Total CSVs: $TOTAL_COUNT"
         echo "Disk usage: $(du -sh data/market_data)"
+        # Save counts for later steps
+        echo "STOCK_COUNT=$STOCK_COUNT" >> $GITHUB_ENV
+        echo "ETF_COUNT=$ETF_COUNT" >> $GITHUB_ENV
+        echo "TOTAL_COUNT=$TOTAL_COUNT" >> $GITHUB_ENV
     
     - name: Commit and push data
+      if: success()
       run: |
         git config user.name "GitHub Actions Bot"
         git config user.email "actions@github.com"
         git add data/market_data/stocks/*.csv
         git add data/market_data/etfs/*.csv
-        git commit -m "🎉 Initial bulk fetch: $(find data/market_data -name '*.csv' | wc -l) symbols with 2y historical data
+        git commit -m "🎉 Initial bulk fetch: ${{ env.TOTAL_COUNT }} symbols with 2y historical data
 
         - Downloaded 2 years of OHLCV data for all US symbols
-        - Stocks: $(ls data/market_data/stocks/*.csv 2>/dev/null | wc -l) CSVs
-        - ETFs: $(ls data/market_data/etfs/*.csv 2>/dev/null | wc -l) CSVs
+        - Stocks: ${{ env.STOCK_COUNT }} CSVs
+        - ETFs: ${{ env.ETF_COUNT }} CSVs
         - Ready for volume-based intelligent sorting
         - Daily scanner will now detect NVDA, ORCL, and all major stocks
         
@@ -59,17 +68,15 @@ jobs:
         git push
     
     - name: Send notification (if Telegram configured)
-      if: always()
+      if: success()
       env:
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
         if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_CHAT_ID" ]; then
-          TOTAL_CSVS=$(find data/market_data -name '*.csv' 2>/dev/null | wc -l)
-          MESSAGE="🎉 *Bulk Fetch Complete!*%0A%0A📊 Downloaded $TOTAL_CSVS symbols%0A✅ Volume-based sorting ready%0A%0APull latest changes to get all data!"
+          MESSAGE="🎉 *Bulk Fetch Complete!*%0A%0A📊 Downloaded ${{ env.TOTAL_COUNT }} symbols%0A📈 Stocks: ${{ env.STOCK_COUNT }}%0A📊 ETFs: ${{ env.ETF_COUNT }}%0A✅ Volume-based sorting ready%0A%0APull latest changes to get all data!"
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d "chat_id=${TELEGRAM_CHAT_ID}" \
             -d "text=${MESSAGE}" \
             -d "parse_mode=Markdown"
         fi
-
