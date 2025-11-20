@@ -14,10 +14,14 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 from collections import defaultdict
+from dotenv import load_dotenv
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+
+# Load environment variables from .env file
+load_dotenv(PROJECT_ROOT / '.env')
 
 # Import existing modules (reuse, don't duplicate)
 from src.finnhub_data import FinnhubClient
@@ -264,9 +268,26 @@ class MasterScanner:
         sp500_file = METADATA_DIR / 'sp500_comprehensive.txt'
 
         if sp500_file.exists():
+            symbols = []
             with open(sp500_file, 'r') as f:
-                symbols = [{'symbol': line.strip(), 'type': 'stock', 'name': '', 'exchange': ''}
-                          for line in f if line.strip()]
+                for line in f:
+                    line = line.strip()
+                    # Skip empty lines and comments
+                    if not line or line.startswith('#'):
+                        continue
+                    # Parse CSV format: SYMBOL,Company Name,Sector
+                    parts = line.split(',')
+                    if parts:
+                        symbol = parts[0].strip()
+                        name = parts[1].strip() if len(parts) > 1 else ''
+                        sector = parts[2].strip() if len(parts) > 2 else ''
+                        symbols.append({
+                            'symbol': symbol,
+                            'name': name,
+                            'type': 'stock',
+                            'exchange': '',
+                            'sector': sector
+                        })
             print(f"  ✅ Loaded {len(symbols)} S&P 500 symbols")
             return symbols
 
@@ -310,7 +331,7 @@ class MasterScanner:
 
     def _apply_filters(self, symbols: List[Dict]) -> List[str]:
         """Apply quality filters (volume, price, exchange)"""
-        filters = self.config['scanning']['filters']
+        filters = self.config['scanning']['intelligent_filters']
 
         # For now, just return symbols
         # TODO: Fetch real-time data and filter by volume/price
@@ -320,7 +341,8 @@ class MasterScanner:
         for sym in symbols:
             exchange = sym.get('exchange', '')
             # Basic exchange filter
-            if any(ex in exchange for ex in valid_exchanges):
+            # If exchange is empty (fallback data), assume it's valid
+            if not exchange or any(ex in exchange for ex in valid_exchanges):
                 filtered.append(sym['symbol'])
 
         return filtered[:self.config['scanning'].get('max_symbols_per_run', 600)]

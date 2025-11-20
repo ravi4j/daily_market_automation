@@ -6,3 +6,4 @@ matplotlib>=3.7.0
 pyyaml>=6.0
 requests>=2.32.0
 finnhub-python>=1.4.0
+python-dotenv>=1.0.0
