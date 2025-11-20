@@ -75,6 +75,8 @@ def main():
     parser = argparse.ArgumentParser(description='Initial bulk fetch of all US symbols')
     parser.add_argument('--resume', action='store_true', 
                        help='Skip symbols that already have CSVs')
+    parser.add_argument('--no-prompt', action='store_true',
+                       help='Skip confirmation prompt (for CI/automation)')
     args = parser.parse_args()
     
     print("=" * 80)
@@ -91,7 +93,9 @@ def main():
     else:
         print("🆕 FRESH START: Downloading all symbols\n")
     
-    input("Press ENTER to start (or Ctrl+C to cancel)...")
+    # Skip prompt in CI/automation
+    if not args.no_prompt:
+        input("Press ENTER to start (or Ctrl+C to cancel)...")
     print()
     
     # Load symbol list

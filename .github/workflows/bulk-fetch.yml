@@ -30,7 +30,7 @@ jobs:
         echo "⏱️  This will take 6-8 hours"
         echo "💾 Will download 2 years of data for each symbol"
         echo ""
-        python scripts/initial_bulk_fetch.py
+        python scripts/initial_bulk_fetch.py --no-prompt
     
     - name: Show statistics
       run: |
