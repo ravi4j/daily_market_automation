@@ -176,9 +176,14 @@ scoring:
   max_opportunities: 5   # Show top 5
   min_confidence: 70     # Only HIGH confidence
 
-# Portfolio (optional - monitors your positions)
+# Portfolio (optional - monitors YOUR existing positions)
 portfolio:
   positions: {}  # Leave empty for pure opportunity scanning
+  
+  # Example: Add your actual positions to monitor
+  # positions:
+  #   TQQQ: 100    # 100 shares
+  #   AAPL: 50     # 50 shares
 ```
 
 ### Run Locally

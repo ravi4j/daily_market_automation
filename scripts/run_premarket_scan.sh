@@ -18,12 +18,16 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_ROOT"
 
 # Activate virtual environment
-if [ ! -d "venv" ]; then
+if [ ! -d ".venv" ] && [ ! -d "venv" ]; then
     echo "❌ Virtual environment not found! Run: ./scripts/setup_local.sh"
     exit 1
 fi
 
-source venv/bin/activate
+if [ -d ".venv" ]; then
+    source .venv/bin/activate
+else
+    source venv/bin/activate
+fi
 
 # Load environment variables
 if [ -f ".env" ]; then
@@ -42,4 +46,3 @@ python scripts/master_daily_scan.py --mode premarket
 echo ""
 echo "✅ Pre-market scan complete!"
 echo ""
-

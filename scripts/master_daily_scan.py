@@ -20,7 +20,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 # Import existing modules (reuse, don't duplicate)
-from src.finnhub_data import FinnhubDataClient
+from src.finnhub_data import FinnhubClient
 from src.news_monitor import NewsMonitor
 from src.indicators import TechnicalIndicators
 from src.insider_tracker import InsiderTracker
@@ -118,7 +118,7 @@ class MasterScanner:
         try:
             api_key = os.getenv('FINNHUB_API_KEY')
             if api_key:
-                self.finnhub = FinnhubDataClient(api_key)
+                self.finnhub = FinnhubClient(api_key)
                 print("  ✅ Finnhub API connected")
             else:
                 print("  ⚠️  Finnhub API key not found (will use fallbacks)")

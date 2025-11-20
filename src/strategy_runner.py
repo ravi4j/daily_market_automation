@@ -11,8 +11,8 @@ from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 
-from indicators import TechnicalIndicators
-from abc_strategy import ABCStrategy
+from src.indicators import TechnicalIndicators
+from src.abc_strategy import ABCStrategy
 
 
 @dataclass

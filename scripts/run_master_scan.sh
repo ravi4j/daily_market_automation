@@ -25,7 +25,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_ROOT"
 
 # Check if virtual environment exists
-if [ ! -d "venv" ]; then
+if [ ! -d ".venv" ] && [ ! -d "venv" ]; then
     echo -e "${RED}❌ Virtual environment not found!${NC}"
     echo ""
     echo "Run setup first:"
@@ -35,7 +35,11 @@ fi
 
 # Activate virtual environment
 echo -e "${BLUE}🔧 Activating virtual environment...${NC}"
-source venv/bin/activate
+if [ -d ".venv" ]; then
+    source .venv/bin/activate
+else
+    source venv/bin/activate
+fi
 
 # Check environment variables
 if [ -f ".env" ]; then

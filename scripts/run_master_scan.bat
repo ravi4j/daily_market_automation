@@ -17,17 +17,23 @@ set PROJECT_ROOT=%SCRIPT_DIR%..
 cd /d "%PROJECT_ROOT%"
 
 REM Check if virtual environment exists
-if not exist "venv\" (
-    echo ❌ Virtual environment not found!
-    echo.
-    echo Run setup first:
-    echo   .\scripts\setup_local.bat
-    exit /b 1
+if not exist ".venv\" (
+    if not exist "venv\" (
+        echo ❌ Virtual environment not found!
+        echo.
+        echo Run setup first:
+        echo   .\scripts\setup_local.bat
+        exit /b 1
+    )
 )
 
 REM Activate virtual environment
 echo 🔧 Activating virtual environment...
-call venv\Scripts\activate.bat
+if exist ".venv\" (
+    call .venv\Scripts\activate.bat
+) else (
+    call venv\Scripts\activate.bat
+)
 
 REM Load environment variables
 if exist ".env" (
