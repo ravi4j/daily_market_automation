@@ -11,7 +11,7 @@ After this completes:
 - Daily updates will be FAST (only fetch latest day)
 
 Usage:
-    python scripts/initial_bulk_fetch.py [--resume]
+    python scripts/initial_bulk_fetch.py [--resume] [--workers N]
 """
 
 import pandas as pd
@@ -21,6 +21,8 @@ from tqdm import tqdm
 import time
 import argparse
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 # Directories
 METADATA_DIR = Path('data/metadata')
@@ -77,15 +79,18 @@ def main():
                        help='Skip symbols that already have CSVs')
     parser.add_argument('--no-prompt', action='store_true',
                        help='Skip confirmation prompt (for CI/automation)')
+    parser.add_argument('--workers', type=int, default=50,
+                       help='Number of parallel workers (default: 50)')
     args = parser.parse_args()
     
     print("=" * 80)
-    print("INITIAL BULK FETCH - ALL US SYMBOLS")
+    print("INITIAL BULK FETCH - ALL US SYMBOLS (PARALLEL)")
     print("=" * 80)
     print()
-    print("📥 This will download 2 years of data for ~23,888 symbols")
-    print("⏱️  Estimated time: 6-8 hours (with rate limiting)")
-    print("💾 Disk space needed: ~500 MB")
+    print(f"📥 This will download 2 years of data for ~23,888 symbols")
+    print(f"⚡ Using {args.workers} parallel workers")
+    print(f"⏱️  Estimated time: 30-60 minutes (with parallel processing)")
+    print(f"💾 Disk space needed: ~500 MB")
     print()
     
     if args.resume:
@@ -104,7 +109,8 @@ def main():
     
     print(f"✅ Loaded {len(df_symbols)} symbols\n")
     
-    # Track progress
+    # Track progress (thread-safe)
+    lock = threading.Lock()
     success_count = 0
     skip_count = 0
     fail_count = 0
@@ -112,43 +118,60 @@ def main():
     # Create progress file for resuming
     progress_file = METADATA_DIR / 'bulk_fetch_progress.txt'
     
-    # Fetch all symbols with progress bar
-    for i, row in enumerate(tqdm(df_symbols.itertuples(), 
-                                  total=len(df_symbols), 
-                                  desc="Fetching", 
-                                  unit="symbol",
-                                  ncols=100)):
-        
-        symbol = row.symbol
-        asset_type = row.type
-        
-        # Check if already exists (for resume)
+    # Prepare symbols to fetch
+    symbols_to_fetch = []
+    for _, row in df_symbols.iterrows():
+        symbol = row['symbol']
+        asset_type = row['type']
         csv_path = get_csv_path(symbol, asset_type)
+        
+        # Skip if already exists (for resume)
         if args.resume and csv_path.exists():
-            skip_count += 1
-            continue
-        
-        # Fetch and save
-        success = fetch_and_save(symbol, asset_type)
-        
-        if success:
-            success_count += 1
+            with lock:
+                skip_count += 1
         else:
-            fail_count += 1
+            symbols_to_fetch.append((symbol, asset_type))
+    
+    print(f"📊 Symbols to fetch: {len(symbols_to_fetch)}")
+    print(f"⏭️  Symbols skipped: {skip_count}\n")
+    
+    # Fetch symbols in parallel with progress bar
+    def fetch_wrapper(symbol_info):
+        symbol, asset_type = symbol_info
+        success = fetch_and_save(symbol, asset_type)
+        return success
+    
+    # Use ThreadPoolExecutor for parallel downloads
+    with ThreadPoolExecutor(max_workers=args.workers) as executor:
+        # Submit all tasks
+        futures = {executor.submit(fetch_wrapper, sym_info): sym_info for sym_info in symbols_to_fetch}
         
-        # Rate limiting: 1 call per second (safe for Yahoo Finance)
-        # This adds up to ~6.6 hours for 23,888 symbols
-        if (i + 1) % 60 == 0:
-            time.sleep(1)
-            
-            # Save progress every 100 symbols
-            if (i + 1) % 100 == 0:
-                with open(progress_file, 'w') as f:
-                    f.write(f"Last processed: {symbol}\n")
-                    f.write(f"Timestamp: {datetime.now()}\n")
-                    f.write(f"Success: {success_count}\n")
-                    f.write(f"Failed: {fail_count}\n")
-                    f.write(f"Skipped: {skip_count}\n")
+        # Process results with progress bar
+        with tqdm(total=len(futures), desc="Fetching", unit="symbol", ncols=100) as pbar:
+            for i, future in enumerate(as_completed(futures)):
+                symbol_info = futures[future]
+                try:
+                    success = future.result()
+                    with lock:
+                        if success:
+                            success_count += 1
+                        else:
+                            fail_count += 1
+                except Exception as e:
+                    with lock:
+                        fail_count += 1
+                
+                pbar.update(1)
+                
+                # Save progress every 500 symbols
+                if (i + 1) % 500 == 0:
+                    with lock:
+                        with open(progress_file, 'w') as f:
+                            f.write(f"Timestamp: {datetime.now()}\n")
+                            f.write(f"Success: {success_count}\n")
+                            f.write(f"Failed: {fail_count}\n")
+                            f.write(f"Skipped: {skip_count}\n")
+                            f.write(f"Remaining: {len(futures) - i - 1}\n")
     
     # Final summary
     print("\n" + "=" * 80)

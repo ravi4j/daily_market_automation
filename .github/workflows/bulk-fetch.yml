@@ -27,10 +27,11 @@ jobs:
     - name: Run bulk fetch
       run: |
         echo "🚀 Starting bulk fetch of ~23,888 symbols..."
-        echo "⏱️  This will take 6-8 hours"
+        echo "⚡ Using 100 parallel workers"
+        echo "⏱️  Estimated time: 30-60 minutes"
         echo "💾 Will download 2 years of data for each symbol"
         echo ""
-        python scripts/initial_bulk_fetch.py --no-prompt
+        python scripts/initial_bulk_fetch.py --no-prompt --workers 100
 
     - name: Show statistics
       if: success()
@@ -47,7 +48,7 @@ jobs:
         echo "STOCK_COUNT=$STOCK_COUNT" >> $GITHUB_ENV
         echo "ETF_COUNT=$ETF_COUNT" >> $GITHUB_ENV
         echo "TOTAL_COUNT=$TOTAL_COUNT" >> $GITHUB_ENV
-    
+
     - name: Commit and push data
       if: success()
       run: |
@@ -62,11 +63,11 @@ jobs:
         - ETFs: ${{ env.ETF_COUNT }} CSVs
         - Ready for volume-based intelligent sorting
         - Daily scanner will now detect NVDA, ORCL, and all major stocks
-        
+
         Run by: GitHub Actions (bulk-fetch.yml)
         Timestamp: $(date -u)"
         git push
-    
+
     - name: Send notification (if Telegram configured)
       if: success()
       env:
