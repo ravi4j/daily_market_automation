@@ -16,6 +16,8 @@ from typing import Dict, List, Optional, Tuple
 from collections import defaultdict
 from dotenv import load_dotenv
 from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -547,85 +549,110 @@ class MasterScanner:
 
         candidates = []
         self.all_fallers = []  # Track ALL symbols with 2%+ drops
+        
+        # Thread-safe data structures
+        lock = threading.Lock()
+        
+        def screen_symbol(symbol):
+            """Screen a single symbol (for parallel execution)"""
+            try:
+                # Load price data (uses CSV if available, fetches & saves if needed)
+                df = self._load_price_data(symbol)
 
-        # Progress bar for screening
-        with tqdm(total=len(symbols), desc="     Pre-screening", unit="symbol", ncols=100) as pbar:
-            for symbol in symbols:
-                try:
-                    # Load price data (uses CSV if available, fetches & saves if needed)
-                    df = self._load_price_data(symbol)
+                if df is None or len(df) < 5:
+                    return None
 
-                    if df is None or len(df) < 5:
+                # Calculate quick metrics (df is sorted ascending, so iloc[-1] is latest)
+                recent_close = df['Close'].iloc[-1]
+                prev_close = df['Close'].iloc[-2]
+                pct_change = ((recent_close - prev_close) / prev_close) * 100
+
+                avg_volume = df['Volume'].tail(10).mean()
+                recent_volume = df['Volume'].iloc[-1]
+                volume_ratio = recent_volume / avg_volume if avg_volume > 0 else 0
+
+                # INTELLIGENT FILTERING RULES
+
+                # Rule 1: Price drop (but not crash)
+                significant_drop = pct_change <= -2  # 2%+ drop (user wants to see all)
+                opportunity_drop = -10 <= pct_change <= -3  # 3-10% sweet spot
+
+                # Rule 2: Volume spike (interest)
+                volume_spike = volume_ratio > 1.2  # 20%+ above average
+
+                # Rule 3: Price above $5 (avoid penny stocks)
+                price_filter = recent_close >= 5.0
+
+                # Rule 4: Decent volume (liquid)
+                volume_filter = avg_volume >= 500000  # 500K+ daily volume
+
+                # Rule 5: Not in death spiral (price not down >20% in 10 days)
+                not_crashing = pct_change > -20
+
+                # Track ALL fallers 2%+ for comprehensive report
+                faller_data = None
+                if significant_drop and price_filter and not_crashing:
+                    # Get actual asset type from universe metadata
+                    asset_type = 'Stock'  # Default
+                    for sym_dict in self.universe:
+                        if isinstance(sym_dict, dict) and sym_dict.get('symbol') == symbol:
+                            asset_type = sym_dict.get('type', 'Stock').capitalize()
+                            break
+
+                    faller_data = {
+                        'symbol': symbol,
+                        'type': asset_type,
+                        'pct_change': pct_change,
+                        'price': recent_close,
+                        'volume': recent_volume,
+                        'avg_volume': avg_volume,
+                        'volume_ratio': volume_ratio
+                    }
+
+                # Check if it meets criteria for deep analysis
+                is_candidate = False
+                
+                # Pass if it meets criteria for deep analysis (3-10% drop)
+                if opportunity_drop and volume_spike and price_filter and volume_filter and not_crashing:
+                    is_candidate = True
+                # Also track significant fallers for deep analysis
+                elif significant_drop and volume_spike and price_filter and volume_filter and not_crashing:
+                    is_candidate = True
+                # Also include symbols that just had volume spike (even without drop)
+                elif volume_ratio > 2.0 and price_filter and volume_filter and not_crashing:
+                    # 2x volume = something interesting happening
+                    is_candidate = True
+
+                return (is_candidate, faller_data)
+
+            except:
+                # Skip symbols we can't fetch data for
+                return None
+
+        # Screen symbols in parallel (50 workers for good balance)
+        max_workers = 50
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {executor.submit(screen_symbol, symbol): symbol for symbol in symbols}
+            
+            with tqdm(total=len(futures), desc="     Pre-screening", unit="symbol", ncols=100) as pbar:
+                for future in as_completed(futures):
+                    try:
+                        result = future.result()
+                        if result:
+                            is_candidate, faller_data = result
+                            
+                            with lock:
+                                if faller_data:
+                                    self.all_fallers.append(faller_data)
+                                
+                                if is_candidate:
+                                    symbol = futures[future]
+                                    candidates.append(symbol)
+                                    pbar.set_postfix({"candidates": len(candidates)})
+                    except:
+                        pass
+                    finally:
                         pbar.update(1)
-                        continue
-
-                    # Calculate quick metrics (df is sorted ascending, so iloc[-1] is latest)
-                    recent_close = df['Close'].iloc[-1]
-                    prev_close = df['Close'].iloc[-2]
-                    pct_change = ((recent_close - prev_close) / prev_close) * 100
-
-                    avg_volume = df['Volume'].tail(10).mean()
-                    recent_volume = df['Volume'].iloc[-1]
-                    volume_ratio = recent_volume / avg_volume if avg_volume > 0 else 0
-
-                    # INTELLIGENT FILTERING RULES
-
-                    # Rule 1: Price drop (but not crash)
-                    significant_drop = pct_change <= -2  # 2%+ drop (user wants to see all)
-                    opportunity_drop = -10 <= pct_change <= -3  # 3-10% sweet spot
-
-                    # Rule 2: Volume spike (interest)
-                    volume_spike = volume_ratio > 1.2  # 20%+ above average
-
-                    # Rule 3: Price above $5 (avoid penny stocks)
-                    price_filter = recent_close >= 5.0
-
-                    # Rule 4: Decent volume (liquid)
-                    volume_filter = avg_volume >= 500000  # 500K+ daily volume
-
-                    # Rule 5: Not in death spiral (price not down >20% in 10 days)
-                    not_crashing = pct_change > -20
-
-                    # Track ALL fallers 2%+ for comprehensive report
-                    if significant_drop and price_filter and not_crashing:
-                        # Get actual asset type from universe metadata
-                        asset_type = 'Stock'  # Default
-                        for sym_dict in self.universe:
-                            if isinstance(sym_dict, dict) and sym_dict.get('symbol') == symbol:
-                                asset_type = sym_dict.get('type', 'Stock').capitalize()
-                                break
-
-                        self.all_fallers.append({
-                            'symbol': symbol,
-                            'type': asset_type,
-                            'pct_change': pct_change,
-                            'price': recent_close,
-                            'volume': recent_volume,
-                            'avg_volume': avg_volume,
-                            'volume_ratio': volume_ratio
-                        })
-
-                    # Pass if it meets criteria for deep analysis (3-10% drop)
-                    if opportunity_drop and volume_spike and price_filter and volume_filter and not_crashing:
-                        candidates.append(symbol)
-                        pbar.set_postfix({"candidates": len(candidates)})
-
-                    # Also track significant fallers for deep analysis
-                    elif significant_drop and volume_spike and price_filter and volume_filter and not_crashing:
-                        candidates.append(symbol)
-                        pbar.set_postfix({"candidates": len(candidates)})
-
-                    # Also include symbols that just had volume spike (even without drop)
-                    elif volume_ratio > 2.0 and price_filter and volume_filter and not_crashing:
-                        # 2x volume = something interesting happening
-                        candidates.append(symbol)
-                        pbar.set_postfix({"candidates": len(candidates)})
-
-                except:
-                    # Skip symbols we can't fetch data for
-                    pass
-                finally:
-                    pbar.update(1)
 
         return candidates
 
