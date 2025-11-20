@@ -1,1230 +1,297 @@
-# Daily Market Automation
+# 🤖 Intelligent Daily Market Scanner
 
-Automated daily OHLCV (Open, High, Low, Close, Volume) data fetcher for multiple stock symbols with intelligent incremental updates.
+**AI-Powered Trading System** that scans the **ENTIRE US market** daily and tells you exactly what to buy.
 
-## ⚡ TL;DR - Quick Setup on New Machine
+## 🎯 What Makes This Different?
+
+**YOU DON'T TELL IT WHAT TO SCAN - IT TELLS YOU WHAT TO BUY!**
+
+- 🧠 **Intelligent**: Scans 1000s of stocks/ETFs automatically
+- 🎯 **Smart Filtering**: Finds opportunities based on price drops, volume spikes, technical signals
+- 📊 **Multi-Signal Scoring**: News (FinBERT AI) + Technicals + Fundamentals + Insider Activity
+- 📱 **One Daily Alert**: Top 5 best opportunities with complete trade setups
+- ⚡ **Fast**: 2-phase scanning (quick pre-screen → deep analysis)
+
+## ⚡ Quick Start (5 Minutes)
 
 ### macOS / Linux
 
 ```bash
-# Run automated setup
+# 1. Clone and setup
+git clone https://github.com/ravi4j/daily_market_automation.git
+cd daily_market_automation
 ./scripts/setup_local.sh
 
-# Configure credentials
+# 2. Configure credentials (get keys from finnhub.io and Telegram)
 nano .env
 
-# Test it
-./scripts/run_daily_workflow.sh
+# Add:
+# FINNHUB_API_KEY=your_key_here
+# TELEGRAM_BOT_TOKEN=your_token_here
+# TELEGRAM_CHAT_ID=your_chat_id_here
+
+# 3. Run master scanner
+./scripts/run_master_scan.sh
 ```
 
 ### Windows 11
 
 ```powershell
-# Run automated setup
+# 1. Clone and setup
+git clone https://github.com/ravi4j/daily_market_automation.git
+cd daily_market_automation
 .\scripts\setup_local.bat
 
-# Configure credentials
+# 2. Configure credentials
 notepad .env
 
-# Test it
-.\scripts\run_daily_workflow.bat
+# Add:
+# FINNHUB_API_KEY=your_key_here
+# TELEGRAM_BOT_TOKEN=your_token_here
+# TELEGRAM_CHAT_ID=your_chat_id_here
+
+# 3. Run master scanner
+.\scripts\run_master_scan.bat
 ```
 
-That's it! See detailed guides:
-- **macOS/Linux**: [`LOCAL_SETUP_GUIDE.md`](LOCAL_SETUP_GUIDE.md)
-- **Windows 11**: [`LOCAL_SETUP_WINDOWS.md`](LOCAL_SETUP_WINDOWS.md) / [`WINDOWS_QUICKSTART.md`](WINDOWS_QUICKSTART.md)
+## 📊 What You Get Daily
 
-## 🎯 Features
+**ONE Telegram message with:**
 
-- ✨ **Incremental Fetching** - Only downloads NEW data (2-5 seconds vs 20-30 seconds)
-- 🛡️ **Smart Error Handling** - No crashes on weekends/holidays/market closures
-- 📊 **Multiple Symbols** - TQQQ, S&P 500 (^GSPC), AAPL, UBER (easily add more)
-- 🔄 **Auto-Retry** - Automatic retry logic for transient network errors
-- 📈 **Breakout Detection** - Identifies trendline violations, S/R breaks, and reversal points
-- 🎯 **Technical Analysis** - Support/resistance levels, swing highs/lows, trend direction
-- 📊 **50+ Technical Indicators** - RSI, MACD, Bollinger Bands, ADX, and many more via pandas-ta
-- 📐 **ABC Pattern Detection** - Professional ABC pattern recognition with entry zones and targets
-- 🎨 **Advanced Charting** - Beautiful visualizations with pattern overlays and risk/reward zones
-- 🔬 **Strategy Backtesting** - Test trading strategies on historical data with performance metrics
-- 🚨 **Daily Trading Alerts** - Automated BUY/SELL signals with 5 proven strategies (includes ABC patterns)
-- 📰 **News Scanner** - Monitors Yahoo Finance news to identify buying opportunities from price dips
-- 💼 **Insider Trading Tracker** - Follows corporate insider transactions to identify "smart money" movements
-- 🤖 **Auto-Add to Portfolio** - Automatically analyzes high-score opportunities (80+) and optionally adds them to tracking
-- 🧠 **FinBERT Sentiment Analysis** - ML-based financial sentiment (85-90% accuracy vs 60-70% keywords), optional GPU acceleration
-- 🌅 **Pre-Market Gap Monitor** - DUAL: Protect positions from gaps + Find new gap opportunities (oversold/breakout) with ML scoring
-- 📱 **Telegram Notifications** - Get instant alerts on your phone after market close and before market open
-- 🎯 **Trading Signals** - JSON/CSV exports (NO PASSWORDS NEEDED, safe for public repos!)
-- 📱 **Multi-Platform Access** - Consume signals from anywhere (Python, shell, curl, Google Sheets)
-- 🤖 **GitHub Actions Automation** - Daily data fetch, chart generation, alerts, and signal exports
-- 🏗️ **Production Ready** - Organized structure for multiple automation scripts
+```
+🔍 DAILY MARKET SCAN - 2024-11-20 16:30 ET
+═══════════════════════════════════════
 
-## 📈 Tracked Symbols
+📊 MARKET STATUS
+S&P 500: +0.8% | VIX: 18.5 (Normal) | Risk: MODERATE
 
-**Default symbols** (easily customizable):
-- `TQQQ` - ProShares UltraPro QQQ (3x leveraged NASDAQ-100)
-- `^GSPC` - S&P 500 Index
-- `AAPL` - Apple Inc.
-- `UBER` - Uber Technologies Inc.
+🚀 TOP 5 OPPORTUNITIES (from 1,247 symbols scanned)
 
-All data is stored as CSV files in the `data/` directory.
+1. NVDA - STRONG BUY (Score: 89/100)
+   Entry: $485 | Target: $525 | Stop: $470 | R/R: 2.7
+   Why: Strong earnings beat + RSI oversold + insider buying
+   📈 Tech: 88 | 📰 News: 92 | 💼 Fund: 85 | 👔 Insider: 90
 
-### 🎛️ Customize Your Portfolio
+2. UNH - BUY (Score: 82/100)
+   Entry: $512 | Target: $548 | Stop: $498 | R/R: 2.5
+   Why: -5% news dip + solid fundamentals + sector rotation
+   📈 Tech: 78 | 📰 News: 85 | 💼 Fund: 82 | 👔 Insider: 80
 
-You can easily add/remove symbols without touching any Python code!
+... (3 more)
 
-**Edit `config/symbols.yaml`:**
+⚖️ YOUR PORTFOLIO (optional - monitors your positions)
+✅ TQQQ: On target
+⚠️ AAPL: 15% overweight - Consider taking profits
+
+🛡️ RISK ASSESSMENT
+Portfolio Exposure: 85% (Target: 80%)
+Recommendation: Add defensive position (TLT or GLD)
+```
+
+## 🧠 How It Works (Intelligent Scanning)
+
+### Phase 1: Quick Pre-Screen (FAST - scans 1000s)
+```
+Automatically filters ENTIRE market for:
+✓ Price drops (3-10%) = potential opportunities
+✓ Volume spikes = something happening
+✓ Healthy technicals = not catching falling knives
+✓ Quality filters = liquid, tradeable stocks
+```
+
+### Phase 2: Deep Analysis (SMART - top 50-100)
+```
+Multi-signal composite scoring (0-100):
+• News Sentiment (30%) - FinBERT AI analysis
+• Technical Analysis (40%) - RSI, MACD, trends
+• Fundamentals (20%) - P/E, margins, growth
+• Insider Activity (10%) - Smart money tracking
+```
+
+### Output
+```
+Top 5 opportunities with:
+- Complete trade setup (entry, stop, target)
+- Risk/reward ratios
+- Confidence scores
+- Specific reasons WHY to buy
+```
+
+## 🎯 Core Features
+
+### ✨ Intelligent Market Scanning
+- **Auto Symbol Selection**: Scans entire US market (stocks + ETFs)
+- **Smart Pre-Screening**: Filters for price drops, volume spikes, technical signals
+- **No Manual Lists**: System finds opportunities automatically
+- **Tiered Scanning**: Daily (~600 symbols), Weekly (~2000), Monthly (full 10,000)
+
+### 🤖 FinBERT AI Sentiment
+- **ML-Powered**: Financial-specific BERT model for news analysis
+- **GPU Support**: Auto-detects GPU for faster processing
+- **Free & Open Source**: No API costs
+
+### 👔 Insider Tracking
+- **Follow Smart Money**: Track insider buying/selling
+- **Finnhub Integration**: Real-time insider transactions
+- **Score Adjustment**: Boosts score for insider buying, reduces for selling
+
+### 📊 Technical Analysis
+- **50+ Indicators**: RSI, MACD, Bollinger Bands, ADX, ATR, etc.
+- **Pattern Detection**: ABC patterns, breakouts, reversals
+- **Trend Analysis**: Identify uptrends, downtrends, consolidations
+
+### 💼 Fundamental Analysis
+- **Company Health**: P/E ratio, profit margins, revenue growth
+- **Analyst Ratings**: Consensus recommendations
+- **Quality Filters**: Avoid penny stocks, low volume, OTC
+
+### 📱 Smart Alerts
+- **One Consolidated Message**: No spam, just actionable insights
+- **Telegram Integration**: Alerts sent after market close
+- **Complete Trade Setups**: Entry, stop loss, target, risk/reward
+
+## 🚀 Advanced Usage
+
+### Configuration (`config/master_config.yaml`)
+
 ```yaml
-symbols:
-  TQQQ: TQQQ
-  AAPL: AAPL
-  NVDA: NVDA     # Add new symbols
-  MSFT: MSFT     # Just add them here!
-  SP500: ^GSPC
+# Scanning strategy
+scanning:
+  strategy:
+    tier: "daily"  # Options: daily, weekly, monthly, full
+
+  intelligent_filters:
+    min_price_drop_pct: 3.0      # Look for 3%+ drops
+    min_volume_ratio: 1.2         # 20%+ volume spike
+    min_price: 5.0                # Skip penny stocks
+
+# Scoring weights (customize to your style)
+scoring:
+  weights:
+    news_sentiment: 30   # 30%
+    technical: 40        # 40%
+    fundamentals: 20     # 20%
+    insider_activity: 10 # 10%
+
+  max_opportunities: 5   # Show top 5
+  min_confidence: 70     # Only HIGH confidence
+
+# Portfolio (optional - monitors your positions)
+portfolio:
+  positions: {}  # Leave empty for pure opportunity scanning
 ```
 
-See [`config/README.md`](config/README.md) for detailed instructions and examples.
+### Run Locally
 
-## 📁 Project Structure
-
-```
-daily_market_automation/
-├── .github/
-│   └── workflows/         # GitHub Actions workflows
-├── src/                   # Source code
-│   ├── fetch_daily_prices.py  # Market data fetching script
-│   ├── detect_breakouts.py    # Breakout detection & analysis
-│   ├── visualize_breakouts.py # Chart generation with trendlines
-│   ├── export_signals.py      # Trading signal export (JSON/CSV)
-│   └── common/           # Shared utilities for future scripts
-├── config/               # Configuration files
-│   ├── symbols.yaml      # Portfolio symbols (customize your watchlist!)
-│   └── README.md         # Config documentation
-├── charts/                # Generated chart images (PNG, committed & regenerated daily)
-├── tests/                # Test files
-│   └── test_incremental.py
-├── scripts/              # Helper scripts
-│   ├── setup.sh          # Automated setup script
-│   ├── fetch_signals.py  # Fetch signals from GitHub (no auth!)
-│   ├── view_signals.sh   # View signals in terminal
-│   └── send_telegram_signals.py  # Send signals to Telegram
-├── data/                 # Historical price CSV files
-│   ├── AAPL.csv
-│   ├── TQQQ.csv
-│   ├── SP500.csv
-│   └── UBER.csv
-├── signals/              # Trading signals output
-│   ├── trading_signals.json  # Breakout-based trading signals (detailed)
-│   ├── trading_signals.csv   # Breakout-based trading signals (simple)
-│   └── daily_alerts.json     # Daily strategy alerts (BUY/SELL signals)
-├── docs/                 # Documentation
-│   ├── architecture.md
-│   ├── breakout-confirmation.md
-│   ├── workflows.md
-│   └── telegram-setup.md
-├── requirements-*.txt    # Python dependencies
-└── README.md
-```
-
-## 1) Quick Start (Fresh Installation)
-
-### Step 1: Clone the Repository
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd daily_market_automation
+# macOS/Linux - Daily scan
+./scripts/run_master_scan.sh
+
+# Windows - Daily scan
+.\scripts\run_master_scan.bat
 ```
 
-### Step 2: Setup Virtual Environment (Keeps Everything Local)
-```bash
-# Create a local virtual environment in .venv folder
-python3 -m venv .venv
+### GitHub Actions (Automatic)
 
-# Activate it
-source .venv/bin/activate   # macOS/Linux
-# .venv\Scripts\activate    # Windows
+The system runs automatically via GitHub Actions:
+- **Daily**: 4:30 PM ET (after market close)
+- **Weekly**: Monday 6 PM ET (comprehensive scan)
+- **Pre-market**: 8 AM ET (gap monitoring)
+
+## 📦 Requirements
+
+- **Python**: 3.12+
+- **API Keys** (free):
+  - Finnhub (60 calls/min free tier)
+  - Telegram Bot
+- **Optional**:
+  - NVIDIA GPU (for faster FinBERT)
+  - No GPU? CPU works fine (just slower)
+
+## 🔧 Installation
+
+### Automatic Setup (Recommended)
+
+```bash
+# macOS/Linux
+./scripts/setup_local.sh
+
+# Windows
+.\scripts\setup_local.bat
 ```
 
-> 💡 All packages will be installed locally in `.venv/` folder inside your project - nothing system-wide!
+### Manual Setup
 
-### Step 3: Install Dependencies
-
-We use organized requirements files for different purposes:
-
-**For running the fetch script (recommended):**
 ```bash
-pip install -r requirements-fetch.txt
-```
+# 1. Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Linux/Mac
+# OR
+venv\Scripts\activate     # Windows
 
-**For development (includes testing, linting, formatting):**
-```bash
-pip install -r requirements-dev.txt
-```
-
-**Just the base dependencies (pandas, numpy, pytz):**
-```bash
+# 2. Install dependencies
 pip install -r requirements-base.txt
+pip install -r requirements-fetch.txt
+pip install -r requirements-indicators.txt
+pip install -r requirements-finbert.txt  # For FinBERT
+
+# 3. Configure environment
+cp .env.example .env
+nano .env  # Add your API keys
+
+# 4. Run
+python scripts/master_daily_scan.py
 ```
 
-### Step 4: Run the Script
-```bash
-python src/fetch_daily_prices.py
-```
+## 📚 Documentation
 
-You should see:
-- Log messages showing data fetching progress
-- CSV files created/updated in `data/` directory (TQQQ.csv, SP500.csv, AAPL.csv, UBER.csv)
+- **[Master Config Guide](config/master_config.yaml)** - All configuration options
+- **[Technical Docs](docs/)** - Architecture, workflows, indicators
+- **[Changelog](CHANGELOG.md)** - Version history
 
-### 🚀 Quick Setup Script (One Command)
+## 🎯 What This System Does
 
-Alternatively, use the automated setup script:
+### ✅ DOES (Automatic)
+- Scans entire US market daily
+- Finds best opportunities automatically
+- Multi-signal analysis (News + Technical + Fundamental + Insider)
+- Sends ONE consolidated alert with top 5 trades
+- Complete trade setups (entry, stop, target)
+- Risk management recommendations
 
-```bash
-# Make script executable
-chmod +x scripts/setup.sh
+### ❌ DOES NOT
+- Execute trades (you review and decide)
+- Require you to pick symbols manually
+- Send multiple alerts (just one clean message)
+- Cost money for API usage (free tier sufficient)
 
-# Run setup (creates venv, installs dependencies)
-./scripts/setup.sh
+## 🤝 Contributing
 
-# Then just run the fetch script
-source .venv/bin/activate
-python src/fetch_daily_prices.py
-```
+This is a personal trading system, but feel free to:
+- Fork and customize for your needs
+- Report bugs via Issues
+- Suggest improvements
 
-### First Run vs Subsequent Runs
+## ⚖️ Disclaimer
 
-**First Run (No existing data):**
-- Downloads ~15 years of historical data for all symbols
-- Takes ~20-30 seconds
-- Creates CSV files in `data/` directory
+**This is for educational and informational purposes only.**
 
-**Subsequent Runs (Incremental):**
-- Only fetches NEW data since last run
-- Takes ~2-5 seconds (much faster!)
-- Updates existing CSV files
+- Not financial advice
+- Past performance ≠ future results
+- Always do your own research
+- Trade at your own risk
+- Start with paper trading
 
-**Weekend/Holiday Runs:**
-- Detects no new data available
-- Reports "CSV is up to date"
-- Exits successfully (no errors)
+## 📝 License
 
-## 📦 Requirements Files Structure
+MIT License - See [LICENSE](LICENSE) file
 
-- **`requirements-base.txt`** - Common dependencies (pandas, numpy, pytz)
-- **`requirements-fetch.txt`** - For `src/fetch_daily_prices.py` (includes base + yfinance)
-- **`requirements-dev.txt`** - Development tools (pytest, black, flake8, mypy)
+## 🙋 Questions?
 
-## 2) Set It to Run Daily
-
-### Option A — macOS/Linux (cron)
-Open crontab:
-```bash
-crontab -e
-```
-Schedule run **daily at 6:30pm America/Chicago** (after U.S. market close):
-```cron
-30 18 * * * /usr/bin/env bash -lc 'cd /mnt/data/daily_market_automation && . .venv/bin/activate && python src/fetch_daily_prices.py >> fetch.log 2>&1'
-```
-> Tip: `date` and `timedatectl` can confirm your system's timezone. Adjust time if needed.
-
-### Option B — Windows (Task Scheduler)
-1. Open **Task Scheduler** → **Create Basic Task...**
-2. Trigger: Daily at **6:30 PM**.
-3. Action: **Start a program** → `Program/script`: `python`
-   **Add arguments**: `src\fetch_daily_prices.py`
-   **Start in**: full folder path of this project.
-4. (Optional) Use a venv by pointing `Program/script` to the `python.exe` inside `.venv\Scripts`
-
-### Option C — GitHub Actions (runs in the cloud)
-
-This project includes **two automated workflows**:
-
-#### 1. Data Fetching (`.github/workflows/daily-fetch.yml`)
-Runs daily to fetch latest market data:
-
-```yaml
-name: Fetch Daily Prices
-on:
-  schedule:
-    - cron: "35 0 * * 1-5"   # 00:35 UTC ≈ 6:35 PM America/Chicago (M-F)
-  workflow_dispatch: {}      # Manual trigger
-```
-
-**What it does:**
-- Fetches latest OHLCV data for all symbols
-- Updates CSV files in `data/` directory
-- Commits and pushes changes automatically
-- Runs Monday-Friday after market close
-
-#### 2. Chart Generation (`.github/workflows/daily-charts.yml`)
-Runs automatically **after** data fetch completes:
-
-```yaml
-name: Generate Daily Charts
-on:
-  workflow_run:
-    workflows: ["Fetch Daily Prices"]
-    types: [completed]
-  workflow_dispatch: {}      # Manual trigger
-```
-
-**What it does:**
-- Generates visual breakout charts (includes analysis)
-- Creates PNG charts in `charts/` directory
-- Commits and pushes chart images
-- Uploads charts as workflow artifacts (30-day retention)
-- Only runs if fetch workflow succeeded
-
-**Note**: The chart generation script (`visualize_breakouts.py`) includes the breakout analysis, so no separate detection step is needed.
-
-#### Setup Requirements:
-1. **Repository Settings** → **Actions** → **General**
-   - Enable "Allow GitHub Actions to create and approve pull requests"
-   - Workflow permissions: "Read and write permissions"
-2. Push workflows to your repository
-3. Enable workflows in the Actions tab
-
-#### Manual Triggers:
-```bash
-# Trigger fetch workflow manually
-gh workflow run daily-fetch.yml
-
-# Trigger chart generation manually
-gh workflow run daily-charts.yml
-```
-
-#### View Results:
-- **Code tab**: See updated CSV files in `data/` and charts in `charts/`
-- **Charts**: Committed to repo and viewable directly on GitHub (regenerated daily)
-- **Actions tab**: View workflow runs and download chart artifacts
-- **Artifacts**: Charts also available as workflow artifacts (30-day retention)
-
-## 3) Optional Email Summary
-Copy `.env.example` to `.env` and fill values, or set these environment variables before running:
-```
-SMTP_HOST=
-SMTP_PORT=587
-SMTP_USER=
-SMTP_PASS=
-SMTP_TO=
-```
-The script will send a simple summary like:
-```
-TQQQ: 2025-11-07  AdjClose=xx.xx  Close=yy.yy
-SP500: 2025-11-07  AdjClose=aa.aa  Close=bb.bb
-```
-
-## 4) Breakout Detection
-
-### Analyze Market Breakouts
-
-The project includes a powerful breakout detection script that identifies:
-- **Trendline Violations** - Breakouts above/below support/resistance trendlines
-- **Support/Resistance Breaks** - Price breaking through key S/R levels
-- **Reversal Points** - Price near previous swing highs/lows
-
-```bash
-# Activate virtual environment
-source .venv/bin/activate
-
-# Run breakout analysis
-python src/detect_breakouts.py
-```
-
-### What It Detects
-
-**🔹 Trendline Analysis:**
-- Uses linear regression on recent highs/lows
-- Identifies uptrends vs downtrends
-- Detects bullish/bearish trendline breakouts
-
-**🔹 Support/Resistance Analysis:**
-- Calculates S/R from 20-day highs/lows
-- Measures distance from current price to S/R levels
-- Alerts when price breaks through resistance or support
-
-**🔹 Reversal Point Analysis:**
-- Identifies swing highs and lows (local peaks/troughs)
-- Detects when price is near previous reversal points
-- Signals potential trend reversals
-
-### Example Output
-
-```
-================================================================================
-📊 TQQQ - 2025-11-10
-================================================================================
-Current Price: $110.03 | Volume: 29,818,811
-
-🔹 TRENDLINE ANALYSIS:
-   Trend Direction: 📈 UPTREND
-   Support Trendline: $113.49
-   Resistance Trendline: $117.47
-   🚨 BREAKOUT DETECTED: BEARISH_TRENDLINE_BREAKOUT
-
-🔹 SUPPORT/RESISTANCE ANALYSIS:
-   Support: $97.07 (13.35% away)
-   Resistance: $121.37 (9.34% away)
-
-🔹 REVERSAL POINT ANALYSIS:
-   Latest Swing High: $121.37
-   Latest Swing Low: $96.83
-   ⚠️  NEAR_PREVIOUS_HIGH at $109.66
-
-================================================================================
-📋 SUMMARY
-================================================================================
-🚨 BREAKOUTS DETECTED:
-   • TQQQ: BEARISH_TRENDLINE_BREAKOUT
-```
-
-### Customize Detection Parameters
-
-Edit `src/detect_breakouts.py` to adjust:
-
-```python
-LOOKBACK_DAYS = 60               # Analysis period (default: 60 days)
-SUPPORT_RESISTANCE_WINDOW = 20   # S/R calculation window (default: 20 days)
-BREAKOUT_THRESHOLD = 0.02        # Breakout threshold (default: 2%)
-
-# Confirmation Filters (see docs/breakout-confirmation.md for details)
-CONFIRMATION_CONFIG = {
-    'percentage_threshold': 0.02,   # 2% move required
-    'point_threshold': 2.0,          # $2 move required
-    'multiple_closes': 1,            # Consecutive closes needed
-    'time_bars': 1,                  # Bars to confirm
-    'volume_multiplier': 1.2,        # Volume surge (1.2x average)
-}
-```
-
-### Confirmation Filters
-
-The system uses **6 sophisticated filters** to validate breakouts and reduce false signals:
-
-1. **✅ Intrabar Close** - Close must be beyond level (not just wick)
-2. **✅ Multiple Closes** - N consecutive closes required
-3. **✅ Time/Bar Confirmation** - Sustained for N bars
-4. **✅ Percentage Move** - Minimum % threshold
-5. **✅ Point Move** - Minimum $ threshold
-6. **✅ Volume Surge** - Above average volume
-
-**Scoring:** Breakout is **CONFIRMED** if 4+ out of 6 filters pass (66% threshold)
-
-📚 **See detailed documentation:** `docs/breakout-confirmation.md`
-
-### Add More Symbols
-
-The system **automatically discovers** all CSV files in the `data/` directory!
-
-#### Method 1: Auto-Discovery (Default - Recommended) ✅
-
-Simply add new CSV files to `data/` folder:
-
-```bash
-# Add new symbol data
-python src/fetch_daily_prices.py  # Will fetch all configured symbols
-
-# Analysis automatically includes all CSV files
-python src/detect_breakouts.py    # Auto-discovers: AAPL, SP500, TQQQ, UBER, etc.
-python src/visualize_breakouts.py # Creates charts for all discovered symbols
-```
-
-**Benefits:**
-- ✅ No code changes needed
-- ✅ Automatically analyzes all available data
-- ✅ Easy to add/remove symbols (just add/delete CSV files)
-- ✅ Scales automatically
-
-#### Method 2: Hardcode Specific Symbols (Optional)
-
-If you want to analyze only specific symbols, edit `src/detect_breakouts.py`:
-
-```python
-# Around line 24-28
-# Comment out auto-discovery:
-# SYMBOLS = None
-
-# Uncomment and customize:
-SYMBOLS = ["TQQQ", "AAPL"]  # Only analyze these
-```
-
-#### Method 3: Add Symbols to Fetch Script
-
-To add new symbols to fetch, edit `src/fetch_daily_prices.py`:
-
-```python
-# Around line 33
-SYMBOLS = {
-    "TQQQ": "TQQQ",
-    "SP500": "^GSPC",
-    "AAPL": "AAPL",
-    "UBER": "UBER",
-    "TSLA": "TSLA",     # Add Tesla
-    "NVDA": "NVDA",     # Add Nvidia
-    "MSFT": "MSFT",     # Add Microsoft
-}
-```
-
-Then fetch data:
-```bash
-python src/fetch_daily_prices.py
-# Creates: data/TSLA.csv, data/NVDA.csv, data/MSFT.csv
-
-# Analysis automatically picks them up!
-python src/detect_breakouts.py  # Now includes 7 symbols
-```
-
-### Visualize Breakouts with Charts
-
-Create visual charts showing trendlines, support/resistance levels, and breakout alerts:
-
-```bash
-# Generate charts for all symbols
-python src/visualize_breakouts.py
-```
-
-**Charts include:**
-- 📊 Candlestick price action
-- 📈 Support and resistance trendlines (linear regression)
-- 🔵 Horizontal support level
-- 🔴 Horizontal resistance level
-- 🔺 Swing high markers (red triangles)
-- 🔻 Swing low markers (green triangles)
-- 🚨 Breakout alert annotations
-- 📊 Price info and statistics
-
-**Charts are saved to:** `charts/SYMBOL_breakout.png`
-
-Example:
-- `charts/TQQQ_breakout.png`
-- `charts/SP500_breakout.png`
-- `charts/AAPL_breakout.png`
-- `charts/UBER_breakout.png`
-
-> 📌 **Note:** Charts are **committed to the repository** and **regenerated daily** by GitHub Actions. You can view the latest charts directly in the repo or download them as workflow artifacts.
-
-### Combined Analysis Workflow
-
-```bash
-# 1. Fetch latest data
-python src/fetch_daily_prices.py
-
-# 2. Option A: Text-based analysis only
-python src/detect_breakouts.py
-
-# 2. Option B: Generate visual charts (includes analysis)
-python src/visualize_breakouts.py
-
-# 3. View charts
-open charts/TQQQ_breakout.png
-```
-
-**Note**: `visualize_breakouts.py` automatically performs the breakout analysis, so you don't need to run both scripts unless you want the text output from `detect_breakouts.py`.
-
-## 5) Trading Signal Exports 🎯
-
-### Overview
-
-The **Trading Signal Export** system generates structured JSON/CSV files with confirmed breakouts - **NO PASSWORDS OR SECRETS REQUIRED**! Perfect for public repos.
-
-**Why This is Better Than Email/Slack:**
-- ✅ **No credentials needed** - Safe for public repositories
-- ✅ **Programmatic access** - JSON/CSV ready for automation
-- ✅ **Git history** - Track signals over time
-- ✅ **Multi-platform** - Consume from anywhere with HTTP
-- ✅ **Free & unlimited** - No API rate limits
-- ✅ **Automated daily updates** - GitHub Actions generates signals
-
-### Generate Signals
-
-```bash
-# Activate virtual environment
-source .venv/bin/activate
-
-# Generate trading signals
-python src/export_signals.py
-```
-
-**Output Files:**
-- `signals/trading_signals.json` - Detailed signals with confirmation scores
-- `signals/trading_signals.csv` - Simple tabular format
-
-### Signal Format
-
-**JSON Structure:**
-```json
-{
-  "summary": {
-    "generated_at": "2025-11-10T17:30:00",
-    "total_symbols_analyzed": 4,
-    "confirmed_breakouts": 2,
-    "buy_signals": 1,
-    "sell_signals": 1,
-    "watch_signals": 0
-  },
-  "signals": [
-    {
-      "symbol": "TQQQ",
-      "signal": "SELL",
-      "breakout_type": "BEARISH_TRENDLINE_BREAKOUT_CONFIRMED",
-      "price": 110.03,
-      "timestamp": "2025-11-10T00:00:00",
-      "confirmation_score": 5,
-      "filters_passed": {
-        "intrabar_close": true,
-        "multiple_closes": true,
-        "time_bars": true,
-        "percentage_move": true,
-        "point_move": true,
-        "volume_surge": false
-      },
-      "details": {
-        "support": 97.07,
-        "resistance": 121.37,
-        "trend_direction": "UPTREND",
-        "volume": 29818811,
-        "volume_ratio": 1.15,
-        "swing_high": 121.37,
-        "swing_low": 96.83
-      },
-      "technical_levels": {
-        "support_trendline": 113.49,
-        "resistance_trendline": 117.47
-      }
-    }
-  ]
-}
-```
-
-**CSV Format:**
-```csv
-Symbol,Signal,Price,Breakout,Score,Trend,Volume_Ratio,Timestamp
-TQQQ,SELL,110.03,BEARISH_TRENDLINE_BREAKOUT_CONFIRMED,5,UPTREND,1.15,2025-11-10T00:00:00
-AAPL,BUY,225.50,RESISTANCE_BREAK_CONFIRMED,6,UPTREND,1.45,2025-11-10T00:00:00
-```
-
-### Automated Daily Signal Generation
-
-Signals are **automatically generated daily** by GitHub Actions after market close!
-
-**Workflow:** `daily-charts.yml`
-1. Fetches latest market data
-2. Generates breakout charts
-3. **Exports trading signals** (JSON + CSV)
-4. **Commits signals to repo** (viewable on GitHub)
-5. Creates workflow summary with signal table
-
-**View on GitHub:**
-- Browse: `signals/trading_signals.json` directly on GitHub
-- Raw URL: `https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json`
-
-### Consuming Signals (No Auth Required!)
-
-#### Option 1: Python Script
-
-Use the included consumption script:
-
-```bash
-# Fetch signals from your public repo (update repo name first!)
-python scripts/fetch_signals.py --repo YOUR_USERNAME/daily_market_automation
-
-# Filter for BUY signals only
-python scripts/fetch_signals.py --repo YOUR_USERNAME/daily_market_automation --signal BUY
-
-# High-confidence signals only (score >= 5)
-python scripts/fetch_signals.py --repo YOUR_USERNAME/daily_market_automation --min-score 5
-```
-
-**Before first use:** Edit `scripts/fetch_signals.py` and replace `your-username` with your GitHub username.
-
-#### Option 2: Shell Script
-
-```bash
-# Quick view in terminal
-REPO="YOUR_USERNAME/daily_market_automation" ./scripts/view_signals.sh
-```
-
-#### Option 3: Direct curl/wget
-
-```bash
-# Fetch JSON (works from anywhere, no auth!)
-curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json
-
-# With jq for pretty printing
-curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json | jq '.signals[]'
-
-# Fetch CSV
-curl -s https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.csv
-```
-
-#### Option 4: Google Sheets / Excel
-
-In Google Sheets, use `IMPORTDATA`:
-```
-=IMPORTDATA("https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.csv")
-```
-
-#### Option 5: Custom Integration
-
-```python
-import requests
-
-# Fetch from your public repo (no auth needed!)
-url = "https://raw.githubusercontent.com/YOUR_USERNAME/daily_market_automation/main/signals/trading_signals.json"
-response = requests.get(url)
-data = response.json()
-
-# Process signals
-for signal in data['signals']:
-    if signal['signal'] == 'BUY' and signal['confirmation_score'] >= 5:
-        print(f"🟢 Strong BUY: {signal['symbol']} @ ${signal['price']}")
-        # Add your logic here: send notification, execute trade, etc.
-```
-
-### Signal Types
-
-| Signal | Meaning | Action |
-|--------|---------|--------|
-| 🟢 **BUY** | Bullish breakout / Resistance break | Consider long position |
-| 🔴 **SELL** | Bearish breakout / Support break | Consider short or exit |
-| ⚪ **WATCH** | Reversal point / Uncertain | Monitor closely |
-
-### Confirmation Score
-
-Signals include a **confirmation score (0-6)** based on:
-1. ✅ Intrabar close confirmation
-2. ✅ Multiple consecutive closes
-3. ✅ Time/bar sustainability
-4. ✅ Percentage move threshold
-5. ✅ Point/dollar move threshold
-6. ✅ Volume surge confirmation
-
-**Score >= 4** = CONFIRMED breakout (66% filters passed)
-
-### Use Cases
-
-**🔔 Morning Check (Before Market Open):**
-```bash
-# Quick check for new signals
-curl -s https://raw.githubusercontent.com/YOUR/repo/main/signals/trading_signals.csv | grep BUY
-```
-
-**📱 Mobile/Tablet:**
-- Bookmark the raw JSON/CSV URL
-- View directly in browser
-- Use with iOS Shortcuts for notifications
-
-**🤖 Trading Bots:**
-- Poll the JSON URL every N minutes
-- Parse signals and execute trades
-- No webhook setup needed!
-
-**📊 Spreadsheet Dashboard:**
-- Import CSV into Google Sheets
-- Add formulas for filtering/alerting
-- Auto-refreshes on page load
-
-**💬 Telegram Bot:**
-- Simple Python script sends signals to your phone
-- No server needed - runs locally or via GitHub Actions
-- **Automated via GitHub Actions** - Daily notifications after market close
-- See `TELEGRAM_QUICKSTART.md` for 5-minute setup
-- See `docs/github-secrets-setup.md` for GitHub automation
-
-**💬 Slack/Discord Bot:**
-- Fetch JSON periodically
-- Post new signals to channel
-- No complex webhooks!
-
-### Files Updated Daily
-
-After GitHub Actions runs:
-- ✅ `signals/trading_signals.json` - Latest signals (committed to repo)
-- ✅ `signals/trading_signals.csv` - Latest signals (committed to repo)
-- ✅ `charts/*.png` - Latest breakout charts
-- ✅ Workflow summary with signal table in Actions tab
-
-### Example Workflow Summary
-
-GitHub Actions creates a nice summary table:
-
-| Symbol | Signal | Price | Score | Volume | Breakout |
-|--------|--------|-------|-------|--------|----------|
-| 🟢 AAPL | BUY | $225.50 | 6/6 | 1.45x | RESISTANCE_BREAK_CONFIRMED |
-| 🔴 TQQQ | SELL | $110.03 | 5/6 | 1.15x | BEARISH_TRENDLINE_BREAKOUT_CONFIRMED |
-
-### Security Note 🔒
-
-**This system is 100% safe for public repos because:**
-- No passwords, API keys, or secrets required
-- All data is already public (market prices)
-- Signals are analysis results, not proprietary data
-- Anyone can view your signals (make repo private if concerned)
-- No execution - signals are informational only
+Open an issue on GitHub or check the [docs](docs/) folder.
 
 ---
 
-## 6) Daily Trading Alerts 🚨
+**Made with ❤️ for intelligent, data-driven trading**
 
-Get automated BUY/SELL alerts using 4 proven trading strategies!
-
-### Quick Start
-
-```bash
-# Run strategy analysis
-python src/strategy_runner.py
-
-# View alerts
-cat signals/daily_alerts.json
-```
-
-### Available Strategies
-
-1. **RSI + MACD Confluence** - Finds oversold/overbought + momentum confirmation
-2. **Trend Following** - Identifies strong trends (SMA20/50/200 alignment)
-3. **Bollinger Band Mean Reversion** - Catches extremes for reversals
-4. **Momentum Breakout** - Captures breakouts above 20-day high/low
-
-### Example Alert Output
-
-```json
-{
-  "symbol": "AAPL",
-  "signal": "BUY",
-  "strategy_name": "RSI+MACD Confluence",
-  "confidence": "HIGH",
-  "price": 150.25,
-  "reason": "• RSI is oversold at 28.50 (< 35)\n• MACD just crossed above signal line\n• ADX shows strong trend at 26.30",
-  "technical_data": {
-    "RSI": 28.5,
-    "MACD": -1.25,
-    "Signal": -1.5,
-    "ADX": 26.3
-  }
-}
-```
-
-### Send Alerts to Telegram
-
-```bash
-# Setup credentials (one-time)
-export TELEGRAM_BOT_TOKEN="your_token"
-export TELEGRAM_CHAT_ID="your_chat_id"
-
-# Send alerts
-python scripts/send_daily_alerts.py
-
-# Or with custom confidence level
-python scripts/send_daily_alerts.py --min-confidence HIGH
-```
-
-### Automate with GitHub Actions
-
-The workflow `.github/workflows/daily-alerts.yml`:
-- ✅ Runs every weekday at 4:30 PM EST (after market close)
-- ✅ Fetches latest data
-- ✅ Runs all 4 strategies
-- ✅ Sends alerts via Telegram
-- ✅ Commits results to `signals/daily_alerts.json`
-
-**Setup:**
-1. Add GitHub Secrets: `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
-2. Enable the workflow (it's ready to go!)
-3. Receive daily alerts automatically 📱
-
-**Full Guide:** [docs/daily-alerts-guide.md](docs/daily-alerts-guide.md)
-
----
-
-## 7) News Scanner 📰
-
-**NEW!** Automatically identify buying opportunities from market dips and news!
-
-### What It Does
-
-- 🔍 Scans your portfolio symbols for price drops (5%+ in 5 days)
-- 📰 Analyzes Yahoo Finance news for sentiment
-- 📊 Checks fundamentals (P/E, margins, growth, analyst ratings)
-- 🎯 Scores opportunities (0-100) based on risk/reward
-- 📱 Sends Telegram alerts with top picks
-
-### Quick Start
-
-**Automatic (Runs twice daily):**
-- 9:00 AM EST - Morning scan
-- 4:30 PM EST - After market close
-
-**Manual Trigger:**
-```bash
-# Activate venv
-source venv/bin/activate
-
-# Run scanner
-python scripts/send_news_opportunities.py
-```
-
-### Example Telegram Alert
-
-```
-📰 Daily News Scan Report
-2025-11-15 16:30
-
-Scanned: 4 symbols
-Found: 2 opportunities
-
-━━━━━━━━━━━━━━━━━━━━
-
-1. NVDA 🟢
-NVIDIA Corporation
-Score: 85/100
-• Price: $485.20 (-8.5%)
-• From 52W High: 12.3%
-• P/E: 42.5
-• Analyst: Buy
-
-📰 NVIDIA shares fall after earnings...
-
-💡 Next Steps:
-• Review fundamentals
-• Run on-demand analysis
-• Set price alerts
-⚠️ Not financial advice. DYOR.
-```
-
-### Features
-
-✅ **Smart Filtering** - Avoids red flags (bankruptcy, fraud, scandals)
-✅ **Fundamental Analysis** - Checks valuation, growth, profitability
-✅ **Uses Your Config** - Scans symbols from `config/symbols.yaml`
-✅ **Opportunity Scoring** - Ranks best risk/reward setups
-✅ **GitHub Actions** - Fully automated, no manual work
-
-### Real-World Use Case
-
-**"CoreWeave and other stocks fell, might be buying opportunities"**
-
-The scanner detects:
-1. 15% price drop ✅
-2. News: "Falls on competitive concerns" (not bankruptcy/fraud) ✅
-3. Strong fundamentals (good P/E, revenue growth, margins) ✅
-4. Score: 82/100 → 🟢 STRONG BUY recommendation
-5. Sends alert to your phone 📱
-
-**Quick Start Guide:** [NEWS_SCANNER_QUICKSTART.md](NEWS_SCANNER_QUICKSTART.md)
-**Full Documentation:** [docs/NEWS_SCANNER_GUIDE.md](docs/NEWS_SCANNER_GUIDE.md)
-
----
-
-## 8) Insider Trading Tracker 💼
-
-**NEW!** Follow corporate insider transactions to identify "smart money" movements!
-
-### What It Does
-
-- 💼 Fetches insider transactions (buys/sells by executives, directors)
-- 📊 Analyzes sentiment (STRONG_BUY, BUY, NEUTRAL, SELL, STRONG_SELL)
-- 🎯 Adjusts opportunity scores (+15 for strong buying, -15 for strong selling)
-- ⚡ Pre-filters for efficiency (only scans stocks with 5%+ drops)
-- 🚀 Stays under API limits (50 calls/min)
-
-### Quick Start
-
-```bash
-# 1. Get free API key: https://finnhub.io/register
-# 2. Set environment variable
-export FINNHUB_API_KEY='your_key_here'
-
-# 3. Test it
-python scripts/test_insider_tracking.py
-
-# 4. Use it!
-python scripts/scan_sp500_news.py
-```
-
-### Example Output
-
-```
-📊 Top 10 Opportunities:
-  1. NVDA   - Score:  87/100 (+15 insider) (-5.2%) - NVIDIA Corporation
-  2. AAPL   - Score:  82/100 (+8 insider) (-3.1%) - Apple Inc.
-  3. TSLA   - Score:  65/100 (-8.2%) - Tesla Inc.
-```
-
-### Example Telegram Alert
-
-```
-1. NVDA 🟢
-NVIDIA Corporation
-Score: 87/100 (+15 insider 🟢)
-• Price: $485.50 (-5.2%)
-• From 52W High: 12.3%
-• P/E: 45.2
-• Insider: 🟢🟢 STRONG_BUY (4B/1S)
-
-📰 Nvidia shares drop on supply chain concerns...
-```
-
-### Command Flags
-
-```bash
-# Pre-filtered scan (default, fast ~2 min for 50 stocks)
-python scripts/scan_sp500_news.py
-
-# Full scan (all 500 stocks, ~20 min)
-python scripts/scan_sp500_news.py --full-scan
-
-# Custom drop threshold
-python scripts/scan_sp500_news.py --min-drop 3.0
-
-# Skip insider data (faster)
-python scripts/scan_sp500_news.py --no-insider
-
-# Test mode
-python scripts/scan_sp500_news.py --top 10
-```
-
-### How It Works
-
-1. **Pre-filter**: Quickly checks all 500 stocks for 5%+ drops (using yfinance, free)
-2. **Fetch insider data**: Only for stocks that dropped (using Finnhub API)
-3. **Analyze sentiment**: Calculates buy/sell ratio and transaction values
-4. **Adjust scores**: Boosts scores for insider buying, penalizes for selling
-5. **Send alerts**: Top opportunities with insider signals
-
-### Score Adjustments
-
-| Insider Signal | Criteria | Score Change |
-|---------------|----------|--------------|
-| 🟢🟢 STRONG_BUY | 75%+ buying | +15 |
-| 🟢 BUY | 60%+ buying | +8 |
-| ⚪ NEUTRAL | Balanced | 0 |
-| 🔴 SELL | 40% or less buying | -8 |
-| 🔴🔴 STRONG_SELL | 25% or less buying | -15 |
-
-### GitHub Actions Setup
-
-1. Add secret `FINNHUB_API_KEY` to your repo
-2. Workflows automatically use insider data if key is set
-3. Degrades gracefully if not set (skips insider tracking)
-
-### Features
-
-✅ **Finnhub API Integration** - Free tier: 60 calls/min
-✅ **Rate Limiting** - Built-in protection (50 calls/min buffer)
-✅ **Caching** - 24h cache for fundamentals
-✅ **Pre-filtering** - Only scan dropped stocks
-✅ **Fallback Strategies** - Works without API key
-✅ **S&P 500 List** - Finnhub → Wikipedia → File fallback
-
-### Real-World Example
-
-**Scenario:** Market dips 5%, you want to find opportunities with insider confidence.
-
-1. **Pre-filter**: Identifies 50 stocks with 5%+ drops (fast)
-2. **Fetch insider data**: Only for those 50 stocks (100 API calls, ~2 min)
-3. **Find strong signals**:
-   - NVDA: Score 70 → 85 (+15 insider buying)
-   - AAPL: Score 74 → 82 (+8 insider buying)
-   - MSFT: Score 75 → 75 (no recent insider activity)
-4. **Alert sent**: Top picks with insider confidence
-5. **You decide**: Buy NVDA and AAPL based on multiple signals
-
-**Quick Start:** [INSIDER_QUICKSTART.md](INSIDER_QUICKSTART.md)
-**Full Guide:** [INSIDER_TRACKING_GUIDE.md](INSIDER_TRACKING_GUIDE.md)
-**Test Script:** `python scripts/test_insider_tracking.py`
-
----
-
-## 9) Pre-Market Gap Monitor 🌅
-
-**NEW!** Get morning alerts with **DUAL FUNCTIONALITY**:
-1. 🛡️ **Protect** your positions from gaps
-2. 🎯 **Find** new buying opportunities
-
-Runs at 7, 8, 9 AM ET (before 9:30 AM market open)!
-
-### What It Does
-
-**🛡️ Position Protection:**
-- 📉 **Gap Detection** - Identifies gaps up/down in your positions
-- 🚨 **Risk Assessment** - CRITICAL/HIGH/MEDIUM/LOW based on proximity to stop loss
-- 💡 **Action Recommendations** - "HOLD", "WATCH", "PREPARE_TO_EXIT", "EXIT_NOW"
-
-**🎯 Opportunity Detection (NEW!):**
-- 📉 **Gap Down Scanner** - Finds oversold stocks ready to bounce (70% gap fill rate)
-- 📈 **Gap Up Scanner** - Finds breakout stocks with momentum (80% continuation rate)
-- 🔢 **Smart Scoring** - 0-100 score based on fundamentals + technicals
-- 💰 **Trade Setups** - Complete entry/stop/target for each opportunity
-
-**📊 Market Context:**
-- S&P 500, Nasdaq, Dow futures sentiment
-- VIX volatility index
-- 📱 **Telegram Alerts** - Everything in ONE comprehensive morning report
-
-### Quick Start
-
-```bash
-# 1. Add your positions to config/premarket_config.yaml
-# 2. Test it
-python scripts/send_premarket_alerts.py
-
-# 3. Set up automation (runs at 7, 8, 9 AM ET)
-# GitHub Actions: Already configured!
-# Local (cron/Task Scheduler): See PREMARKET_GAP_MONITOR_QUICKSTART.md
-```
-
-### Example Telegram Alert
-
-```
-🌅 PRE-MARKET ALERT
-07:00 AM ET
-
-📊 MARKET FUTURES
-🔴 S&P 500: -0.85%
-🔴 Nasdaq: -1.12%
-
-🔴 Market likely opens red
-━━━━━━━━━━━━━━━━━━━━
-
-📈 YOUR POSITIONS
-
-⚠️ ETN
-🔴 Pre-Market: $340.33 (-0.71%)
-Previous Close: $342.76
-Your Entry: $341.49
-Your Stop: $340.00
-
-Distance: 0.10% from stop
-
-💡 VERY CLOSE TO STOP! Be ready to exit at open.
-━━━━━━━━━━━━━━━━━━━━
-
-⚠️ ACTION REQUIRED
-• Be at computer at 9:25 AM
-• Market opens in 150 minutes
-```
-
-### Gap Types Detected
-
-| Gap Type | Description | Typical Action |
-|----------|-------------|----------------|
-| **Common Gap** (< 2%) | Small overnight move | Usually fills, monitor normally |
-| **Breakaway Gap** (> 5%) | Major news-driven move | Rarely fills, take action |
-| **Gap Up** | Opens higher | Consider taking profits |
-| **Gap Down** | Opens lower | Prepare to exit if near stop |
-
-### Risk Levels
-
-| Level | When | What To Do |
-|-------|------|------------|
-| 🚨 **CRITICAL** | Below stop loss | Exit immediately at open |
-| ⚠️ **HIGH** | Within 1% of stop | Be ready to exit |
-| 🟡 **MEDIUM** | 2-5% gap, not near stop | Watch closely |
-| ✅ **LOW** | Small gap, far from stop | Normal monitoring |
-
-### Configuration
-
-Edit `config/premarket_config.yaml`:
-
-```yaml
-positions:
-  AAPL:
-    shares: 10
-    avg_entry: 230.00
-    stop_loss: 225.00
-    target1: 240.00
-    notes: "Swing trade from Nov 18"
-
-alerts:
-  gap_threshold: 0.5          # Alert if gap > 0.5%
-  stop_proximity_threshold: 1.0  # Alert if within 1% of stop
-
-telegram:
-  include_market_sentiment: true
-  include_vix: true           # Volatility index
-  include_recommendations: true
-```
-
-### GitHub Actions
-
-Workflow runs automatically at 7, 8, 9 AM ET:
-- ✅ `.github/workflows/premarket-alerts.yml`
-- ✅ No setup needed (uses existing Telegram credentials)
-- ✅ Update `config/premarket_config.yaml` to track your positions
-
-### Local Automation
-
-```bash
-# macOS/Linux (cron)
-0 12 * * 1-5 cd $PROJECT && venv/bin/python scripts/send_premarket_alerts.py
-
-# Windows (Task Scheduler)
-# See PREMARKET_GAP_MONITOR_QUICKSTART.md for setup
-
-# Or use master workflow script:
-./scripts/run_premarket_workflow.sh   # macOS/Linux
-.\scripts\run_premarket_workflow.bat  # Windows
-```
-
-### Features
-
-✅ **Gap Classification** - Common, breakaway, runaway, exhaustion
-✅ **Futures Monitoring** - S&P 500, Nasdaq, Dow Jones
-✅ **VIX Tracking** - Volatility index (fear gauge)
-✅ **Risk Assessment** - Automatic severity calculation
-✅ **Action Suggestions** - Clear recommendations for each position
-✅ **Pre-Market Volume** - Shows trading activity before open
-✅ **Potential Loss Calculation** - Estimates loss if stopped out
-
-### Real-World Example
-
-**Your ETN Trade:**
-
-```
-Nov 17 Evening:
-• Bought ETN at $341.49
-• Set stop at $340.00
-• Closed at $342.76 (+$25 profit)
-
-Nov 18 Morning:
-• 7:00 AM Alert: "ETN pre-market $340.33, NEAR STOP!"
-• 8:00 AM Alert: "ETN still at $340.40, watch closely"
-• 9:00 AM Alert: "ETN at $340.33, prepare to exit"
-• 9:30 AM: Opens at $340.33, stop triggers at $340.00
-
-Result: Loss -$29.70 (controlled)
-
-Without Pre-Market Alerts:
-• You wake up at 10 AM
-• ETN already at $335 (continued falling)
-• Stop triggered, but you didn't know
-• More stress, less control
-```
-
-**Quick Start:** [PREMARKET_GAP_MONITOR_QUICKSTART.md](PREMARKET_GAP_MONITOR_QUICKSTART.md)
-**Test Script:** `python scripts/send_premarket_alerts.py`
-
----
-
-## 10) Testing
-
-### Test Incremental Fetching
-To verify that incremental fetching works correctly:
-
-```bash
-# Run the test script (it will trim AAPL.csv and backup the original)
-python tests/test_incremental.py
-
-# Now run the fetch script - it should only fetch missing days
-python src/fetch_daily_prices.py
-
-# Restore original if needed
-mv data/AAPL.csv.backup data/AAPL.csv
-```
-
-## Notes
-- **Incremental Fetching**: Script only downloads NEW data when CSV exists (much faster!)
-- CSVs are de-duplicated by date and always keep the latest data for a given day.
-- If Yahoo briefly fails, the script auto-retries and logs errors to stdout (or `fetch.log` with cron).
-- All automation scripts should be placed in `src/` directory.
-- Shared utilities go in `src/common/`.
-- See `docs/architecture.md` for more details on project structure.
+*"You don't tell it what to scan. It tells you what to buy."*

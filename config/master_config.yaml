@@ -1,0 +1,407 @@
+# ============================================================================
+# MASTER CONFIGURATION - Daily Market Automation
+# ============================================================================
+# ONE unified config for the entire system
+# All scanning, analysis, alerts, and portfolio management settings
+
+# ============================================================================
+# 1. INTELLIGENT MARKET SCANNING - Automatic symbol selection
+# ============================================================================
+# YOU DON'T TELL IT WHAT TO SCAN - IT FINDS THE BEST OPPORTUNITIES FOR YOU!
+scanning:
+  # Universe to scan (fetched automatically from Finnhub API)
+  universe:
+    scan_stocks: true           # Scan US stocks
+    scan_etfs: true             # Scan ETFs
+    scan_indices: true          # Track major indices
+
+  # Daily scan strategy (tiered approach for speed)
+  strategy:
+    tier: "daily"               # Options: "daily", "weekly", "monthly", "full"
+    # daily = Smart pre-screen + deep analysis (~600 symbols, ~5 min)
+    # weekly = Broader scan (~2000 symbols, ~20 min)
+    # monthly = Full market scan (~10,000 symbols, ~60 min)
+    # full = Everything (use for deep dives)
+
+  # INTELLIGENT PRE-SCREENING (automatic filtering)
+  # System automatically identifies promising candidates based on:
+  intelligent_filters:
+    # Price action filters
+    min_price_drop_pct: 3.0     # Look for 3%+ drops (potential opportunities)
+    max_price_drop_pct: 10.0    # But not >10% (avoid crashes)
+    max_drawdown_pct: 20.0      # Skip symbols down >20% (catching knives)
+
+    # Volume filters (find symbols with activity)
+    min_volume_ratio: 1.2       # 20%+ above average volume
+    high_volume_ratio: 2.0      # 2x volume = something big happening
+
+    # Quality filters
+    min_volume: 500000          # Skip low-volume stocks
+    min_price: 5.0              # Skip penny stocks under $5
+    exchanges: ["NYSE", "NASDAQ", "AMEX"]  # US exchanges only
+    exclude_otc: true           # Skip OTC/pink sheets
+
+  # Performance
+  max_symbols_per_run: 600      # Max symbols to fetch from API
+  max_deep_analysis: 100        # Max symbols for deep analysis
+  parallel_workers: 10          # Parallel processing threads
+
+  # What to look for (system automatically finds these)
+  opportunity_signals:
+    - price_drops_with_volume   # Price drop + volume spike = opportunity
+    - technical_oversold        # RSI < 30, price below support
+    - news_driven_dips          # Negative news + solid fundamentals
+    - insider_buying_dips       # Insider buying during price drops
+    - sector_rotation           # Money moving between sectors
+
+# ============================================================================
+# 2. YOUR PORTFOLIO - Positions to monitor (OPTIONAL)
+# ============================================================================
+# NOTE: You DON'T need to define positions here!
+# The system will find the BEST opportunities from the ENTIRE market.
+# Only add positions here if you want to monitor existing holdings.
+portfolio:
+  # Your current positions (OPTIONAL - leave empty for pure opportunity scanning)
+  positions: {}
+    # Example format (uncomment to use):
+    # TQQQ: 100    # Tech leveraged ETF (shares)
+    # AAPL: 50     # Apple stock
+    # UBER: 25     # Uber stock
+
+  # Rebalancing thresholds
+  rebalancing:
+    enabled: true
+    threshold_pct: 10           # Alert if position > 10% off target
+    check_frequency: "daily"    # Check: daily, weekly, monthly
+
+  # Risk management
+  risk:
+    max_position_size: 20       # No single position > 20% of portfolio
+    max_sector_exposure: 30     # No sector > 30% of portfolio
+    cash_reserve_pct: 20        # Keep 20% in cash/bonds
+    defensive_vix_threshold: 25 # Suggest defensive moves if VIX > 25
+
+# ============================================================================
+# 3. OPPORTUNITY SCORING - Multi-signal composite scoring (0-100)
+# ============================================================================
+scoring:
+  # Score weights (must total 100%)
+  weights:
+    news_sentiment: 30          # FinBERT sentiment analysis (30%)
+    technical: 40               # RSI, MACD, trends, volume (40%)
+    fundamentals: 20            # P/E, margins, growth (20%)
+    insider_activity: 10        # Smart money tracking (10%)
+
+  # Confidence levels
+  confidence_thresholds:
+    high: 80                    # 80-100 = HIGH confidence
+    medium: 60                  # 60-79 = MEDIUM confidence
+    low: 40                     # 40-59 = LOW confidence (skip)
+
+  # Recommendations
+  recommendation_thresholds:
+    strong_buy: 85              # Score >= 85 = STRONG BUY
+    buy: 70                     # Score >= 70 = BUY
+    watch: 55                   # Score >= 55 = WATCH
+    skip: 0                     # Score < 55 = SKIP
+
+  # Output settings
+  max_opportunities: 5          # Show top 5 best opportunities
+  min_confidence: 70            # Only show HIGH confidence (70+)
+
+# ============================================================================
+# 4. NEWS SENTIMENT (FinBERT) - ML-based sentiment analysis
+# ============================================================================
+finbert:
+  # Enable FinBERT for accurate financial sentiment
+  enabled: true
+  model_name: "ProsusAI/finbert"
+
+  # Auto GPU detection (uses GPU if available, else CPU)
+  device: "auto"                # Options: "auto", "cuda", "cpu"
+
+  # Confidence thresholds
+  high_confidence: 0.75         # 75%+ = high confidence
+  medium_confidence: 0.60       # 60-75% = medium confidence
+  negative_threshold: 0.60      # 60%+ confident negative = opportunity
+
+  # Performance
+  max_length: 512               # Max tokens per article
+  batch_size: 8                 # Process 8 articles at once
+
+  # Fallback
+  fallback_to_keywords: true    # Use keywords if FinBERT fails
+
+  # Avoid serious red flags (bankruptcy, fraud, etc)
+  avoid_keywords:
+    - bankruptcy
+    - fraud
+    - scandal
+    - sec investigation
+    - accounting issues
+    - chapter 11
+    - delisting
+
+# ============================================================================
+# 5. INSIDER TRACKING - Follow the smart money
+# ============================================================================
+insider:
+  # Enable insider transaction tracking
+  enabled: true
+  lookback_days: 30             # Check last 30 days of transactions
+
+  # Score adjustments (added to composite score)
+  score_adjustments:
+    STRONG_BUY: 15              # Heavy insider buying
+    BUY: 8                      # Moderate insider buying
+    NEUTRAL: 0                  # Mixed activity
+    SELL: -8                    # Moderate insider selling
+    STRONG_SELL: -15            # Heavy insider selling
+
+  # Pre-filter for efficiency
+  pre_filter:
+    min_drop_pct: 5.0           # Only check stocks down 5%+
+    drop_period_days: 5         # In last 5 days
+
+  # API rate limiting (Finnhub free tier: 60/min)
+  rate_limit:
+    calls_per_minute: 50        # Safety buffer
+
+# ============================================================================
+# 6. TRADING STRATEGIES - Pattern-based entry/exit signals
+# ============================================================================
+# CURRENT STRATEGIES (all integrated):
+# 1. ABC Patterns - Wave-based Fibonacci entries
+# 2. RSI + MACD Confluence - Oversold + momentum confirmation
+# 3. Momentum Breakout - Volume + price acceleration
+# 4. Bollinger Band Mean Reversion - Oversold bounce plays
+# 5. Trend Following - Ride the trend with SMA crossovers
+#
+# EASILY EXTENSIBLE - Add more strategies:
+# - Create new strategy class in src/
+# - Initialize in master scanner
+# - Signals automatically integrated into scoring
+strategies:
+  enabled: true
+
+  # Which strategies to use (all enabled by default)
+  active_strategies:
+    - abc_patterns
+    - rsi_macd
+    - momentum_breakout
+    - mean_reversion
+    - trend_following
+    # Add your new strategies here
+
+  # Strategy boost (add points to score if strategies confirm)
+  strategy_confirmation_boost: 10  # Add up to 10 points
+
+  # Minimum confidence to include strategy signal
+  min_strategy_confidence: "MEDIUM"  # HIGH, MEDIUM, LOW
+
+# ============================================================================
+# 7. TECHNICAL ANALYSIS - Indicators and signals
+# ============================================================================
+technical:
+  # Indicators to calculate
+  indicators:
+    - RSI                       # Relative Strength Index
+    - MACD                      # Moving Average Convergence Divergence
+    - BB                        # Bollinger Bands
+    - SMA                       # Simple Moving Averages (20, 50, 200)
+    - EMA                       # Exponential Moving Averages
+    - ADX                       # Trend strength
+    - ATR                       # Volatility
+    - OBV                       # Volume indicator
+
+  # RSI settings
+  rsi:
+    period: 14
+    oversold: 30                # RSI < 30 = oversold (buy signal)
+    overbought: 70              # RSI > 70 = overbought (sell signal)
+
+  # MACD settings
+  macd:
+    fast: 12
+    slow: 26
+    signal: 9
+
+  # Trend detection
+  trend:
+    short_period: 20            # 20-day SMA
+    medium_period: 50           # 50-day SMA
+    long_period: 200            # 200-day SMA
+
+# ============================================================================
+# 7. FUNDAMENTAL ANALYSIS - Company health metrics
+# ============================================================================
+fundamentals:
+  # Metrics to check
+  metrics:
+    - PE_ratio                  # Price-to-Earnings
+    - profit_margin             # Net profit margin
+    - revenue_growth            # YoY revenue growth
+    - debt_to_equity            # Debt ratio
+    - analyst_rating            # Analyst consensus
+    - market_cap                # Company size
+
+  # Thresholds for scoring
+  good_pe_max: 25               # P/E < 25 = reasonable
+  good_margin_min: 10           # Profit margin > 10% = healthy
+  good_growth_min: 10           # Revenue growth > 10% = growing
+  good_debt_max: 1.5            # Debt/Equity < 1.5 = manageable
+
+# ============================================================================
+# 8. MARKET PROTECTION - Risk monitoring and defensive positioning
+# ============================================================================
+protection:
+  # VIX monitoring (volatility index)
+  vix:
+    normal_max: 20              # VIX < 20 = normal market
+    elevated_min: 20            # VIX 20-30 = elevated risk
+    high_min: 30                # VIX > 30 = high risk
+
+  # Auto-suggest defensive moves
+  defensive:
+    enabled: true
+    suggest_bonds: true         # Suggest TLT (bonds) when volatile
+    suggest_gold: true          # Suggest GLD (gold) as safe haven
+    suggest_cash: true          # Suggest raising cash position
+
+  # Stop loss recommendations
+  stop_loss:
+    enabled: true
+    default_pct: 7              # Default 7% stop loss
+    tight_pct: 5                # Tight stop for volatile stocks
+    wide_pct: 10                # Wide stop for stable stocks
+
+# ============================================================================
+# 9. ALERTS & NOTIFICATIONS - Telegram integration
+# ============================================================================
+alerts:
+  # Telegram settings
+  telegram:
+    enabled: true
+    bot_token_env: "TELEGRAM_BOT_TOKEN"
+    chat_id_env: "TELEGRAM_CHAT_ID"
+
+  # Alert frequency
+  schedule:
+    daily_scan: "16:30"         # 4:30 PM ET (after market close)
+    weekly_review: "MON 18:00"  # Monday 6 PM
+    premarket: "08:00"          # 8 AM ET (before market open)
+
+  # Alert content
+  include:
+    market_summary: true        # VIX, S&P, sentiment
+    top_opportunities: true     # Top 5 buys
+    portfolio_status: true      # Position health
+    rebalancing_needs: true     # Buy/sell recommendations
+    risk_assessment: true       # Current risk level
+    action_items: true          # Specific actions to take
+
+  # Format
+  format:
+    consolidated: true          # ONE message (not multiple)
+    include_charts: false       # Text only (charts optional)
+    max_length: 4000            # Telegram limit: 4096 chars
+
+# ============================================================================
+# 10. DATA MANAGEMENT - Storage and organization
+# ============================================================================
+data:
+  # Directory structure
+  directories:
+    market_data: "data/market_data"
+    metadata: "data/metadata"
+    cache: "data/cache"
+    signals: "signals"
+    charts: "charts"
+
+  # Organization by asset type
+  organize_by_type: true        # etfs/, stocks/, indices/
+
+  # Data retention
+  retention:
+    price_history_years: 2      # Keep 2 years of price data
+    cache_ttl_hours: 24         # Cache expires after 24 hours
+    signals_days: 30            # Keep signals for 30 days
+
+  # Fetching
+  fetch:
+    incremental: true           # Only fetch new data
+    initial_period: "2y"        # Initial fetch: 2 years
+    parallel: true              # Parallel downloads
+
+# ============================================================================
+# 11. API INTEGRATIONS - Third-party services
+# ============================================================================
+apis:
+  # Finnhub (primary data source)
+  finnhub:
+    enabled: true
+    api_key_env: "FINNHUB_API_KEY"
+    rate_limit: 50              # Calls per minute
+    endpoints:
+      - stock_symbols           # Get all US symbols
+      - insider_transactions    # Insider trades
+      - company_profile         # Fundamentals
+      - news                    # Company news
+
+  # Yahoo Finance (via yfinance)
+  yfinance:
+    enabled: true
+    primary_for: ["price_data", "historical"]
+    fallback: true              # Use if Finnhub fails
+
+  # Fallback behavior
+  fallback_mode: "warn"         # Options: "disable", "warn", "continue"
+
+# ============================================================================
+# 12. AUTOMATION - Scheduling and workflows
+# ============================================================================
+automation:
+  # GitHub Actions
+  github_actions:
+    enabled: true
+    workflows:
+      - daily_scan              # Daily market scan
+      - weekly_review           # Weekly deep dive
+      - premarket_check         # Pre-market monitoring
+
+  # Local execution
+  local:
+    enabled: true
+    cron_schedule: "30 16 * * 1-5"  # 4:30 PM weekdays
+    platform:
+      macos: "scripts/run_master_scan.sh"
+      linux: "scripts/run_master_scan.sh"
+      windows: "scripts\\run_master_scan.bat"
+
+# ============================================================================
+# 13. ADVANCED FEATURES - Optional enhancements
+# ============================================================================
+advanced:
+  # Backtesting
+  backtesting:
+    enabled: false              # Enable for strategy testing
+    initial_capital: 10000
+    commission: 0.001           # 0.1% per trade
+
+  # Machine learning
+  ml:
+    enabled: false              # Future: ML-based predictions
+    model: null
+
+  # Options analysis
+  options:
+    enabled: false              # Future: Options strategies
+
+  # Paper trading
+  paper_trading:
+    enabled: false              # Future: Auto paper trade
+    platform: "tradingview"
+
+# ============================================================================
+# END OF CONFIGURATION
+# ============================================================================

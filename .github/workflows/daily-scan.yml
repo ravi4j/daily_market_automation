@@ -1,0 +1,43 @@
+name: Daily Market Scan
+
+on:
+  schedule:
+    # Run at 4:30 PM ET (21:30 UTC) on weekdays
+    - cron: '30 21 * * 1-5'
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-base.txt
+          pip install -r requirements-fetch.txt
+          pip install -r requirements-indicators.txt
+          pip install -r requirements-finbert.txt
+
+      - name: Run Master Scanner
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python scripts/master_daily_scan.py --mode daily
+
+      - name: Commit results
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add signals/ data/
+          git diff --quiet && git diff --staged --quiet || git commit -m "Daily scan results - $(date +'%Y-%m-%d')"
+          git push
