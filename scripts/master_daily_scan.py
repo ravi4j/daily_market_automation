@@ -1192,31 +1192,49 @@ class MasterScanner:
         print("\n" + "=" * 80)
         print("PHASE 2: GAP OPPORTUNITY SCAN")
         print("=" * 80)
-        print(f"\n🔍 Scanning market for gap-based opportunities...\n")
+        print(f"\n🔍 Checking gaps for yesterday's top opportunities...\n")
 
-        # Use the SAME intelligent universe from daily scan
-        print(f"  🧠 Reusing intelligent universe (600 quality symbols)...")
+        # SMART: Only check gaps for yesterday's top opportunities!
+        # These are the symbols you're actually considering to trade
+        print(f"  🎯 Loading yesterday's top opportunities...")
         
-        if not hasattr(self, 'universe') or not self.universe:
-            # Fetch universe if not already loaded
-            self.fetch_market_universe()
-        
-        # Take first 50 from intelligent universe
-        # (Already prioritized: news-driven + ETFs + high-volume stocks)
         scan_symbols = []
         
-        # Add portfolio positions first (highest priority)
+        # Add portfolio positions (highest priority - monitor your holdings)
         if positions:
             scan_symbols.extend(positions.keys())
+            print(f"     → {len(positions)} portfolio positions")
         
-        # Add from intelligent universe up to 50 total
-        for symbol in self.universe:
-            if symbol not in scan_symbols:
-                scan_symbols.append(symbol)
-            if len(scan_symbols) >= 50:
-                break
+        # Load yesterday's top opportunities from saved results
+        results_file = SIGNALS_DIR / 'master_scan_results.json'
+        if results_file.exists():
+            try:
+                import json
+                with open(results_file, 'r') as f:
+                    results = json.load(f)
+                
+                opportunities = results.get('opportunities', [])
+                if opportunities:
+                    # Add top opportunities (these are your trade candidates!)
+                    for opp in opportunities[:10]:  # Top 10 opportunities
+                        symbol = opp.get('symbol')
+                        if symbol and symbol not in scan_symbols:
+                            scan_symbols.append(symbol)
+                    
+                    print(f"     → {len(opportunities[:10])} top opportunities from yesterday")
+                else:
+                    print(f"     ⚠️  No opportunities in results file")
+            except Exception as e:
+                print(f"     ⚠️  Could not load results: {e}")
+        else:
+            print(f"     ⚠️  No results file found (run daily scan first)")
         
-        print(f"  ✅ Using {len(scan_symbols)} symbols from intelligent 600")
+        # Fallback: if no symbols, use major indices
+        if not scan_symbols:
+            scan_symbols = ['SPY', 'QQQ', 'IWM', 'DIA', 'VTI']
+            print(f"     → Using fallback: major indices")
+        
+        print(f"\n  ✅ Checking gaps for {len(scan_symbols)} symbols")
 
         opportunities = self.premarket_scanner.scan_for_opportunities(
             symbols=scan_symbols,  # Already limited to 50
