@@ -1180,19 +1180,41 @@ class MasterScanner:
             print()
 
         # Scan for gap opportunities
-        print("\n=" * 80)
+        print("\n" + "=" * 80)
         print("PHASE 2: GAP OPPORTUNITY SCAN")
         print("=" * 80)
         print(f"\n🔍 Scanning market for gap-based opportunities...\n")
 
-        # Use S&P 500 or configured symbols
-        scan_symbols = self.config.get('scanning', {}).get('intelligent_filters', {}).get('premarket_symbols', [])
+        # Get symbols to scan (use portfolio positions + S&P 500 top 50)
+        scan_symbols = []
+        
+        # Add portfolio positions if any
+        if positions:
+            scan_symbols.extend(positions.keys())
+        
+        # Add top 50 from S&P 500 for more coverage
+        sp500_file = METADATA_DIR / 'sp500_comprehensive.txt'
+        if sp500_file.exists():
+            try:
+                with open(sp500_file, 'r') as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        symbol = line.split(',')[0].strip()
+                        if symbol and symbol not in scan_symbols:
+                            scan_symbols.append(symbol)
+                        if len(scan_symbols) >= 50:  # Limit to 50 total
+                            break
+            except Exception as e:
+                print(f"  ⚠️  Could not load S&P 500 list: {e}")
+        
+        # Fallback if no symbols found
         if not scan_symbols:
-            # Default: scan top holdings + some liquid stocks
-            scan_symbols = list(positions.keys()) if positions else ['SPY', 'QQQ', 'AAPL', 'MSFT', 'NVDA', 'TSLA']
+            scan_symbols = ['SPY', 'QQQ', 'AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META', 'NFLX']
 
         opportunities = self.premarket_scanner.scan_for_opportunities(
-            symbols=scan_symbols[:50],  # Limit to 50 for speed
+            symbols=scan_symbols,  # Already limited to 50
             min_gap_pct=3.0,
             max_opportunities=5
         )
