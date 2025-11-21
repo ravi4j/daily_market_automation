@@ -3,6 +3,9 @@ name: Bulk Fetch All Symbols (One-Time)
 on:
   workflow_dispatch:  # Manual trigger only
 
+permissions:
+  contents: write  # Allow pushing changes
+
 jobs:
   bulk-fetch:
     runs-on: ubuntu-latest
