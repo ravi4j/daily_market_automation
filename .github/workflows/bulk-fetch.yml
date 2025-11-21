@@ -13,7 +13,9 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -30,12 +32,13 @@ jobs:
     - name: Run bulk fetch
       run: |
         echo "🚀 Starting bulk fetch of ~23,888 symbols..."
-        echo "⚡ Using 20 parallel workers (rate-limit friendly)"
-        echo "⏱️  Estimated time: 2-3 hours"
+        echo "⚡ Using 5 parallel workers (very conservative for rate limits)"
+        echo "⏱️  Estimated time: 4-6 hours"
         echo "💾 Will download 2 years of data for each symbol"
         echo "🔄 Resume mode: Will skip existing CSVs"
+        echo "⏰ Added 500ms base delay between ALL requests"
         echo ""
-        python scripts/initial_bulk_fetch.py --no-prompt --workers 20 --resume
+        python scripts/initial_bulk_fetch.py --no-prompt --workers 5 --resume
 
     - name: Show statistics
       if: success()
