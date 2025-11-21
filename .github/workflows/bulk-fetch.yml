@@ -30,11 +30,12 @@ jobs:
     - name: Run bulk fetch
       run: |
         echo "🚀 Starting bulk fetch of ~23,888 symbols..."
-        echo "⚡ Using 100 parallel workers"
-        echo "⏱️  Estimated time: 30-60 minutes"
+        echo "⚡ Using 20 parallel workers (rate-limit friendly)"
+        echo "⏱️  Estimated time: 2-3 hours"
         echo "💾 Will download 2 years of data for each symbol"
+        echo "🔄 Resume mode: Will skip existing CSVs"
         echo ""
-        python scripts/initial_bulk_fetch.py --no-prompt --workers 100
+        python scripts/initial_bulk_fetch.py --no-prompt --workers 20 --resume
 
     - name: Show statistics
       if: success()
