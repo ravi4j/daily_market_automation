@@ -511,22 +511,25 @@ class MasterScanner:
         """Weekly tier: More comprehensive scan"""
         return symbols[:2000]
 
-    def _apply_filters(self, symbols: List[Dict]) -> List[str]:
+    def _apply_filters(self, symbols: List[Dict]) -> List[Dict]:
         """
-        Extract symbol strings from filtered list
+        Return filtered symbol list with full metadata
         Exchange filtering already done in _filter_tier_daily()
+        Keep dictionaries so we have type information for reporting
         """
-        # Simply extract symbol names from the pre-filtered list
-        return [sym['symbol'] if isinstance(sym, dict) else sym for sym in symbols]
+        # Return full symbol dictionaries (not just strings) to preserve type info
+        return symbols
 
     def _count_by_type(self, asset_type: str) -> int:
         """Count symbols by type"""
-        # Simplified count (ETFs typically have 3-letter tickers)
+        # Count by actual type from metadata
         if asset_type == 'etf':
-            return sum(1 for s in self.universe if len(s) <= 4 and s.isupper())
+            return sum(1 for s in self.universe if isinstance(s, dict) and s.get('type', '').lower() == 'etf')
+        elif asset_type == 'stock':
+            return sum(1 for s in self.universe if isinstance(s, dict) and s.get('type', '').lower() == 'stock')
         return len(self.universe)
 
-    def _quick_prescreen(self, symbols: List[str]) -> List[str]:
+    def _quick_prescreen(self, symbols: List[Dict]) -> List[str]:
         """
         INTELLIGENT PRE-SCREENING
 
@@ -540,6 +543,12 @@ class MasterScanner:
         Then we do DEEP analysis on the 50-100 that pass
 
         Also tracks ALL fallers (2%+) for comprehensive report
+
+        Args:
+            symbols: List of symbol dictionaries with 'symbol' and 'type' fields
+
+        Returns:
+            List of symbol strings (candidates for deep analysis)
         """
         print(f"     Screening {len(symbols)} symbols for:")
         print(f"     • Price drops (2%+ = all fallers)")
@@ -553,8 +562,20 @@ class MasterScanner:
         # Thread-safe data structures
         lock = threading.Lock()
 
-        def screen_symbol(symbol):
+        def screen_symbol(sym_dict):
             """Screen a single symbol (for parallel execution)"""
+            # Handle both dict and string formats for backward compatibility
+            if isinstance(sym_dict, str):
+                symbol = sym_dict
+                asset_type = 'Stock'  # Default if no type info
+            else:
+                symbol = sym_dict.get('symbol')
+                raw_type = sym_dict.get('type', 'stock')
+                asset_type = 'ETF' if raw_type.lower() == 'etf' else 'Stock'
+
+            if not symbol:
+                return None
+
             try:
                 # Load price data (uses CSV if available, fetches & saves if needed)
                 df = self._load_price_data(symbol)
@@ -592,15 +613,7 @@ class MasterScanner:
                 # Track ALL fallers 2%+ for comprehensive report
                 faller_data = None
                 if significant_drop and price_filter and not_crashing:
-                    # Get actual asset type from universe metadata
-                    asset_type = 'Stock'  # Default
-                    for sym_dict in self.universe:
-                        if isinstance(sym_dict, dict) and sym_dict.get('symbol') == symbol:
-                            raw_type = sym_dict.get('type', 'stock')
-                            # Properly capitalize: 'etf' -> 'ETF', 'stock' -> 'Stock'
-                            asset_type = 'ETF' if raw_type.lower() == 'etf' else 'Stock'
-                            break
-
+                    # asset_type already determined at function start
                     faller_data = {
                         'symbol': symbol,
                         'type': asset_type,
@@ -1420,7 +1433,7 @@ class MasterScanner:
         print("PHASE 4: GENERATING OPPORTUNITY CHARTS")
         print("=" * 80)
         self._generate_opportunity_charts()
-        
+
         # Phase 5: Generate and send alert with charts
         alert = self.generate_alert()
         print("\n" + "=" * 80)
