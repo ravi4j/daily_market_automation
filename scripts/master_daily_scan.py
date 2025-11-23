@@ -549,10 +549,10 @@ class MasterScanner:
 
         candidates = []
         self.all_fallers = []  # Track ALL symbols with 2%+ drops
-        
+
         # Thread-safe data structures
         lock = threading.Lock()
-        
+
         def screen_symbol(symbol):
             """Screen a single symbol (for parallel execution)"""
             try:
@@ -596,7 +596,9 @@ class MasterScanner:
                     asset_type = 'Stock'  # Default
                     for sym_dict in self.universe:
                         if isinstance(sym_dict, dict) and sym_dict.get('symbol') == symbol:
-                            asset_type = sym_dict.get('type', 'Stock').capitalize()
+                            raw_type = sym_dict.get('type', 'stock')
+                            # Properly capitalize: 'etf' -> 'ETF', 'stock' -> 'Stock'
+                            asset_type = 'ETF' if raw_type.lower() == 'etf' else 'Stock'
                             break
 
                     faller_data = {
@@ -611,7 +613,7 @@ class MasterScanner:
 
                 # Check if it meets criteria for deep analysis
                 is_candidate = False
-                
+
                 # Pass if it meets criteria for deep analysis (3-10% drop)
                 if opportunity_drop and volume_spike and price_filter and volume_filter and not_crashing:
                     is_candidate = True
@@ -633,18 +635,18 @@ class MasterScanner:
         max_workers = 50
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = {executor.submit(screen_symbol, symbol): symbol for symbol in symbols}
-            
+
             with tqdm(total=len(futures), desc="     Pre-screening", unit="symbol", ncols=100) as pbar:
                 for future in as_completed(futures):
                     try:
                         result = future.result()
                         if result:
                             is_candidate, faller_data = result
-                            
+
                             with lock:
                                 if faller_data:
                                     self.all_fallers.append(faller_data)
-                                
+
                                 if is_candidate:
                                     symbol = futures[future]
                                     candidates.append(symbol)
