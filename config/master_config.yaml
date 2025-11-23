@@ -166,7 +166,7 @@ scoring:
 
   # Output settings
   max_opportunities: 5          # Show top 5 best opportunities
-  min_confidence: 70            # Only show HIGH confidence (70+)
+  min_confidence: 40            # Temporary: Lower threshold to generate test charts
 
 # ============================================================================
 # 4. NEWS SENTIMENT (FinBERT) - ML-based sentiment analysis

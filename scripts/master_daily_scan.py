@@ -10,6 +10,7 @@ import sys
 import yaml
 import pandas as pd
 import yfinance as yf
+import logging
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
@@ -25,6 +26,36 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Load environment variables from .env file
 load_dotenv(PROJECT_ROOT / '.env')
+
+# Setup logging
+LOGS_DIR = PROJECT_ROOT / 'logs'
+LOGS_DIR.mkdir(exist_ok=True)
+
+# Create logger
+logger = logging.getLogger('master_scanner')
+logger.setLevel(logging.DEBUG)
+
+# File handler - detailed logs
+log_file = LOGS_DIR / f'scan_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+file_handler = logging.FileHandler(log_file)
+file_handler.setLevel(logging.DEBUG)
+file_formatter = logging.Formatter('%(asctime)s | %(levelname)-8s | %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+file_handler.setFormatter(file_formatter)
+
+# Console handler - only warnings and errors
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.WARNING)
+console_formatter = logging.Formatter('%(levelname)s: %(message)s')
+console_handler.setFormatter(console_formatter)
+
+# Add handlers
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
+
+logger.info("="*80)
+logger.info("MASTER SCANNER - Starting new run")
+logger.info(f"Log file: {log_file}")
+logger.info("="*80)
 
 # Import existing modules (reuse, don't duplicate)
 from src.finnhub_data import FinnhubClient
@@ -712,14 +743,26 @@ class MasterScanner:
         # Progress bar for deep analysis
         with tqdm(total=len(candidates), desc="     Deep analysis", unit="symbol", ncols=100) as pbar:
             for symbol in candidates:
+                # Extract symbol string if we got a dict (should be string from _quick_prescreen)
+                if isinstance(symbol, dict):
+                    symbol_str = symbol.get('symbol')
+                else:
+                    symbol_str = symbol
+
                 try:
-                    opp = self._analyze_symbol(symbol)
+                    logger.debug(f"Analyzing {symbol_str}...")
+                    opp = self._analyze_symbol(symbol_str)
                     if opp:
                         opportunities.append(opp)
+                        logger.info(f"✅ {symbol_str}: Score {opp['composite_score']:.1f} - {opp['confidence']}")
                         pbar.set_postfix({"opportunities": len(opportunities)})
+                    else:
+                        logger.debug(f"{symbol_str}: No opportunity (scored below threshold or failed analysis)")
                 except Exception as e:
-                    # Silent errors during scanning (too noisy otherwise)
-                    pass
+                    # Log errors for debugging
+                    logger.error(f"❌ Error analyzing {symbol_str}: {type(e).__name__}: {e}")
+                    import traceback
+                    logger.debug(f"Traceback for {symbol_str}:\n{traceback.format_exc()}")
                 finally:
                     pbar.update(1)
 
@@ -1448,6 +1491,17 @@ class MasterScanner:
         self._save_results()
 
         print("✅ DAILY SCAN COMPLETE!\n")
+
+        # Log summary
+        logger.info("="*80)
+        logger.info("DAILY SCAN COMPLETE")
+        logger.info(f"Scanned: {len(self.universe)} symbols")
+        logger.info(f"Candidates: {len(self.opportunities) if hasattr(self, 'opportunities') else 0}")
+        logger.info(f"Opportunities found: {len(self.opportunities)}")
+        logger.info(f"Charts generated: {len(self.generated_chart_paths) if hasattr(self, 'generated_chart_paths') else 0}")
+        logger.info(f"Fallers (2%+): {len(self.all_fallers) if hasattr(self, 'all_fallers') else 0}")
+        logger.info(f"Log file: {log_file}")
+        logger.info("="*80)
 
     def _run_premarket_scan(self):
         """Pre-market scan (before market open) - gap analysis"""

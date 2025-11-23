@@ -219,7 +219,7 @@ class OpportunityChartGenerator:
             ax.axhline(support, color='green', linestyle=':', linewidth=1.5, alpha=0.6, label=f'Support ${support:.2f}')
         if resistance:
             ax.axhline(resistance, color='red', linestyle=':', linewidth=1.5, alpha=0.6, label=f'Resistance ${resistance:.2f}')
-        
+
         # Fibonacci Retracement Levels (Golden Pocket: 0.5, 0.618, 0.65)
         self._plot_fibonacci_levels(ax, df, dates)
 
@@ -359,7 +359,7 @@ class OpportunityChartGenerator:
         """
         Calculate and plot Fibonacci retracement levels (Golden Pocket).
         Uses recent swing high and low to calculate key retracement levels.
-        
+
         Golden Pocket = 0.5 to 0.618 (most common reversal zone)
         Classic levels: 0.382, 0.5, 0.618
         """
@@ -367,38 +367,38 @@ class OpportunityChartGenerator:
         # Use last 30 days to find the swing points
         lookback = min(30, len(df))
         recent_df = df.tail(lookback)
-        
+
         swing_high = recent_df['High'].max()
         swing_low = recent_df['Low'].min()
-        
+
         # Calculate Fibonacci levels
         diff = swing_high - swing_low
-        
+
         if diff < 0.01:  # Avoid division by zero or very flat price action
             return
-        
+
         # Classic Fibonacci retracement levels
         fib_levels = {
             0.382: swing_low + diff * 0.382,  # 38.2% retracement
             0.5: swing_low + diff * 0.5,      # 50% retracement
             0.618: swing_low + diff * 0.618   # 61.8% - Golden Ratio
         }
-        
+
         # Plot the golden pocket zone (50% to 61.8%) as a shaded region
         golden_low = fib_levels[0.5]
         golden_high = fib_levels[0.618]
-        ax.axhspan(golden_low, golden_high, alpha=0.15, color='gold', 
+        ax.axhspan(golden_low, golden_high, alpha=0.15, color='gold',
                   label='Golden Pocket (50-61.8%)', zorder=1)
-        
+
         # Plot each Fibonacci level line
         colors = {0.382: '#DAA520', 0.5: '#FFD700', 0.618: '#FFA500'}  # Gold shades
         for level, price in fib_levels.items():
-            ax.axhline(price, color=colors[level], linestyle='-.', linewidth=1.5, 
+            ax.axhline(price, color=colors[level], linestyle='-.', linewidth=1.5,
                       alpha=0.7, zorder=2)
             # Add price label on the right side
             ax.text(dates[-1], price, f'  Fib {level:.3f} (${price:.2f})',
                    verticalalignment='center', fontsize=8, color=colors[level],
-                   fontweight='bold', bbox=dict(boxstyle='round,pad=0.3', 
+                   fontweight='bold', bbox=dict(boxstyle='round,pad=0.3',
                    facecolor='white', edgecolor=colors[level], alpha=0.8))
 
 

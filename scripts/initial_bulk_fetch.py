@@ -61,7 +61,7 @@ def fetch_and_save(symbol: str, asset_type: str, max_retries: int = 3, stats: di
             base_delay = 0.5  # 500ms between each request
             retry_delay = (2 ** attempt) if attempt > 0 else 0  # 0s, 2s, 4s, 8s
             time.sleep(base_delay + retry_delay)
-            
+
             # Fetch 2 years of data
             ticker = yf.Ticker(symbol)
             df = ticker.history(period='2y')

@@ -62,3 +62,4 @@ fetch.log
 # Environment variables
 .env
 .env.local
+logs/
