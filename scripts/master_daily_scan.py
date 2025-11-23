@@ -1227,7 +1227,7 @@ class MasterScanner:
     def generate_alert(self) -> str:
         """Generate consolidated Telegram alert"""
         print("\n" + "=" * 80)
-        print("PHASE 4: GENERATING ALERT")
+        print("PHASE 5: GENERATING ALERT")
         print("=" * 80)
 
         alert = self._format_alert_message()
@@ -1291,7 +1291,7 @@ class MasterScanner:
 
         try:
             import requests
-            
+
             # Send text message first
             url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
             payload = {
@@ -1305,47 +1305,47 @@ class MasterScanner:
                 print("✅ Alert sent to Telegram")
             else:
                 print(f"⚠️  Telegram send failed: {response.status_code}")
-            
+
             # Send opportunity charts
             self._send_opportunity_charts(bot_token, chat_id)
 
         except Exception as e:
             print(f"⚠️  Telegram send error: {e}\n")
-    
+
     def _send_opportunity_charts(self, bot_token: str, chat_id: str):
         """Send opportunity charts to Telegram"""
         if not self.opportunities:
             return
-        
+
         import requests
         from pathlib import Path
         from datetime import datetime
-        
+
         # Find charts for today's opportunities
         date_str = datetime.now().strftime("%Y%m%d")
         charts_sent = 0
-        
+
         try:
             for opp in self.opportunities[:5]:  # Send top 5 charts max
                 symbol = opp['symbol']
-                
+
                 # Determine asset type
                 asset_type = 'stock'
                 for sym_dict in self.universe:
                     if isinstance(sym_dict, dict) and sym_dict.get('symbol') == symbol:
                         asset_type = sym_dict.get('type', 'stock').lower()
                         break
-                
+
                 # Find chart file
                 if asset_type == 'etf':
                     chart_path = Path(f'charts/etfs/{symbol}_{date_str}.png')
                 else:
                     chart_path = Path(f'charts/stocks/{symbol}_{date_str}.png')
-                
+
                 if chart_path.exists():
                     # Send photo with caption
                     url = f"https://api.telegram.org/bot{bot_token}/sendPhoto"
-                    
+
                     caption = (
                         f"📊 *{symbol}* - {opp.get('confidence', 'N/A')} Confidence\n"
                         f"Score: {opp.get('composite_score', 0):.1f}/100\n"
@@ -1353,7 +1353,7 @@ class MasterScanner:
                         f"Target: ${opp.get('target_price', 0):.2f}\n"
                         f"R/R: {opp.get('risk_reward', 0):.2f}:1"
                     )
-                    
+
                     with open(chart_path, 'rb') as photo:
                         files = {'photo': photo}
                         data = {
@@ -1362,17 +1362,17 @@ class MasterScanner:
                             'parse_mode': 'Markdown'
                         }
                         response = requests.post(url, files=files, data=data)
-                        
+
                         if response.status_code == 200:
                             charts_sent += 1
                         else:
                             print(f"   ⚠️  Chart send failed for {symbol}: {response.status_code}")
-            
+
             if charts_sent > 0:
                 print(f"📊 {charts_sent} chart(s) sent to Telegram\n")
             else:
                 print("   ℹ️  No charts available to send\n")
-                
+
         except Exception as e:
             print(f"   ⚠️  Chart send error: {e}\n")
 
@@ -1415,7 +1415,13 @@ class MasterScanner:
         # Phase 3: Check portfolio
         self.check_portfolio()
 
-        # Phase 4: Generate and send alert
+        # Phase 4: Generate opportunity charts FIRST (before Telegram)
+        print("\n" + "=" * 80)
+        print("PHASE 4: GENERATING OPPORTUNITY CHARTS")
+        print("=" * 80)
+        self._generate_opportunity_charts()
+        
+        # Phase 5: Generate and send alert with charts
         alert = self.generate_alert()
         print("\n" + "=" * 80)
         print("PREVIEW OF ALERT:")
@@ -1425,7 +1431,7 @@ class MasterScanner:
 
         self.send_alert(alert)
 
-        # Save results
+        # Save results (reports only, charts already done)
         self._save_results()
 
         print("✅ DAILY SCAN COMPLETE!\n")
@@ -1613,9 +1619,6 @@ class MasterScanner:
 
             # Generate comprehensive fallers report (ALL 2%+ drops)
             self._generate_all_fallers_report()
-
-            # Generate opportunity charts for top opportunities
-            self._generate_opportunity_charts()
 
         except Exception as e:
             print(f"⚠️  Save failed: {e}")
