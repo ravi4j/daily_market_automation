@@ -927,13 +927,13 @@ class MasterScanner:
                     df = pd.read_csv(check_file, index_col=0, parse_dates=True)
                     # CSV is stored descending (newest first), sort ascending for analysis
                     df = df.sort_index(ascending=True)
-                    
+
                     # Round ALL data to proper precision (fixes old unrounded data)
                     price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
                     for col in price_cols:
                         if col in df.columns:
                             df[col] = df[col].round(2)
-                    
+
                     if 'Volume' in df.columns:
                         df['Volume'] = df['Volume'].round(0).astype('int64')
                     if 'Dividends' in df.columns:
@@ -964,12 +964,12 @@ class MasterScanner:
                                 # Combine old + new data
                                 df = pd.concat([df, new_data]).sort_index(ascending=True)
                                 df = df[~df.index.duplicated(keep='last')]
-                                
+
                                 # Round the combined data (new data should already be rounded, but ensure consistency)
                                 for col in price_cols:
                                     if col in df.columns:
                                         df[col] = df[col].round(2)
-                                
+
                                 if 'Volume' in df.columns:
                                     df['Volume'] = df['Volume'].round(0).astype('int64')
                                 if 'Dividends' in df.columns:
