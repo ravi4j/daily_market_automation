@@ -1545,6 +1545,9 @@ class MasterScanner:
             # Generate comprehensive fallers report (ALL 2%+ drops)
             self._generate_all_fallers_report()
 
+            # Generate opportunity charts for top opportunities
+            self._generate_opportunity_charts()
+
         except Exception as e:
             print(f"⚠️  Save failed: {e}")
 
@@ -1929,6 +1932,87 @@ class MasterScanner:
             return "👀 WATCH"
         else:
             return "⏸️ SKIP"
+
+    def _generate_opportunity_charts(self):
+        """
+        Generate visual analysis charts for top opportunities.
+        Creates comprehensive charts showing:
+        - Price action with candlesticks
+        - Entry/Stop/Target zones
+        - Technical indicators (RSI, MACD, Volume)
+        - ABC patterns if detected
+        - Support/Resistance levels
+        - Intraday buy signals
+        """
+        try:
+            if not self.opportunities:
+                print("  ℹ️  No opportunities to chart")
+                return
+
+            # Import chart generator
+            from src.opportunity_chart_generator import OpportunityChartGenerator
+
+            generator = OpportunityChartGenerator()
+
+            # Generate charts for top opportunities (max 10)
+            top_opportunities = self.opportunities[:10]
+
+            print(f"\n📊 GENERATING OPPORTUNITY CHARTS")
+            print(f"   Creating charts for top {len(top_opportunities)} opportunities...")
+
+            chart_count = 0
+            failed_count = 0
+
+            for opp in tqdm(top_opportunities, desc="     Charts", unit="chart", ncols=100):
+                try:
+                    symbol = opp['symbol']
+
+                    # Determine asset type (check if it's in ETF or stock folder)
+                    asset_type = 'stock'  # Default
+                    for sym_dict in self.universe:
+                        if isinstance(sym_dict, dict) and sym_dict.get('symbol') == symbol:
+                            asset_type = sym_dict.get('type', 'stock').lower()
+                            break
+
+                    # Load CSV data
+                    df = self._load_price_data(symbol)
+                    if df is None or len(df) < 20:
+                        failed_count += 1
+                        continue
+
+                    # Prepare opportunity data for chart
+                    opportunity_data = {
+                        'composite_score': opp.get('composite_score', 0),
+                        'confidence': opp.get('confidence', 'UNKNOWN'),
+                        'risk_reward_ratio': opp.get('risk_reward', 0),
+                        'entry_price': opp.get('current_price', 0),  # Use current price as entry
+                        'stop_loss': opp.get('stop_loss'),
+                        'target_price': opp.get('target_price')
+                    }
+
+                    # Generate chart with asset type for proper folder organization
+                    chart_path = generator.generate_opportunity_chart(
+                        symbol, df, opportunity_data,
+                        asset_type=asset_type,
+                        lookback_days=60
+                    )
+
+                    chart_count += 1
+
+                except Exception as e:
+                    failed_count += 1
+                    # Silent fail for individual charts
+                    pass
+
+            print(f"   ✅ Generated {chart_count} charts")
+            if failed_count > 0:
+                print(f"   ⚠️  Failed: {failed_count} charts")
+            print(f"   📁 Charts saved in:")
+            print(f"      - charts/stocks/ (stock opportunities)")
+            print(f"      - charts/etfs/ (ETF opportunities)")
+
+        except Exception as e:
+            print(f"⚠️  Chart generation failed: {e}")
 
 
 def main():
