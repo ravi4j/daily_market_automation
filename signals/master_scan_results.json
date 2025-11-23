@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-22T18:54:50.221784",
+  "timestamp": "2025-11-22T19:12:03.140002",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
@@ -7,14 +7,14 @@
   "opportunities": [
     {
       "symbol": "MSTR",
-      "composite_score": 72.0,
-      "confidence": 72.0,
+      "composite_score": 70.0,
+      "confidence": 70.0,
       "recommendation": "BUY",
       "scores": {
         "news": 100,
         "technical": 50.0,
         "fundamentals": 85.0,
-        "insider": 50.0
+        "insider": 30
       },
       "trade_setup": {
         "entry": 170.5,
@@ -23,59 +23,67 @@
         "risk_reward": 2.8571428571428563
       },
       "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "SELL",
+        "num_buys": 45,
+        "num_sells": 115,
+        "net_value": -57407121.485999994,
+        "largest_buy": {
+          "name": "Briger Peter L JR",
+          "shares": 220000,
+          "value": 19800000,
+          "date": "2025-07-29"
+        },
+        "largest_sell": {
+          "name": "Montgomery Jeanine",
+          "shares": 43750,
+          "value": 18836125.0,
+          "date": "2025-07-11"
+        },
+        "transactions": [
+          {
+            "name": "Shao Wei-Ming",
+            "change": -2600,
+            "date": "2025-11-19",
+            "price": 202.02,
+            "value": -525252.0
+          },
+          {
+            "name": "Shao Wei-Ming",
+            "change": 2600,
+            "date": "2025-11-19",
+            "price": 69.123,
+            "value": 179719.80000000002
+          },
+          {
+            "name": "Shao Wei-Ming",
+            "change": -2600,
+            "date": "2025-11-18",
+            "price": 200,
+            "value": -520000
+          },
+          {
+            "name": "Shao Wei-Ming",
+            "change": 2600,
+            "date": "2025-11-18",
+            "price": 69.123,
+            "value": 179719.80000000002
+          },
+          {
+            "name": "Montgomery Jeanine",
+            "change": -43,
+            "date": "2025-11-18",
+            "price": 208.548,
+            "value": -8967.564
+          }
+        ],
+        "summary": "45 buys, 115 sells (last 6 months) | Net: -$57.4M"
+      },
       "reasons": [
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-11-22T18:54:21.442071"
-    },
-    {
-      "symbol": "FIGR",
-      "composite_score": 70.0,
-      "confidence": 70.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 34.79999923706055,
-        "stop_loss": 32.36399929046631,
-        "target": 41.75999908447265,
-        "risk_reward": 2.857142857142858
-      },
-      "strategy_signals": [],
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-22T18:54:16.035111"
-    },
-    {
-      "symbol": "ORCL",
-      "composite_score": 70.0,
-      "confidence": 70.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 198.75999450683594,
-        "stop_loss": 184.84679489135743,
-        "target": 238.51199340820312,
-        "risk_reward": 2.8571428571428594
-      },
-      "strategy_signals": [],
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-22T18:54:23.795546"
+      "timestamp": "2025-11-22T19:10:52.234639"
     },
     {
       "symbol": "ARDX",
@@ -86,7 +94,7 @@
         "news": 100,
         "technical": 50.0,
         "fundamentals": 75.0,
-        "insider": 50.0
+        "insider": 50
       },
       "trade_setup": {
         "entry": 5.420000076293945,
@@ -95,14 +103,70 @@
         "risk_reward": 2.8571428571428608
       },
       "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 3,
+        "num_sells": 8,
+        "net_value": 515497.1333,
+        "largest_buy": {
+          "name": "MOTT DAVID M",
+          "shares": 200000,
+          "value": 737260.0,
+          "date": "2025-06-09"
+        },
+        "largest_sell": {
+          "name": "Williams Laura A",
+          "shares": 50000,
+          "value": 306050.0,
+          "date": "2025-08-26"
+        },
+        "transactions": [
+          {
+            "name": "Williams Laura A",
+            "change": -30000,
+            "date": "2025-08-26",
+            "price": 6.121,
+            "value": -183630.0
+          },
+          {
+            "name": "Williams Laura A",
+            "change": -50000,
+            "date": "2025-08-26",
+            "price": 6.121,
+            "value": -306050.0
+          },
+          {
+            "name": "Williams Laura A",
+            "change": 50000,
+            "date": "2025-08-26",
+            "price": 0.99,
+            "value": 49500.0
+          },
+          {
+            "name": "Kelliher Mike",
+            "change": -5417,
+            "date": "2025-08-21",
+            "price": 5.9317,
+            "value": -32132.018900000003
+          },
+          {
+            "name": "Williams Laura A",
+            "change": -6261,
+            "date": "2025-08-21",
+            "price": 5.9317,
+            "value": -37138.373700000004
+          }
+        ],
+        "summary": "3 buys, 8 sells (last 6 months) | Net: +$0.5M"
+      },
       "reasons": [
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-11-22T18:54:33.150298"
+      "timestamp": "2025-11-22T19:11:10.750952"
     },
     {
-      "symbol": "RBLX",
+      "symbol": "J",
       "composite_score": 68.5,
       "confidence": 68.5,
       "recommendation": "WATCH",
@@ -110,20 +174,236 @@
         "news": 95,
         "technical": 50.0,
         "fundamentals": 75.0,
-        "insider": 50.0
+        "insider": 50
       },
       "trade_setup": {
-        "entry": 89.25,
-        "stop_loss": 83.0025,
-        "target": 107.1,
-        "risk_reward": 2.857142857142855
+        "entry": 128.77000427246094,
+        "stop_loss": 119.75610397338868,
+        "target": 154.5240051269531,
+        "risk_reward": 2.857142857142857
       },
       "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 6,
+        "num_sells": 23,
+        "net_value": 792717.8600000003,
+        "largest_buy": {
+          "name": "PRAGADA ROBERT V",
+          "shares": 27501,
+          "value": 4146050.76,
+          "date": "2025-11-18"
+        },
+        "largest_sell": {
+          "name": "PRAGADA ROBERT V",
+          "shares": 13128,
+          "value": 1976945.52,
+          "date": "2025-11-17"
+        },
+        "transactions": [
+          {
+            "name": "PRAGADA ROBERT V",
+            "change": 27501,
+            "date": "2025-11-18",
+            "price": 150.76,
+            "value": 4146050.76
+          },
+          {
+            "name": "Miller Shannon",
+            "change": 3586,
+            "date": "2025-11-17",
+            "price": 150.59,
+            "value": 540015.74
+          },
+          {
+            "name": "Miller Shannon",
+            "change": -45,
+            "date": "2025-11-17",
+            "price": 150.59,
+            "value": -6776.55
+          },
+          {
+            "name": "Miller Shannon",
+            "change": -542,
+            "date": "2025-11-17",
+            "price": 150.59,
+            "value": -81619.78
+          },
+          {
+            "name": "Miller Shannon",
+            "change": -292,
+            "date": "2025-11-17",
+            "price": 150.59,
+            "value": -43972.28
+          }
+        ],
+        "summary": "6 buys, 23 sells (last 6 months) | Net: +$0.8M"
+      },
       "reasons": [
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-11-22T18:54:22.295299"
+      "timestamp": "2025-11-22T19:11:49.201137"
+    },
+    {
+      "symbol": "ORCL",
+      "composite_score": 68.0,
+      "confidence": 68.0,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 30
+      },
+      "trade_setup": {
+        "entry": 198.75999450683594,
+        "stop_loss": 184.84679489135743,
+        "target": 238.51199340820312,
+        "risk_reward": 2.8571428571428594
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "SELL",
+        "num_buys": 16,
+        "num_sells": 71,
+        "net_value": -955363461.3246999,
+        "largest_buy": {
+          "name": "ELLISON LAWRENCE JOSEPH",
+          "shares": 5000000,
+          "value": 255650000.0,
+          "date": "2025-07-15"
+        },
+        "largest_sell": {
+          "name": "CATZ SAFRA",
+          "shares": 899234,
+          "value": 191449076.7616,
+          "date": "2025-06-26"
+        },
+        "transactions": [
+          {
+            "name": "BERG JEFFREY",
+            "change": -4226,
+            "date": "2025-10-28",
+            "price": 284.307,
+            "value": -1201481.382
+          },
+          {
+            "name": "BERG JEFFREY",
+            "change": -22724,
+            "date": "2025-10-28",
+            "price": 283.627,
+            "value": -6445139.948
+          },
+          {
+            "name": "BERG JEFFREY",
+            "change": -13373,
+            "date": "2025-10-28",
+            "price": 282.555,
+            "value": -3778608.015
+          },
+          {
+            "name": "BERG JEFFREY",
+            "change": -9042,
+            "date": "2025-10-28",
+            "price": 281.579,
+            "value": -2546037.318
+          },
+          {
+            "name": "Levey Stuart",
+            "change": 143,
+            "date": "2025-10-23",
+            "price": 280.07,
+            "value": 40050.01
+          }
+        ],
+        "summary": "16 buys, 71 sells (last 6 months) | Net: -$955.4M"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-11-22T19:10:58.155429"
+    },
+    {
+      "symbol": "FIGR",
+      "composite_score": 66.5,
+      "confidence": 66.5,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 15
+      },
+      "trade_setup": {
+        "entry": 34.79999923706055,
+        "stop_loss": 32.36399929046631,
+        "target": 41.75999908447265,
+        "risk_reward": 2.857142857142858
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "STRONG_SELL",
+        "num_buys": 1,
+        "num_sells": 14,
+        "net_value": -151700495.8384,
+        "largest_buy": {
+          "name": "Stevens David Todd",
+          "shares": 13035,
+          "value": 64653.6,
+          "date": "2025-09-10"
+        },
+        "largest_sell": {
+          "name": "Ou June",
+          "shares": 1500000,
+          "value": 37500000,
+          "date": "2025-09-12"
+        },
+        "transactions": [
+          {
+            "name": "Stevens David Todd",
+            "change": -2865,
+            "date": "2025-11-18",
+            "price": 41.1216,
+            "value": -117813.384
+          },
+          {
+            "name": "Stevens David Todd",
+            "change": -13405,
+            "date": "2025-11-18",
+            "price": 39.9274,
+            "value": -535226.797
+          },
+          {
+            "name": "Stevens David Todd",
+            "change": -48646,
+            "date": "2025-11-18",
+            "price": 39.335,
+            "value": -1913490.4100000001
+          },
+          {
+            "name": "Stevens David Todd",
+            "change": -18584,
+            "date": "2025-11-18",
+            "price": 38.428,
+            "value": -714145.9519999999
+          },
+          {
+            "name": "Tannenbaum Michael Benjamin",
+            "change": -29634,
+            "date": "2025-11-18",
+            "price": 41.117,
+            "value": -1218461.1779999998
+          }
+        ],
+        "summary": "1 buys, 14 sells (last 6 months) | Net: -$151.7M"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-11-22T19:10:46.782703"
     }
   ],
   "portfolio_status": {}

@@ -1,6 +1,6 @@
 # 📊 DAILY MARKET SCAN - DETAILED REVIEW REPORT
 
-**Date**: 2025-11-22 18:54 ET
+**Date**: 2025-11-22 19:12 ET
 
 ---
 
@@ -27,8 +27,8 @@ Multi-signal composite scoring (0-100):
 
 ### 1. MSTR - BUY
 
-**Composite Score**: 72.0/100
-**Confidence**: 72.0 (MEDIUM - Moderate conviction)
+**Composite Score**: 70.0/100
+**Confidence**: 70.0 (MEDIUM - Moderate conviction)
 
 #### 💰 Trade Setup
 
@@ -44,7 +44,7 @@ Multi-signal composite scoring (0-100):
 | News Sentiment | 100/100 | 30% | 30.0 |
 | Technical Analysis | 50/100 | 40% | 20.0 |
 | Fundamentals | 85/100 | 20% | 17.0 |
-| Insider Activity | 50/100 | 10% | 5.0 |
+| Insider Activity | 30/100 | 10% | 3.0 |
 
 #### 💡 Why This Is An Opportunity
 
@@ -65,102 +65,13 @@ Multi-signal composite scoring (0-100):
 - Reasonable valuation (P/E), good margins, growth
 - Positive analyst sentiment
 
-**Insider Activity (50/100)**
-- No significant insider activity
+**Insider Activity (30/100)**
+- Recent insider selling detected
+- Exercise caution
 
 ---
 
-### 2. FIGR - BUY
-
-**Composite Score**: 70.0/100
-**Confidence**: 70.0 (MEDIUM - Moderate conviction)
-
-#### 💰 Trade Setup
-
-- **Entry Price**: $34.80
-- **Stop Loss**: $32.36 (-7.0%)
-- **Target Price**: $41.76 (20.0%)
-- **Risk/Reward Ratio**: 2.86:1
-
-#### 📊 Score Breakdown
-
-| Signal | Score | Weight | Contribution |
-|--------|-------|--------|-------------|
-| News Sentiment | 100/100 | 30% | 30.0 |
-| Technical Analysis | 50/100 | 40% | 20.0 |
-| Fundamentals | 75/100 | 20% | 15.0 |
-| Insider Activity | 50/100 | 10% | 5.0 |
-
-#### 💡 Why This Is An Opportunity
-
-- ✓ Strong news sentiment
-- ✓ Solid fundamentals
-
-#### 🔍 Detailed Signal Analysis
-
-**News Sentiment (100/100)**
-- Strong positive sentiment or identified buying opportunity from dip
-- AI analysis shows favorable risk/reward
-
-**Technical Analysis (50/100)**
-- Neutral technical picture
-
-**Fundamentals (75/100)**
-- Strong fundamental quality
-- Reasonable valuation (P/E), good margins, growth
-- Positive analyst sentiment
-
-**Insider Activity (50/100)**
-- No significant insider activity
-
----
-
-### 3. ORCL - BUY
-
-**Composite Score**: 70.0/100
-**Confidence**: 70.0 (MEDIUM - Moderate conviction)
-
-#### 💰 Trade Setup
-
-- **Entry Price**: $198.76
-- **Stop Loss**: $184.85 (-7.0%)
-- **Target Price**: $238.51 (20.0%)
-- **Risk/Reward Ratio**: 2.86:1
-
-#### 📊 Score Breakdown
-
-| Signal | Score | Weight | Contribution |
-|--------|-------|--------|-------------|
-| News Sentiment | 100/100 | 30% | 30.0 |
-| Technical Analysis | 50/100 | 40% | 20.0 |
-| Fundamentals | 75/100 | 20% | 15.0 |
-| Insider Activity | 50/100 | 10% | 5.0 |
-
-#### 💡 Why This Is An Opportunity
-
-- ✓ Strong news sentiment
-- ✓ Solid fundamentals
-
-#### 🔍 Detailed Signal Analysis
-
-**News Sentiment (100/100)**
-- Strong positive sentiment or identified buying opportunity from dip
-- AI analysis shows favorable risk/reward
-
-**Technical Analysis (50/100)**
-- Neutral technical picture
-
-**Fundamentals (75/100)**
-- Strong fundamental quality
-- Reasonable valuation (P/E), good margins, growth
-- Positive analyst sentiment
-
-**Insider Activity (50/100)**
-- No significant insider activity
-
----
-
-### 4. ARDX - BUY
+### 2. ARDX - BUY
 
 **Composite Score**: 70.0/100
 **Confidence**: 70.0 (MEDIUM - Moderate conviction)
@@ -205,16 +116,16 @@ Multi-signal composite scoring (0-100):
 
 ---
 
-### 5. RBLX - WATCH
+### 3. J - WATCH
 
 **Composite Score**: 68.5/100
 **Confidence**: 68.5 (MEDIUM - Moderate conviction)
 
 #### 💰 Trade Setup
 
-- **Entry Price**: $89.25
-- **Stop Loss**: $83.00 (-7.0%)
-- **Target Price**: $107.10 (20.0%)
+- **Entry Price**: $128.77
+- **Stop Loss**: $119.76 (-7.0%)
+- **Target Price**: $154.52 (20.0%)
 - **Risk/Reward Ratio**: 2.86:1
 
 #### 📊 Score Breakdown
@@ -250,6 +161,98 @@ Multi-signal composite scoring (0-100):
 
 ---
 
+### 4. ORCL - WATCH
+
+**Composite Score**: 68.0/100
+**Confidence**: 68.0 (MEDIUM - Moderate conviction)
+
+#### 💰 Trade Setup
+
+- **Entry Price**: $198.76
+- **Stop Loss**: $184.85 (-7.0%)
+- **Target Price**: $238.51 (20.0%)
+- **Risk/Reward Ratio**: 2.86:1
+
+#### 📊 Score Breakdown
+
+| Signal | Score | Weight | Contribution |
+|--------|-------|--------|-------------|
+| News Sentiment | 100/100 | 30% | 30.0 |
+| Technical Analysis | 50/100 | 40% | 20.0 |
+| Fundamentals | 75/100 | 20% | 15.0 |
+| Insider Activity | 30/100 | 10% | 3.0 |
+
+#### 💡 Why This Is An Opportunity
+
+- ✓ Strong news sentiment
+- ✓ Solid fundamentals
+
+#### 🔍 Detailed Signal Analysis
+
+**News Sentiment (100/100)**
+- Strong positive sentiment or identified buying opportunity from dip
+- AI analysis shows favorable risk/reward
+
+**Technical Analysis (50/100)**
+- Neutral technical picture
+
+**Fundamentals (75/100)**
+- Strong fundamental quality
+- Reasonable valuation (P/E), good margins, growth
+- Positive analyst sentiment
+
+**Insider Activity (30/100)**
+- Recent insider selling detected
+- Exercise caution
+
+---
+
+### 5. FIGR - WATCH
+
+**Composite Score**: 66.5/100
+**Confidence**: 66.5 (MEDIUM - Moderate conviction)
+
+#### 💰 Trade Setup
+
+- **Entry Price**: $34.80
+- **Stop Loss**: $32.36 (-7.0%)
+- **Target Price**: $41.76 (20.0%)
+- **Risk/Reward Ratio**: 2.86:1
+
+#### 📊 Score Breakdown
+
+| Signal | Score | Weight | Contribution |
+|--------|-------|--------|-------------|
+| News Sentiment | 100/100 | 30% | 30.0 |
+| Technical Analysis | 50/100 | 40% | 20.0 |
+| Fundamentals | 75/100 | 20% | 15.0 |
+| Insider Activity | 15/100 | 10% | 1.5 |
+
+#### 💡 Why This Is An Opportunity
+
+- ✓ Strong news sentiment
+- ✓ Solid fundamentals
+
+#### 🔍 Detailed Signal Analysis
+
+**News Sentiment (100/100)**
+- Strong positive sentiment or identified buying opportunity from dip
+- AI analysis shows favorable risk/reward
+
+**Technical Analysis (50/100)**
+- Neutral technical picture
+
+**Fundamentals (75/100)**
+- Strong fundamental quality
+- Reasonable valuation (P/E), good margins, growth
+- Positive analyst sentiment
+
+**Insider Activity (15/100)**
+- Recent insider selling detected
+- Exercise caution
+
+---
+
 ---
 
 ## 📝 How to Use This Report
@@ -262,4 +265,4 @@ Multi-signal composite scoring (0-100):
 
 **Disclaimer**: This is an automated analysis tool. Always do your own research and never invest more than you can afford to lose.
 
-*Report generated by Master Scanner v1.0 - 2025-11-22 18:54:50*
+*Report generated by Master Scanner v1.0 - 2025-11-22 19:12:03*

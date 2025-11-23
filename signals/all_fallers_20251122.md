@@ -1,6 +1,6 @@
 # 📉 ALL MARKET FALLERS - 2%+ Drops
 
-**Date**: 2025-11-22 18:54 ET
+**Date**: 2025-11-22 19:12 ET
 **Total Fallers**: 35
 **Stocks**: 19
 **ETFs**: 16

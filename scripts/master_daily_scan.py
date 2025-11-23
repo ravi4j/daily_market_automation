@@ -796,6 +796,9 @@ class MasterScanner:
         fundamental_score = self._score_fundamentals(symbol)
         insider_score = self._score_insider_activity(symbol)
 
+        # Get detailed insider data
+        insider_data = self._get_insider_details(symbol)
+
         # Check trading strategies (ABC, RSI+MACD, etc.)
         strategy_signals = self._check_strategies(symbol, df)
 
@@ -870,6 +873,7 @@ class MasterScanner:
                 'risk_reward': risk_reward
             },
             'strategy_signals': strategy_signals,
+            'insider_activity': insider_data,  # Include detailed insider transactions
             'reasons': reasons,
             'timestamp': datetime.now().isoformat()
         }
@@ -923,6 +927,21 @@ class MasterScanner:
                     df = pd.read_csv(check_file, index_col=0, parse_dates=True)
                     # CSV is stored descending (newest first), sort ascending for analysis
                     df = df.sort_index(ascending=True)
+                    
+                    # Round ALL data to proper precision (fixes old unrounded data)
+                    price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
+                    for col in price_cols:
+                        if col in df.columns:
+                            df[col] = df[col].round(2)
+                    
+                    if 'Volume' in df.columns:
+                        df['Volume'] = df['Volume'].round(0).astype('int64')
+                    if 'Dividends' in df.columns:
+                        df['Dividends'] = df['Dividends'].round(2)
+                    if 'Stock Splits' in df.columns:
+                        df['Stock Splits'] = df['Stock Splits'].round(2)
+                    if 'Capital Gains' in df.columns:
+                        df['Capital Gains'] = df['Capital Gains'].round(2)
 
                     # Check if data is recent (within last 7 days)
                     if not df.empty:
@@ -930,7 +949,11 @@ class MasterScanner:
                         days_old = (pd.Timestamp.today() - last_date).days
 
                         if days_old <= 7:
-                            # Recent enough, use cached data
+                            # Recent enough - save with proper formatting (descending order)
+                            df_save = df.sort_index(ascending=False)
+                            csv_file.parent.mkdir(parents=True, exist_ok=True)
+                            df_save.to_csv(csv_file)
+                            # Return in ascending order for analysis
                             return df
                         else:
                             # Data is old, fetch incremental update
@@ -939,25 +962,27 @@ class MasterScanner:
 
                             if not new_data.empty:
                                 # Combine old + new data
-                                df = pd.concat([df, new_data]).sort_index()
+                                df = pd.concat([df, new_data]).sort_index(ascending=True)
                                 df = df[~df.index.duplicated(keep='last')]
-
-                                # Round prices to 2 decimals, volumes to integers
-                                price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
+                                
+                                # Round the combined data (new data should already be rounded, but ensure consistency)
                                 for col in price_cols:
                                     if col in df.columns:
                                         df[col] = df[col].round(2)
-
+                                
                                 if 'Volume' in df.columns:
                                     df['Volume'] = df['Volume'].round(0).astype('int64')
                                 if 'Dividends' in df.columns:
                                     df['Dividends'] = df['Dividends'].round(2)
                                 if 'Stock Splits' in df.columns:
                                     df['Stock Splits'] = df['Stock Splits'].round(2)
+                                if 'Capital Gains' in df.columns:
+                                    df['Capital Gains'] = df['Capital Gains'].round(2)
 
-                                # Save updated CSV to new location (sorted ascending for easier append)
+                                # Save updated CSV in descending order (newest first)
+                                df_save = df.sort_index(ascending=False)
                                 csv_file.parent.mkdir(parents=True, exist_ok=True)
-                                df.to_csv(csv_file)
+                                df_save.to_csv(csv_file)
 
                                 # Remove legacy file if we're organizing by type
                                 if check_file == legacy_csv and csv_file != legacy_csv:
@@ -1096,7 +1121,12 @@ class MasterScanner:
             return 50.0
 
         try:
-            sentiment = self.insider_tracker.get_insider_sentiment(symbol)
+            insider_data = self.insider_tracker.get_insider_activity(symbol, days=180)
+
+            if not insider_data:
+                return 50.0
+
+            sentiment = insider_data.get('sentiment', 'NEUTRAL')
 
             # Convert sentiment to score
             sentiment_map = {
@@ -1111,6 +1141,79 @@ class MasterScanner:
 
         except:
             return 50.0
+
+    def _get_insider_details(self, symbol: str) -> Dict:
+        """Get detailed insider transaction information"""
+        if not self.insider_tracker:
+            return {
+                'sentiment': 'NEUTRAL',
+                'num_buys': 0,
+                'num_sells': 0,
+                'net_value': 0,
+                'transactions': [],
+                'summary': 'No insider tracker available'
+            }
+
+        try:
+            # Get insider activity (last 6 months)
+            insider_data = self.insider_tracker.get_insider_activity(symbol, days=180)
+
+            if not insider_data:
+                return {
+                    'sentiment': 'NEUTRAL',
+                    'num_buys': 0,
+                    'num_sells': 0,
+                    'net_value': 0,
+                    'transactions': [],
+                    'summary': 'No recent insider transactions'
+                }
+
+            # Extract key info
+            num_buys = insider_data.get('num_buys', 0)
+            num_sells = insider_data.get('num_sells', 0)
+            sentiment = insider_data.get('sentiment', 'NEUTRAL')
+            net_value = insider_data.get('net_value', 0)
+
+            # Get top 5 transactions (most recent or largest)
+            all_txns = insider_data.get('all_transactions', [])
+            recent_txns = []
+            for txn in all_txns[:5]:  # Take first 5
+                recent_txns.append({
+                    'name': txn.name,
+                    'change': txn.change,
+                    'date': txn.transaction_date,
+                    'price': txn.share_price,
+                    'value': txn.transaction_value
+                })
+
+            # Build summary
+            summary = f"{num_buys} buys, {num_sells} sells (last 6 months)"
+            if net_value > 0:
+                summary += f" | Net: +${net_value/1e6:.1f}M"
+            elif net_value < 0:
+                summary += f" | Net: -${abs(net_value)/1e6:.1f}M"
+
+            return {
+                'sentiment': sentiment,
+                'num_buys': num_buys,
+                'num_sells': num_sells,
+                'net_value': net_value,
+                'largest_buy': insider_data.get('largest_buy'),
+                'largest_sell': insider_data.get('largest_sell'),
+                'transactions': recent_txns,
+                'summary': summary
+            }
+
+        except Exception as e:
+            logger.debug(f"Error getting insider details for {symbol}: {e}")
+            return {
+                'sentiment': 'NEUTRAL',
+                'num_buys': 0,
+                'num_sells': 0,
+                'net_value': 0,
+                'transactions': [],
+                'summary': f'Error: {str(e)}'
+            }
 
     def _check_strategies(self, symbol: str, df: pd.DataFrame) -> List[Dict]:
         """
