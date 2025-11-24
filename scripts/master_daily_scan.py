@@ -1505,12 +1505,14 @@ class MasterScanner:
                     # Send photo with caption
                     url = f"https://api.telegram.org/bot{bot_token}/sendPhoto"
 
+                    trade_setup = opp.get('trade_setup', {})
                     caption = (
                         f"📊 *{symbol}* - {opp.get('confidence', 'N/A')} Confidence\n"
                         f"Score: {opp.get('composite_score', 0):.1f}/100\n"
-                        f"Entry: ${opp.get('current_price', 0):.2f} | "
-                        f"Target: ${opp.get('target_price', 0):.2f}\n"
-                        f"R/R: {opp.get('risk_reward', 0):.2f}:1"
+                        f"Entry: ${trade_setup.get('entry', 0):.2f} | "
+                        f"Target: ${trade_setup.get('target', 0):.2f}\n"
+                        f"Stop: ${trade_setup.get('stop_loss', 0):.2f} | "
+                        f"R/R: {trade_setup.get('risk_reward', 0):.1f}:1"
                     )
 
                     with open(chart_path, 'rb') as photo:
@@ -1749,11 +1751,17 @@ class MasterScanner:
             msg.append(f"\n🚀 GAP OPPORTUNITIES (Top {len(opportunities)})")
 
             for i, opp in enumerate(opportunities[:5], 1):
-                msg.append(f"\n{i}. {opp['symbol']} - {opp['recommendation']}")
+                opp_type = opp.get('opportunity_type', 'GAP')
+                confidence = opp.get('confidence', 'MEDIUM')
+                badge = "🟢" if confidence == 'HIGH' else "🟡" if confidence == 'MEDIUM' else "⚪"
+
+                msg.append(f"\n{i}. {badge} {opp['symbol']} - {opp_type}")
                 msg.append(f"   Gap: {opp['gap_pct']:.2f}% | Score: {opp['score']:.0f}/100")
                 msg.append(f"   Entry: ${opp['entry']:.2f} | Target: ${opp['target']:.2f}")
                 msg.append(f"   Stop: ${opp['stop']:.2f}")
-                msg.append(f"   Why: {opp.get('reason', 'Gap opportunity')}")
+                reasons = opp.get('reasons', [])
+                if reasons:
+                    msg.append(f"   Why: {', '.join(reasons[:2])}")  # Show top 2 reasons
 
         msg.append("\n" + "=" * 40)
         msg.append("⏰ Market opens at 9:30 AM ET")
