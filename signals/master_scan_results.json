@@ -1,256 +1,26 @@
 {
-  "timestamp": "2025-11-24T21:47:08.645674",
+  "timestamp": "2025-11-24T23:33:20.904068",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
   "opportunities": [
     {
-      "symbol": "CPRT",
-      "composite_score": 72.0,
-      "confidence": 72.0,
-      "recommendation": "BUY",
+      "symbol": "TQQQ",
+      "composite_score": 50.0,
+      "confidence": 50.0,
+      "recommendation": "SKIP",
       "scores": {
-        "news": 100,
+        "news": 50.0,
         "technical": 50.0,
-        "fundamentals": 85.0,
-        "insider": 50
-      },
-      "trade_setup": {
-        "entry": 38.90999984741211,
-        "stop_loss": 36.186299858093264,
-        "target": 46.69199981689453,
-        "risk_reward": 2.857142857142859
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 10,
-        "num_sells": 8,
-        "net_value": -11116175.419,
-        "largest_buy": {
-          "name": "Englander Daniel J",
-          "shares": 100000,
-          "value": 1180000.0,
-          "date": "2025-11-13"
-        },
-        "largest_sell": {
-          "name": "TRYFOROS THOMAS N",
-          "shares": 228840,
-          "value": 10879053.6,
-          "date": "2025-09-15"
-        },
-        "transactions": [
-          {
-            "name": "Englander Daniel J",
-            "change": -100000,
-            "date": "2025-11-13",
-            "price": 11.8,
-            "value": -1180000.0
-          },
-          {
-            "name": "Englander Daniel J",
-            "change": 100000,
-            "date": "2025-11-13",
-            "price": 11.8,
-            "value": 1180000.0
-          },
-          {
-            "name": "Liaw Jeffrey",
-            "change": -22086,
-            "date": "2025-10-15",
-            "price": 44.7902,
-            "value": -989236.3572
-          },
-          {
-            "name": "Liaw Jeffrey",
-            "change": -2197,
-            "date": "2025-10-15",
-            "price": 44.8028,
-            "value": -98431.75159999999
-          },
-          {
-            "name": "Liaw Jeffrey",
-            "change": 43166,
-            "date": "2025-10-15",
-            "price": 8.7,
-            "value": 375544.19999999995
-          }
-        ],
-        "summary": "10 buys, 8 sells (last 6 months) | Net: -$11.1M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-24T21:46:38.625947"
-    },
-    {
-      "symbol": "ANF",
-      "composite_score": 65.5,
-      "confidence": 65.5,
-      "recommendation": "WATCH",
-      "scores": {
-        "news": 90,
-        "technical": 50.0,
-        "fundamentals": 85.0,
-        "insider": 15
-      },
-      "trade_setup": {
-        "entry": 65.61000061035156,
-        "stop_loss": 61.017300567626954,
-        "target": 78.73200073242187,
-        "risk_reward": 2.857142857142856
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "STRONG_SELL",
-        "num_buys": 0,
-        "num_sells": 5,
-        "net_value": -1220535.6484,
-        "largest_buy": null,
-        "largest_sell": {
-          "name": "GOLDMAN JAMES A",
-          "shares": 5072,
-          "value": 487824.96,
-          "date": "2025-08-29"
-        },
-        "transactions": [
-          {
-            "name": "Robinson Kenneth B.",
-            "change": -1392,
-            "date": "2025-09-05",
-            "price": 94.6,
-            "value": -131683.19999999998
-          },
-          {
-            "name": "Rust Jay",
-            "change": -1500,
-            "date": "2025-08-29",
-            "price": 93.15,
-            "value": -139725.0
-          },
-          {
-            "name": "GOLDMAN JAMES A",
-            "change": -5072,
-            "date": "2025-08-29",
-            "price": 96.18,
-            "value": -487824.96
-          },
-          {
-            "name": "ANDERSON KERRII B",
-            "change": -4292,
-            "date": "2025-08-29",
-            "price": 95.1152,
-            "value": -408234.4384
-          },
-          {
-            "name": "Ball Robert J.",
-            "change": -595,
-            "date": "2025-07-15",
-            "price": 89.19,
-            "value": -53068.049999999996
-          }
-        ],
-        "summary": "0 buys, 5 sells (last 6 months) | Net: -$1.2M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-24T21:46:44.519763"
-    },
-    {
-      "symbol": "CNK",
-      "composite_score": 65.0,
-      "confidence": 65.0,
-      "recommendation": "WATCH",
-      "scores": {
-        "news": 95,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 15
-      },
-      "trade_setup": {
-        "entry": 27.969999313354492,
-        "stop_loss": 26.01209936141968,
-        "target": 33.56399917602539,
-        "risk_reward": 2.8571428571428594
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "STRONG_SELL",
-        "num_buys": 0,
-        "num_sells": 10,
-        "net_value": -2498868.86,
-        "largest_buy": null,
-        "largest_sell": {
-          "name": "Gierhart Wanda Marie",
-          "shares": 52524,
-          "value": 1672889.4000000001,
-          "date": "2025-06-13"
-        },
-        "transactions": [
-          {
-            "name": "Thomas Melissa",
-            "change": -14326,
-            "date": "2025-11-07",
-            "price": 28.58,
-            "value": -409437.07999999996
-          },
-          {
-            "name": "Thomas Melissa",
-            "change": -7200,
-            "date": "2025-08-15",
-            "price": 25.17,
-            "value": -181224.0
-          },
-          {
-            "name": "Gierhart Wanda Marie",
-            "change": -1254,
-            "date": "2025-08-01",
-            "price": 28.49,
-            "value": -35726.46
-          },
-          {
-            "name": "Gamble Sean",
-            "change": -3109,
-            "date": "2025-07-28",
-            "price": 29.04,
-            "value": -90285.36
-          },
-          {
-            "name": "Gamble Sean",
-            "change": -1555,
-            "date": "2025-07-28",
-            "price": 29.04,
-            "value": -45157.2
-          }
-        ],
-        "summary": "0 buys, 10 sells (last 6 months) | Net: -$2.5M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-24T21:46:45.314282"
-    },
-    {
-      "symbol": "STNE",
-      "composite_score": 64.0,
-      "confidence": 64.0,
-      "recommendation": "WATCH",
-      "scores": {
-        "news": 90,
-        "technical": 50.0,
-        "fundamentals": 60.0,
+        "fundamentals": 50.0,
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 15.079999923706055,
-        "stop_loss": 14.024399929046632,
-        "target": 18.095999908447265,
-        "risk_reward": 2.8571428571428603
+        "entry": 102.05,
+        "stop_loss": 94.90650000000001,
+        "target": 122.46,
+        "risk_reward": 2.857142857142861
       },
       "strategy_signals": [],
       "insider_activity": {
@@ -261,89 +31,8 @@
         "transactions": [],
         "summary": "No recent insider transactions"
       },
-      "reasons": [
-        "Strong news sentiment"
-      ],
-      "timestamp": "2025-11-24T21:46:34.314560"
-    },
-    {
-      "symbol": "CELH",
-      "composite_score": 63.0,
-      "confidence": 63.0,
-      "recommendation": "WATCH",
-      "scores": {
-        "news": 95,
-        "technical": 50.0,
-        "fundamentals": 65.0,
-        "insider": 15
-      },
-      "trade_setup": {
-        "entry": 37.91999816894531,
-        "stop_loss": 35.26559829711914,
-        "target": 45.503997802734375,
-        "risk_reward": 2.857142857142857
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "STRONG_SELL",
-        "num_buys": 2,
-        "num_sells": 130,
-        "net_value": -1100037132.8634,
-        "largest_buy": {
-          "name": "Kravitz Hal",
-          "shares": 10000,
-          "value": 452400.0,
-          "date": "2025-11-13"
-        },
-        "largest_sell": {
-          "name": "Milmoe William H.",
-          "shares": 300000,
-          "value": 12047640.0,
-          "date": "2025-07-30"
-        },
-        "transactions": [
-          {
-            "name": "Milmoe William H.",
-            "change": -112500,
-            "date": "2025-11-20",
-            "price": 37.0234,
-            "value": -4165132.5000000005
-          },
-          {
-            "name": "Milmoe William H.",
-            "change": -187500,
-            "date": "2025-11-20",
-            "price": 37.0234,
-            "value": -6941887.5
-          },
-          {
-            "name": "DeSantis Dean",
-            "change": -112500,
-            "date": "2025-11-20",
-            "price": 37.0234,
-            "value": -4165132.5000000005
-          },
-          {
-            "name": "DeSantis Dean",
-            "change": -187500,
-            "date": "2025-11-20",
-            "price": 37.0234,
-            "value": -6941887.5
-          },
-          {
-            "name": "DeSantis Deborah",
-            "change": -187500,
-            "date": "2025-11-20",
-            "price": 37.0234,
-            "value": -6941887.5
-          }
-        ],
-        "summary": "2 buys, 130 sells (last 6 months) | Net: -$1100.0M"
-      },
-      "reasons": [
-        "Strong news sentiment"
-      ],
-      "timestamp": "2025-11-24T21:46:36.990091"
+      "reasons": [],
+      "timestamp": "2025-11-24T23:33:10.505862"
     }
   ],
   "portfolio_status": {}
