@@ -1552,6 +1552,115 @@ class MasterScanner:
     # MAIN EXECUTION
     # =========================================================================
 
+    def _update_all_existing_csvs(self):
+        """
+        Update ALL existing CSV files incrementally (Phase 0)
+        
+        This is FAST because:
+        - Only updates files that exist (doesn't fetch new symbols)
+        - Only fetches data since last date in CSV
+        - Runs in parallel with 20 workers
+        - Takes ~5-10 minutes for 23,888 symbols
+        """
+        print("\n" + "=" * 80)
+        print("PHASE 0: INCREMENTAL DATA UPDATE FOR ALL SYMBOLS")
+        print("=" * 80)
+        
+        # Find all existing CSVs
+        stock_csvs = list(STOCK_DIR.glob('*.csv'))
+        etf_csvs = list(ETF_DIR.glob('*.csv'))
+        all_csvs = stock_csvs + etf_csvs
+        
+        print(f"📊 Found {len(all_csvs)} existing CSV files")
+        print(f"   Stocks: {len(stock_csvs)}")
+        print(f"   ETFs: {len(etf_csvs)}")
+        print(f"\n⏳ Updating incrementally (only fetching new data since last date)...\n")
+        
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        from tqdm import tqdm
+        
+        updated_count = 0
+        skipped_count = 0
+        error_count = 0
+        
+        def update_single_csv(csv_path: Path) -> str:
+            """Update a single CSV file incrementally"""
+            symbol = csv_path.stem
+            
+            try:
+                # Read existing CSV
+                df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
+                if df.empty:
+                    return 'empty'
+                
+                # Check how old the data is
+                last_date = df.index.max()  # Works with both ascending/descending
+                now = pd.Timestamp.now()
+                if last_date.tz is not None:
+                    now = now.tz_localize('UTC').tz_convert(last_date.tz)
+                days_old = (now - last_date).days
+                
+                # Skip if data is fresh (< 1 day old)
+                if days_old < 1:
+                    return 'fresh'
+                
+                # Fetch incremental data
+                start_date = last_date + pd.Timedelta(days=1)
+                ticker = yf.Ticker(symbol)
+                new_data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=None)
+                
+                if new_data.empty:
+                    return 'no_new_data'
+                
+                # Combine and deduplicate
+                combined = pd.concat([df, new_data])
+                combined = combined[~combined.index.duplicated(keep='last')]
+                
+                # Round to proper precision
+                price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
+                for col in price_cols:
+                    if col in combined.columns:
+                        combined[col] = combined[col].round(2)
+                
+                if 'Volume' in combined.columns:
+                    combined['Volume'] = combined['Volume'].round(0).astype('int64')
+                if 'Dividends' in combined.columns:
+                    combined['Dividends'] = combined['Dividends'].round(2)
+                if 'Stock Splits' in combined.columns:
+                    combined['Stock Splits'] = combined['Stock Splits'].round(2)
+                if 'Capital Gains' in combined.columns:
+                    combined['Capital Gains'] = combined['Capital Gains'].round(2)
+                
+                # Sort descending (newest first) and save
+                combined = combined.sort_index(ascending=False)
+                combined.to_csv(csv_path)
+                
+                return 'updated'
+                
+            except Exception as e:
+                logger.debug(f"Error updating {symbol}: {e}")
+                return 'error'
+        
+        # Process in parallel
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            futures = {executor.submit(update_single_csv, csv): csv for csv in all_csvs}
+            
+            for future in tqdm(as_completed(futures), total=len(all_csvs), desc="Updating CSVs"):
+                result = future.result()
+                if result == 'updated':
+                    updated_count += 1
+                elif result == 'fresh':
+                    skipped_count += 1
+                elif result == 'error':
+                    error_count += 1
+        
+        print(f"\n✅ CSV Update Complete:")
+        print(f"   Updated: {updated_count}")
+        print(f"   Fresh (skipped): {skipped_count}")
+        print(f"   Errors: {error_count}\n")
+        
+        logger.info(f"CSV Update: {updated_count} updated, {skipped_count} fresh, {error_count} errors")
+
     def run(self, mode: str = 'daily'):
         """
         Run market scan workflow
@@ -1577,6 +1686,9 @@ class MasterScanner:
         """Daily scan (after market close) - comprehensive analysis"""
         print("\n🌙 DAILY SCAN MODE (After Market Close)")
         print("   Comprehensive analysis of entire market\n")
+
+        # Phase 0: Update ALL existing CSVs incrementally (FAST!)
+        self._update_all_existing_csvs()
 
         # Phase 1: Fetch universe
         self.fetch_market_universe()
