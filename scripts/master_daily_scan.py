@@ -1567,8 +1567,11 @@ class MasterScanner:
         print("=" * 80)
         
         # Find all existing CSVs
-        stock_csvs = list(STOCK_DIR.glob('*.csv'))
-        etf_csvs = list(ETF_DIR.glob('*.csv'))
+        stock_dir = MARKET_DATA_DIR / 'stocks'
+        etf_dir = MARKET_DATA_DIR / 'etfs'
+        
+        stock_csvs = list(stock_dir.glob('*.csv')) if stock_dir.exists() else []
+        etf_csvs = list(etf_dir.glob('*.csv')) if etf_dir.exists() else []
         all_csvs = stock_csvs + etf_csvs
         
         print(f"📊 Found {len(all_csvs)} existing CSV files")
