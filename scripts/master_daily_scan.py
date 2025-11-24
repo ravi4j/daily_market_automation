@@ -955,8 +955,19 @@ class MasterScanner:
                             df_save.to_csv(csv_file)
                             # Return in ascending order for analysis
                             return df
+                        elif days_old > 60:
+                            # Data is VERY old (>60 days), fetch fresh 2 years instead of huge incremental
+                            logger.info(f"{symbol}: CSV is {days_old} days old, fetching fresh 2y data...")
+                            fresh_data = self._fetch_incremental(symbol, start_date=None)  # Will use period='2y'
+                            
+                            if not fresh_data.empty:
+                                df = fresh_data  # Replace old data entirely
+                            else:
+                                # Fetch failed, use old data
+                                logger.warning(f"{symbol}: Failed to fetch fresh data, using {days_old}-day-old cache")
+                                return df
                         else:
-                            # Data is old, fetch incremental update
+                            # Data is 7-60 days old, fetch incremental update
                             start_date = (last_date + pd.Timedelta(days=1)).strftime('%Y-%m-%d')
                             new_data = self._fetch_incremental(symbol, start_date)
 
