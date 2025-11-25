@@ -668,6 +668,12 @@ class MasterScanner:
                 elif volume_ratio > 2.0 and price_filter and volume_filter and not_crashing:
                     # 2x volume = something interesting happening
                     is_candidate = True
+                # Also include big gainers (5%+ up with volume)
+                elif pct_change >= 5.0 and volume_spike and price_filter and volume_filter:
+                    is_candidate = True
+                # Also include high-volume leaders (even without price move) - ensures we always have candidates
+                elif volume_filter and price_filter and avg_volume >= 5000000:  # 5M+ volume
+                    is_candidate = True
 
                 return (is_candidate, faller_data)
 
