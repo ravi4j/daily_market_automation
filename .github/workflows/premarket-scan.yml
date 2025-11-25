@@ -6,13 +6,19 @@ on:
     - cron: '0 13 * * 1-5'
   workflow_dispatch:  # Manual trigger
 
+permissions:
+  contents: write  # Allow pushing pre-market scan results
+
 jobs:
   scan:
     runs-on: ubuntu-latest
+    timeout-minutes: 30  # Pre-market scan should be fast
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
