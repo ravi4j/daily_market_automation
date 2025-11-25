@@ -26,12 +26,12 @@ def get_all_us_symbols():
     Strategy: Use base universe (major stocks/ETFs) + add more from Finnhub
     This ensures we always include NVDA, AAPL, etc.
     """
-    
+
     # Load base universe (curated list of important symbols)
     base_file = METADATA_DIR / 'base_universe.txt'
     stocks = []
     etfs = []
-    
+
     if base_file.exists():
         print("📋 Loading base universe...", flush=True)
         with open(base_file, 'r') as f:
@@ -45,7 +45,7 @@ def get_all_us_symbols():
                         elif sym_type == 'etf':
                             etfs.append(symbol)
         print(f"   Base: {len(stocks)} stocks, {len(etfs)} ETFs")
-    
+
     # Add more symbols from Finnhub (up to 500 total each)
     api_key = os.getenv('FINNHUB_API_KEY')
     if api_key:
@@ -53,26 +53,26 @@ def get_all_us_symbols():
             client = finnhub.Client(api_key=api_key)
             print("📡 Fetching additional symbols from Finnhub...", flush=True)
             us_symbols = client.stock_symbols('US')
-            
+
             for sym in us_symbols:
                 symbol = sym.get('displaySymbol', sym.get('symbol'))
                 sym_type = sym.get('type', '')
                 exchange = sym.get('mic', '')
-                
+
                 # Filter for major exchanges
                 if exchange not in ['XNAS', 'XNYS', 'XASE', 'ARCX']:
                     continue
-                
+
                 # Add if not already in base list and under limit
                 if sym_type == 'Common Stock' and symbol not in stocks and len(stocks) < 500:
                     stocks.append(symbol)
                 elif sym_type in ['ETP', 'ETF'] and symbol not in etfs and len(etfs) < 200:
                     etfs.append(symbol)
-            
+
             print(f"   Added from Finnhub: {len(stocks)} stocks, {len(etfs)} ETFs total")
         except Exception as e:
             print(f"   ⚠️  Finnhub fetch failed: {e}")
-    
+
     return stocks, etfs
 
 def rank_symbols(symbols, output_file, symbol_type='Stock'):
@@ -165,39 +165,39 @@ def rank_symbols(symbols, output_file, symbol_type='Stock'):
 def main():
     """Main entry point"""
     import sys
-    
+
     print("="*80)
     print("NIGHTLY SYMBOL RANKING")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("="*80)
-    
+
     # Check for test mode
     test_mode = '--test' in sys.argv
     if test_mode:
         print("🧪 TEST MODE: Processing only 20 stocks and 10 ETFs")
-    
+
     # Get symbols
     stocks, etfs = get_all_us_symbols()
-    
+
     if not stocks and not etfs:
         print("❌ No symbols fetched, exiting")
         return
-    
+
     # Limit for test mode
     if test_mode:
         stocks = stocks[:20]
         etfs = etfs[:10]
-    
+
     # Rank stocks
     stock_file = METADATA_DIR / 'ranked_stocks.csv'
     if stocks:
         rank_symbols(stocks, stock_file, 'Stock')
-    
+
     # Rank ETFs
     etf_file = METADATA_DIR / 'ranked_etfs.csv'
     if etfs:
         rank_symbols(etfs, etf_file, 'ETF')
-    
+
     print("\n" + "="*80)
     print("RANKING COMPLETE")
     print(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -205,7 +205,7 @@ def main():
     print("\n📁 Output files:")
     print(f"   Stocks: {stock_file}")
     print(f"   ETFs:   {etf_file}")
-    
+
     # Show that files exist and have data
     if stock_file.exists():
         df = pd.read_csv(stock_file)

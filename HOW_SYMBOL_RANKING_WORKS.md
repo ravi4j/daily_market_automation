@@ -30,8 +30,8 @@ Contains ~100 most important symbols:
 ---
 
 ### 2. Nightly Ranking Job
-**Script**: `scripts/nightly_rank_symbols.py`  
-**When**: 2 AM daily (GitHub Action)  
+**Script**: `scripts/nightly_rank_symbols.py`
+**When**: 2 AM daily (GitHub Action)
 **What it does**:
 
 1. Loads base universe (100 symbols)
@@ -58,7 +58,7 @@ AMD,69406159,58700284,335588229120.0,206.13,4
 ---
 
 ### 3. Daily Scanner Uses Rankings
-**Script**: `scripts/master_daily_scan.py`  
+**Script**: `scripts/master_daily_scan.py`
 **Method**: `_filter_tier_daily()`
 
 **What it does**:
@@ -108,13 +108,13 @@ python scripts/master_daily_scan.py --test --no-cleanup
 ## GitHub Actions
 
 ### Nightly Ranking
-**File**: `.github/workflows/nightly-rank.yml`  
-**Schedule**: 2 AM UTC daily  
+**File**: `.github/workflows/nightly-rank.yml`
+**Schedule**: 2 AM UTC daily
 **What**: Runs `nightly_rank_symbols.py`, commits rankings
 
 ### Daily Scan
-**File**: `.github/workflows/daily-scan.yml`  
-**Schedule**: 10 PM CT (after market close)  
+**File**: `.github/workflows/daily-scan.yml`
+**Schedule**: 10 PM CT (after market close)
 **What**: Runs `master_daily_scan.py` (uses rankings)
 
 ---
@@ -137,7 +137,7 @@ To add/remove symbols from base universe:
 ```yaml
 scanning:
   max_symbols_per_run: 600  # How many to analyze daily
-  
+
   intelligent_filters:
     min_volume: 500000      # Minimum daily volume
     min_price: 5.0          # Minimum stock price
@@ -165,4 +165,3 @@ scanning:
 ❌ **NOT Committed** (deleted after analysis):
 - `data/market_data/stocks/*.csv` (temporary)
 - `data/market_data/etfs/*.csv` (temporary)
-
