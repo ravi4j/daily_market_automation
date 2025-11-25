@@ -11,7 +11,7 @@ permissions:
 jobs:
   rank:
     runs-on: ubuntu-latest
-    timeout-minutes: 240  # 4 hours max (for 8,534 symbols)
+    timeout-minutes: 360  # 6 hours max (safe buffer for 8,534 symbols + rate limits)
 
     steps:
       - name: Checkout code
