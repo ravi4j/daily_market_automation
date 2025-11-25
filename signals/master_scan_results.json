@@ -1,39 +1,9 @@
 {
-  "timestamp": "2025-11-24T23:33:20.904068",
+  "timestamp": "2025-11-25T16:42:52.938458",
   "scan_config": {
     "tier": "daily",
-    "symbols_scanned": 600
+    "symbols_scanned": 5
   },
-  "opportunities": [
-    {
-      "symbol": "TQQQ",
-      "composite_score": 50.0,
-      "confidence": 50.0,
-      "recommendation": "SKIP",
-      "scores": {
-        "news": 50.0,
-        "technical": 50.0,
-        "fundamentals": 50.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 102.05,
-        "stop_loss": 94.90650000000001,
-        "target": 122.46,
-        "risk_reward": 2.857142857142861
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 0,
-        "num_sells": 0,
-        "net_value": 0,
-        "transactions": [],
-        "summary": "No recent insider transactions"
-      },
-      "reasons": [],
-      "timestamp": "2025-11-24T23:33:10.505862"
-    }
-  ],
+  "opportunities": [],
   "portfolio_status": {}
 }

@@ -475,25 +475,26 @@ class MasterScanner:
 
     def _filter_tier_daily(self, symbols: List[Dict]) -> List[Dict]:
         """
-        INTELLIGENT 600 SELECTION SYSTEM - Pluggable Strategies
+        VOLUME-FIRST SELECTION (NO CSV DEPENDENCY!)
 
-        Uses SymbolSelector with configurable strategies (NO HARDCODED SYMBOLS!)
-
-        Strategies configured in master_config.yaml:
-        - News-driven (20%): Symbols with breaking news
-        - Volume spikes (20%): 2x+ volume
-        - Price moves (20%): 5%+ price change
-        - High liquidity (40%): ETFs + high-volume stocks
-
-        100% configurable - add/remove/adjust strategies without code changes!
+        Fetches volume data via yfinance, selects top 600 by volume
+        ALL CONFIG-DRIVEN - NO HARDCODING!
         """
-        print("  🧠 Using pluggable intelligent selection strategies...")
+        print("  🧠 Volume-first intelligent selection...")
 
-        max_symbols = self.config['scanning'].get('max_symbols_per_run', 600)
-
-        # Exchange filtering first (quality baseline)
+        # Get config
         filters = self.config['scanning']['intelligent_filters']
+        max_symbols = self.config['scanning'].get('max_symbols_per_run', 600)
+        min_volume = filters.get('min_volume', 500000)
+        min_price = filters.get('min_price', 5.0)
         valid_exchanges = set(filters.get('exchanges', ['NYSE', 'NASDAQ', 'AMEX']))
+        exclude_otc = filters.get('exclude_otc', True)
+
+        print(f"     Config: volume>{min_volume:,}, price>${min_price}, max={max_symbols}")
+
+        # STEP 1: Filter by exchange
+        print(f"  📊 Filtering {len(symbols)} symbols...")
+
         exchange_mapping = {
             'XNAS': 'NASDAQ', 'XNYS': 'NYSE', 'XASE': 'AMEX',
             'ARCX': 'NYSE', 'BATS': 'BATS',
@@ -503,7 +504,7 @@ class MasterScanner:
         for sym in symbols:
             exchange = sym.get('exchange', '')
 
-            if exchange == 'OOTC':
+            if exclude_otc and exchange == 'OOTC':
                 continue
 
             if not exchange:
@@ -513,26 +514,57 @@ class MasterScanner:
                 if any(valid in mapped for valid in valid_exchanges):
                     quality_symbols.append(sym)
 
-        print(f"     Quality baseline: {len(quality_symbols)} symbols from major exchanges")
+        print(f"     ✓ {len(quality_symbols)} from major exchanges")
 
-        # Sort by volume (highest activity first)
-        # Uses volume from CSV first row - FAST!
-        print(f"  📊 Sorting by volume (highest activity first)...")
-        quality_symbols_sorted = self._sort_by_volume(quality_symbols)
+        # STEP 2: Fetch volume in parallel
+        print(f"     Fetching volume (5-day snapshot)...")
 
-        # Use SymbolSelector with pluggable strategies
-        selector = SymbolSelector(
-            config=self.config.get('scanning', {}),
-            finnhub_client=self.finnhub,
-            data_dir=MARKET_DATA_DIR
-        )
+        def fetch_vol(sym_dict):
+            symbol = sym_dict.get('symbol')
+            try:
+                ticker = yf.Ticker(symbol)
+                hist = ticker.history(period='5d')
 
-        selected_symbols = selector.select_intelligent(quality_symbols_sorted, max_symbols)
+                if len(hist) >= 1:
+                    sym_dict['volume'] = int(hist['Volume'].iloc[-1])
+                    sym_dict['price'] = float(hist['Close'].iloc[-1])
+                else:
+                    sym_dict['volume'] = 0
+                    sym_dict['price'] = 0
+            except:
+                sym_dict['volume'] = 0
+                sym_dict['price'] = 0
+            return sym_dict
 
-        # Convert back to dict format
-        result = [sym for sym in quality_symbols_sorted if sym['symbol'] in selected_symbols]
+        workers = self.config['scanning'].get('parallel_workers', 10)
 
-        return result
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            with tqdm(total=len(quality_symbols), desc="     Volume", unit="sym", ncols=100) as pbar:
+                futures = {executor.submit(fetch_vol, sym): sym for sym in quality_symbols}
+                for future in as_completed(futures):
+                    future.result()
+                    pbar.update(1)
+
+        # STEP 3: Filter by price/volume
+        filtered = [s for s in quality_symbols
+                   if s.get('price', 0) >= min_price and s.get('volume', 0) >= min_volume]
+
+        print(f"     ✓ {len(filtered)} passed filters")
+
+        # STEP 4: Sort by volume
+        filtered.sort(key=lambda x: x.get('volume', 0), reverse=True)
+
+        if filtered:
+            top = filtered[0]
+            print(f"     Top: {top['symbol']} (vol: {top.get('volume', 0):,.0f})")
+
+        # STEP 5: Take top N
+        selected = filtered[:max_symbols]
+
+        print(f"  ✓ Selected {len(selected)} symbols")
+        print(f"     → Will fetch {len(selected)} CSVs for analysis")
+
+        return selected
 
     # NOTE: _score_and_prioritize_symbols() and _has_recent_activity() methods
     # have been replaced by the pluggable SymbolSelector class in src/symbol_selector.py
@@ -658,8 +690,18 @@ class MasterScanner:
                 # Check if it meets criteria for deep analysis
                 is_candidate = False
 
-                # Pass if it meets criteria for deep analysis (3-10% drop)
+                # CRITERIA 1: Buy-the-dip (3-10% drop + volume)
                 if opportunity_drop and volume_spike and price_filter and volume_filter and not_crashing:
+                    is_candidate = True
+                
+                # CRITERIA 2: Breakouts (5%+ gainers + volume)
+                breakout = pct_change >= 5.0 and volume_spike and price_filter and volume_filter
+                if breakout:
+                    is_candidate = True
+                
+                # CRITERIA 3: High-volume leaders (5M+ volume, any direction)
+                high_volume_leader = recent_volume >= 5000000 and price_filter and not_crashing
+                if high_volume_leader:
                     is_candidate = True
                 # Also track significant fallers for deep analysis
                 elif significant_drop and volume_spike and price_filter and volume_filter and not_crashing:
@@ -734,6 +776,12 @@ class MasterScanner:
         print("  🔍 Phase A: Pre-screening entire market...")
         candidates = self._quick_prescreen(self.universe)
         print(f"  ✅ Found {len(candidates)} promising candidates\n")
+        
+        # FALLBACK: If no candidates found, analyze all selected symbols anyway
+        if len(candidates) == 0 and len(self.universe) > 0:
+            print(f"  ℹ️  No specific opportunities found by pre-screening")
+            print(f"  📊 Analyzing all {len(self.universe)} selected symbols (fallback mode)\n")
+            candidates = [sym.get('symbol') if isinstance(sym, dict) else sym for sym in self.universe]
 
         # PHASE B: Deep analysis on candidates
         print("  🎯 Phase B: Deep analysis of candidates...")
@@ -965,7 +1013,7 @@ class MasterScanner:
                             # Data is VERY old (>60 days), fetch fresh 2 years instead of huge incremental
                             logger.info(f"{symbol}: CSV is {days_old} days old, fetching fresh 2y data...")
                             fresh_data = self._fetch_incremental(symbol, start_date=None)  # Will use period='2y'
-                            
+
                             if not fresh_data.empty:
                                 df = fresh_data  # Replace old data entirely
                             else:
@@ -1025,11 +1073,30 @@ class MasterScanner:
 
                 df.index.name = 'Date'
 
-                # Save for next time (enables incremental updates later)
-                csv_file.parent.mkdir(parents=True, exist_ok=True)
-                df.to_csv(csv_file)
+                # Round to proper precision (2 decimals for prices, 0 for volume)
+                price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
+                for col in price_cols:
+                    if col in df.columns:
+                        df[col] = df[col].round(2)
 
-                return df
+                if 'Volume' in df.columns:
+                    df['Volume'] = df['Volume'].round(0).astype('int64')
+
+                # Verify data quality before saving
+                last_price = df['Close'].iloc[-1]
+                last_volume = df['Volume'].iloc[-1]
+                days_fetched = len(df)
+
+                logger.info(f"{symbol}: Fetched {days_fetched} days, Latest: ${last_price:.2f}, Vol: {last_volume:,.0f}")
+
+                # Save for next time (enables incremental updates later)
+                # Store in descending order (newest first)
+                df_save = df.sort_index(ascending=False)
+                csv_file.parent.mkdir(parents=True, exist_ok=True)
+                df_save.to_csv(csv_file)
+
+                # Return in ascending order for analysis
+                return df.sort_index(ascending=True)
         except:
             pass
 
@@ -1561,7 +1628,7 @@ class MasterScanner:
     def _update_all_existing_csvs(self):
         """
         Update ALL existing CSV files incrementally (Phase 0)
-        
+
         This is FAST because:
         - Only updates files that exist (doesn't fetch new symbols)
         - Only fetches data since last date in CSV
@@ -1571,46 +1638,46 @@ class MasterScanner:
         print("\n" + "=" * 80)
         print("PHASE 0: INCREMENTAL DATA UPDATE FOR ALL SYMBOLS")
         print("=" * 80)
-        
+
         # Find all existing CSVs
         stock_dir = MARKET_DATA_DIR / 'stocks'
         etf_dir = MARKET_DATA_DIR / 'etfs'
-        
+
         stock_csvs = list(stock_dir.glob('*.csv')) if stock_dir.exists() else []
         etf_csvs = list(etf_dir.glob('*.csv')) if etf_dir.exists() else []
         all_csvs = stock_csvs + etf_csvs
-        
+
         print(f"📊 Found {len(all_csvs)} existing CSV files")
         print(f"   Stocks: {len(stock_csvs)}")
         print(f"   ETFs: {len(etf_csvs)}")
         print(f"\n⏳ Updating incrementally (only fetching new data since last date)...\n")
-        
+
         from concurrent.futures import ThreadPoolExecutor, as_completed
         from tqdm import tqdm
-        
+
         updated_count = 0
         skipped_count = 0
         error_count = 0
-        
+
         def update_single_csv(csv_path: Path) -> str:
             """Update a single CSV file incrementally"""
             symbol = csv_path.stem
-            
+
             try:
                 # Read existing CSV
                 df = pd.read_csv(csv_path, index_col=0, parse_dates=True)
                 if df.empty:
                     return 'empty'
-                
+
                 # SORT FIRST (ascending for processing)
                 df = df.sort_index(ascending=True)
-                
+
                 # ALWAYS round all data
                 price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
                 for col in price_cols:
                     if col in df.columns:
                         df[col] = df[col].round(2)
-                
+
                 if 'Volume' in df.columns:
                     df['Volume'] = df['Volume'].round(0).astype('int64')
                 if 'Dividends' in df.columns:
@@ -1619,14 +1686,14 @@ class MasterScanner:
                     df['Stock Splits'] = df['Stock Splits'].round(2)
                 if 'Capital Gains' in df.columns:
                     df['Capital Gains'] = df['Capital Gains'].round(2)
-                
+
                 # Check how old the data is (last row after sorting ascending)
                 last_date = df.index[-1]  # Last row = newest date
                 now = pd.Timestamp.now()
                 if last_date.tz is not None:
                     now = now.tz_localize('UTC').tz_convert(last_date.tz)
                 days_old = (now - last_date).days
-                
+
                 # Only fetch if data is old (skip if already has today/future data)
                 if days_old >= 0:
                     start_date = last_date + pd.Timedelta(days=1)
@@ -1634,7 +1701,7 @@ class MasterScanner:
                     new_data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=None)
                 else:
                     new_data = pd.DataFrame()  # CSV has future data, skip fetch
-                
+
                 # Process new data if we got any
                 if not new_data.empty:
                     # Fix timezone issue: make both timezone-naive for proper merging
@@ -1642,16 +1709,16 @@ class MasterScanner:
                         new_data.index = new_data.index.tz_localize(None)
                     if df.index.tz is not None:
                         df.index = df.index.tz_localize(None)
-                    
+
                     # Combine and deduplicate
                     df = pd.concat([df, new_data])
                     df = df[~df.index.duplicated(keep='last')]
-                    
+
                     # Round all data again after merge
                     for col in price_cols:
                         if col in df.columns:
                             df[col] = df[col].round(2)
-                    
+
                     if 'Volume' in df.columns:
                         df['Volume'] = df['Volume'].round(0).astype('int64')
                     if 'Dividends' in df.columns:
@@ -1660,21 +1727,21 @@ class MasterScanner:
                         df['Stock Splits'] = df['Stock Splits'].round(2)
                     if 'Capital Gains' in df.columns:
                         df['Capital Gains'] = df['Capital Gains'].round(2)
-                
+
                 # ALWAYS sort descending (newest first) and save
                 df = df.sort_index(ascending=False)
                 df.to_csv(csv_path)
-                
+
                 return 'updated'
-                
+
             except Exception as e:
                 logger.debug(f"Error updating {symbol}: {e}")
                 return 'error'
-        
+
         # Process in parallel
         with ThreadPoolExecutor(max_workers=20) as executor:
             futures = {executor.submit(update_single_csv, csv): csv for csv in all_csvs}
-            
+
             for future in tqdm(as_completed(futures), total=len(all_csvs), desc="Updating CSVs"):
                 result = future.result()
                 if result == 'updated':
@@ -1683,12 +1750,12 @@ class MasterScanner:
                     skipped_count += 1
                 elif result == 'error':
                     error_count += 1
-        
+
         print(f"\n✅ CSV Update Complete:")
         print(f"   Updated: {updated_count}")
         print(f"   Fresh (skipped): {skipped_count}")
         print(f"   Errors: {error_count}\n")
-        
+
         logger.info(f"CSV Update: {updated_count} updated, {skipped_count} fresh, {error_count} errors")
 
     def run(self, mode: str = 'daily'):
@@ -2422,18 +2489,37 @@ def main():
     """Main entry point"""
     import argparse
 
-    parser = argparse.ArgumentParser(description='Master Daily Market Scanner')
+    parser = argparse.ArgumentParser(description='Master Daily Market Scanner - NO CSV STORAGE')
     parser.add_argument('--mode', type=str, default='daily',
                        choices=['daily', 'premarket', 'intraday'],
                        help='Scan mode: daily (after close), premarket (before open), intraday (during hours)')
     parser.add_argument('--config', type=str, default=None,
                        help='Path to config file (default: config/master_config.yaml)')
+    parser.add_argument('--test', action='store_true',
+                       help='TEST: Process only 10 symbols (quick verification)')
+    parser.add_argument('--no-cleanup', action='store_true',
+                       help='KEEP CSVs after analysis (for inspection/debugging)')
 
     args = parser.parse_args()
 
     config_path = Path(args.config) if args.config else CONFIG_FILE
 
     scanner = MasterScanner(config_path)
+
+    # Test mode: Override config to process only 10 symbols
+    if args.test:
+        print("\n🧪 TEST MODE ENABLED")
+        print("   - Processing only 10 symbols")
+        print("   - Use for quick verification\n")
+        scanner.config['scanning']['max_symbols_per_run'] = 10
+
+    # Store cleanup flag
+    scanner.skip_cleanup = args.no_cleanup
+    if args.no_cleanup:
+        print("\n📁 CSV CLEANUP DISABLED")
+        print("   - CSVs will be kept for inspection")
+        print("   - Manually delete when done\n")
+
     scanner.run(mode=args.mode)
 
 

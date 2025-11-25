@@ -74,7 +74,7 @@ The scanner looks for **5 specific signals**:
 # Look for: 3-10% price drop in last 10 days
 price_drop = -10% <= change <= -3%
 
-Why: 
+Why:
 - Too small (<3%) = not interesting
 - Too large (>10%) = might be crashing
 - Sweet spot: 3-10% = potential buy opportunity
@@ -236,7 +236,7 @@ composite_score = (
 
 ```python
 if score >= 80: confidence = "HIGH"
-if score >= 60: confidence = "MEDIUM"  
+if score >= 60: confidence = "MEDIUM"
 if score >= 40: confidence = "LOW"
 if score < 40:  SKIP (not enough confidence)
 ```
@@ -424,4 +424,3 @@ The master scanner uses a **3-phase intelligent process**:
 **Result**: You get the **top 5 best opportunities** from the **entire market** with **complete trade setups** and **high confidence**.
 
 **You don't pick symbols. The AI picks for you.** 🎯
-
