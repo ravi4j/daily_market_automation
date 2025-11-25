@@ -1,8 +1,8 @@
 # 📉 ALL MARKET FALLERS - 2%+ Drops
 
-**Date**: 2025-11-25 16:36 ET
-**Total Fallers**: 1
-**Stocks**: 1
+**Date**: 2025-11-25 17:04 ET
+**Total Fallers**: 2
+**Stocks**: 2
 **ETFs**: 0
 
 ---
@@ -13,7 +13,8 @@
 
 | Rank | Symbol | Type | Drop % | Price | Volume | Avg Volume | Vol Ratio |
 |------|--------|------|--------|-------|--------|------------|----------|
-| 1 | **MGRT** | Stock | -6.51% | $6.46 | 24,098 | 29,060 | 0.83x |
+| 1 | **AMD** | Stock | -4.15% | $206.13 | 69,406,159 | 60,535,146 | 1.15x |
+| 2 | **NVDA** | Stock | -2.59% | $177.82 | 309,771,315 | 244,024,512 | 1.27x |
 
 ---
 
@@ -21,12 +22,13 @@
 
 ### 🔴 Top 10 Worst Fallers
 
-1. **MGRT** (Stock): -6.51%
+1. **AMD** (Stock): -4.15%
+2. **NVDA** (Stock): -2.59%
 
 ### 📊 Drop Distribution
 
-- **2-5% drops**: 0 symbols
-- **5-10% drops**: 1 symbols
+- **2-5% drops**: 2 symbols
+- **5-10% drops**: 0 symbols
 - **10%+ drops**: 0 symbols
 
 ---

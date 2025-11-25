@@ -1,0 +1,103 @@
+# BASE TRADING UNIVERSE
+# S&P 500 stocks + Major ETFs
+# Updated: 2024-11 (refresh monthly via script)
+# This ensures we always scan the most important/liquid symbols
+
+# Format: SYMBOL|TYPE
+# TYPE: stock or etf
+
+# Major Tech
+AAPL|stock
+MSFT|stock
+GOOGL|stock
+GOOG|stock
+AMZN|stock
+NVDA|stock
+META|stock
+TSLA|stock
+AVGO|stock
+ORCL|stock
+ADBE|stock
+CRM|stock
+AMD|stock
+INTC|stock
+CSCO|stock
+QCOM|stock
+NFLX|stock
+
+# Major Finance
+JPM|stock
+V|stock
+MA|stock
+BAC|stock
+WFC|stock
+GS|stock
+MS|stock
+BLK|stock
+C|stock
+SCHW|stock
+
+# Healthcare
+UNH|stock
+LLY|stock
+JNJ|stock
+ABBV|stock
+MRK|stock
+PFE|stock
+TMO|stock
+ABT|stock
+DHR|stock
+
+# Consumer
+WMT|stock
+HD|stock
+MCD|stock
+NKE|stock
+COST|stock
+TGT|stock
+SBUX|stock
+LOW|stock
+
+# Energy
+XOM|stock
+CVX|stock
+COP|stock
+EOG|stock
+SLB|stock
+
+# Industrial
+BA|stock
+CAT|stock
+UPS|stock
+GE|stock
+HON|stock
+
+# Communication
+DIS|stock
+CMCSA|stock
+T|stock
+VZ|stock
+TMUS|stock
+
+# Major ETFs
+SPY|etf
+QQQ|etf
+IWM|etf
+DIA|etf
+VOO|etf
+VTI|etf
+EFA|etf
+EEM|etf
+AGG|etf
+TLT|etf
+GLD|etf
+SLV|etf
+XLF|etf
+XLE|etf
+XLK|etf
+XLV|etf
+XLI|etf
+XLP|etf
+XLY|etf
+XLU|etf
+

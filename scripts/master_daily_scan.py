@@ -475,96 +475,73 @@ class MasterScanner:
 
     def _filter_tier_daily(self, symbols: List[Dict]) -> List[Dict]:
         """
-        VOLUME-FIRST SELECTION (NO CSV DEPENDENCY!)
+        USE PRE-RANKED SYMBOLS (NO API CALLS, NO RATE LIMITS!)
 
-        Fetches volume data via yfinance, selects top 600 by volume
-        ALL CONFIG-DRIVEN - NO HARDCODING!
+        Reads nightly-generated rankings from CSV files
+        Fast, reliable, always includes top stocks
         """
-        print("  🧠 Volume-first intelligent selection...")
+        print("  🧠 Using pre-ranked symbol lists...")
 
         # Get config
-        filters = self.config['scanning']['intelligent_filters']
         max_symbols = self.config['scanning'].get('max_symbols_per_run', 600)
-        min_volume = filters.get('min_volume', 500000)
-        min_price = filters.get('min_price', 5.0)
-        valid_exchanges = set(filters.get('exchanges', ['NYSE', 'NASDAQ', 'AMEX']))
-        exclude_otc = filters.get('exclude_otc', True)
 
-        print(f"     Config: volume>{min_volume:,}, price>${min_price}, max={max_symbols}")
+        # File paths
+        stock_rankings = METADATA_DIR / 'ranked_stocks.csv'
+        etf_rankings = METADATA_DIR / 'ranked_etfs.csv'
 
-        # STEP 1: Filter by exchange
-        print(f"  📊 Filtering {len(symbols)} symbols...")
+        selected_symbols = []
 
-        exchange_mapping = {
-            'XNAS': 'NASDAQ', 'XNYS': 'NYSE', 'XASE': 'AMEX',
-            'ARCX': 'NYSE', 'BATS': 'BATS',
-        }
+        # Load stock rankings
+        if stock_rankings.exists():
+            df_stocks = pd.read_csv(stock_rankings)
+            stock_count = min(int(max_symbols * 0.8), len(df_stocks))  # 80% stocks
+            top_stocks = df_stocks.head(stock_count)
 
-        quality_symbols = []
-        for sym in symbols:
-            exchange = sym.get('exchange', '')
+            print(f"  📈 Stocks: Using top {stock_count} from rankings")
+            print(f"     Top 5: {', '.join(top_stocks.head(5)['symbol'].tolist())}")
 
-            if exclude_otc and exchange == 'OOTC':
-                continue
+            for _, row in top_stocks.iterrows():
+                selected_symbols.append({
+                    'symbol': row['symbol'],
+                    'type': 'stock',
+                    'volume': row['volume'],
+                    'market_cap': row.get('market_cap', 0),
+                    'exchange': 'XNAS'  # Placeholder
+                })
+        else:
+            print(f"  ⚠️  Stock rankings not found: {stock_rankings}")
+            print(f"     Run: python scripts/nightly_rank_symbols.py")
 
-            if not exchange:
-                quality_symbols.append(sym)
-            else:
-                mapped = exchange_mapping.get(exchange, exchange)
-                if any(valid in mapped for valid in valid_exchanges):
-                    quality_symbols.append(sym)
+        # Load ETF rankings
+        if etf_rankings.exists():
+            df_etfs = pd.read_csv(etf_rankings)
+            etf_count = min(int(max_symbols * 0.2), len(df_etfs))  # 20% ETFs
+            top_etfs = df_etfs.head(etf_count)
 
-        print(f"     ✓ {len(quality_symbols)} from major exchanges")
+            print(f"  📊 ETFs: Using top {etf_count} from rankings")
+            print(f"     Top 5: {', '.join(top_etfs.head(5)['symbol'].tolist())}")
 
-        # STEP 2: Fetch volume in parallel
-        print(f"     Fetching volume (5-day snapshot)...")
+            for _, row in top_etfs.iterrows():
+                selected_symbols.append({
+                    'symbol': row['symbol'],
+                    'type': 'etf',
+                    'volume': row['volume'],
+                    'market_cap': row.get('market_cap', 0),
+                    'exchange': 'XNAS'  # Placeholder
+                })
+        else:
+            print(f"  ⚠️  ETF rankings not found: {etf_rankings}")
 
-        def fetch_vol(sym_dict):
-            symbol = sym_dict.get('symbol')
-            try:
-                ticker = yf.Ticker(symbol)
-                hist = ticker.history(period='5d')
+        # Fallback if no rankings available
+        if not selected_symbols:
+            print(f"  ⚠️  No rankings found, using fallback")
+            selected_symbols = symbols[:max_symbols]
 
-                if len(hist) >= 1:
-                    sym_dict['volume'] = int(hist['Volume'].iloc[-1])
-                    sym_dict['price'] = float(hist['Close'].iloc[-1])
-                else:
-                    sym_dict['volume'] = 0
-                    sym_dict['price'] = 0
-            except:
-                sym_dict['volume'] = 0
-                sym_dict['price'] = 0
-            return sym_dict
+        print(f"\n  ✅ Selected {len(selected_symbols)} symbols")
+        print(f"     Stocks: {sum(1 for s in selected_symbols if s['type'] == 'stock')}")
+        print(f"     ETFs: {sum(1 for s in selected_symbols if s['type'] == 'etf')}")
 
-        workers = self.config['scanning'].get('parallel_workers', 10)
-
-        with ThreadPoolExecutor(max_workers=workers) as executor:
-            with tqdm(total=len(quality_symbols), desc="     Volume", unit="sym", ncols=100) as pbar:
-                futures = {executor.submit(fetch_vol, sym): sym for sym in quality_symbols}
-                for future in as_completed(futures):
-                    future.result()
-                    pbar.update(1)
-
-        # STEP 3: Filter by price/volume
-        filtered = [s for s in quality_symbols
-                   if s.get('price', 0) >= min_price and s.get('volume', 0) >= min_volume]
-
-        print(f"     ✓ {len(filtered)} passed filters")
-
-        # STEP 4: Sort by volume
-        filtered.sort(key=lambda x: x.get('volume', 0), reverse=True)
-
-        if filtered:
-            top = filtered[0]
-            print(f"     Top: {top['symbol']} (vol: {top.get('volume', 0):,.0f})")
-
-        # STEP 5: Take top N
-        selected = filtered[:max_symbols]
-
-        print(f"  ✓ Selected {len(selected)} symbols")
-        print(f"     → Will fetch {len(selected)} CSVs for analysis")
-
-        return selected
+        return selected_symbols
 
     # NOTE: _score_and_prioritize_symbols() and _has_recent_activity() methods
     # have been replaced by the pluggable SymbolSelector class in src/symbol_selector.py
@@ -693,12 +670,12 @@ class MasterScanner:
                 # CRITERIA 1: Buy-the-dip (3-10% drop + volume)
                 if opportunity_drop and volume_spike and price_filter and volume_filter and not_crashing:
                     is_candidate = True
-                
+
                 # CRITERIA 2: Breakouts (5%+ gainers + volume)
                 breakout = pct_change >= 5.0 and volume_spike and price_filter and volume_filter
                 if breakout:
                     is_candidate = True
-                
+
                 # CRITERIA 3: High-volume leaders (5M+ volume, any direction)
                 high_volume_leader = recent_volume >= 5000000 and price_filter and not_crashing
                 if high_volume_leader:
@@ -776,7 +753,7 @@ class MasterScanner:
         print("  🔍 Phase A: Pre-screening entire market...")
         candidates = self._quick_prescreen(self.universe)
         print(f"  ✅ Found {len(candidates)} promising candidates\n")
-        
+
         # FALLBACK: If no candidates found, analyze all selected symbols anyway
         if len(candidates) == 0 and len(self.universe) > 0:
             print(f"  ℹ️  No specific opportunities found by pre-screening")

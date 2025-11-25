@@ -1,9 +1,389 @@
 {
-  "timestamp": "2025-11-25T16:42:52.938458",
+  "timestamp": "2025-11-25T17:04:54.213109",
   "scan_config": {
     "tier": "daily",
-    "symbols_scanned": 5
+    "symbols_scanned": 10
   },
-  "opportunities": [],
+  "opportunities": [
+    {
+      "symbol": "AMD",
+      "composite_score": 66.5,
+      "confidence": 66.5,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 15
+      },
+      "trade_setup": {
+        "entry": 206.13,
+        "stop_loss": 191.70090000000002,
+        "target": 247.356,
+        "risk_reward": 2.8571428571428616
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "STRONG_SELL",
+        "num_buys": 9,
+        "num_sells": 57,
+        "net_value": -76487184.28,
+        "largest_buy": {
+          "name": "Su Lisa T",
+          "shares": 224727,
+          "value": 7683416.13,
+          "date": "2025-08-21"
+        },
+        "largest_sell": {
+          "name": "Su Lisa T",
+          "shares": 138093,
+          "value": 22614109.68,
+          "date": "2025-08-21"
+        },
+        "transactions": [
+          {
+            "name": "Norrod Forrest Eugene",
+            "change": -820,
+            "date": "2025-11-19",
+            "price": 230.78,
+            "value": -189239.6
+          },
+          {
+            "name": "Norrod Forrest Eugene",
+            "change": -5142,
+            "date": "2025-11-19",
+            "price": 230.12,
+            "value": -1183277.04
+          },
+          {
+            "name": "Norrod Forrest Eugene",
+            "change": -10188,
+            "date": "2025-11-19",
+            "price": 229.21,
+            "value": -2335191.48
+          },
+          {
+            "name": "Norrod Forrest Eugene",
+            "change": -3300,
+            "date": "2025-11-19",
+            "price": 228.36,
+            "value": -753588.0
+          },
+          {
+            "name": "Norrod Forrest Eugene",
+            "change": 8200,
+            "date": "2025-11-19",
+            "price": 34.19,
+            "value": 280358.0
+          }
+        ],
+        "summary": "9 buys, 57 sells (last 6 months) | Net: -$76.5M"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-11-25T17:04:35.841444"
+    },
+    {
+      "symbol": "TSLA",
+      "composite_score": 52.0,
+      "confidence": 52.0,
+      "recommendation": "SKIP",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 50.0,
+        "insider": 70
+      },
+      "trade_setup": {
+        "entry": 419.4,
+        "stop_loss": 390.042,
+        "target": 503.28,
+        "risk_reward": 2.8571428571428568
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "BUY",
+        "num_buys": 33,
+        "num_sells": 24,
+        "net_value": 144725971791.763,
+        "largest_buy": {
+          "name": "Musk Elon",
+          "shares": 423743904,
+          "value": 141568600887.36,
+          "date": "2025-11-06"
+        },
+        "largest_sell": {
+          "name": "MURDOCH JAMES R",
+          "shares": 120000,
+          "value": 42034320.0,
+          "date": "2025-08-26"
+        },
+        "transactions": [
+          {
+            "name": "Musk Elon",
+            "change": 423743904,
+            "date": "2025-11-06",
+            "price": 334.09,
+            "value": 141568600887.36
+          },
+          {
+            "name": "MURDOCH JAMES R",
+            "change": -60000,
+            "date": "2025-09-15",
+            "price": 422.68,
+            "value": -25360800.0
+          },
+          {
+            "name": "Musk Elon",
+            "change": 17536,
+            "date": "2025-09-12",
+            "price": 396.359,
+            "value": 6950551.424
+          },
+          {
+            "name": "Musk Elon",
+            "change": 116948,
+            "date": "2025-09-12",
+            "price": 395.526,
+            "value": 46255974.648
+          },
+          {
+            "name": "Musk Elon",
+            "change": 290501,
+            "date": "2025-09-12",
+            "price": 394.764,
+            "value": 114679336.764
+          }
+        ],
+        "summary": "33 buys, 24 sells (last 6 months) | Net: +$144726.0M"
+      },
+      "reasons": [],
+      "timestamp": "2025-11-25T17:04:34.916288"
+    },
+    {
+      "symbol": "NVDA",
+      "composite_score": 51.5,
+      "confidence": 51.5,
+      "recommendation": "SKIP",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 15
+      },
+      "trade_setup": {
+        "entry": 177.82,
+        "stop_loss": 165.3726,
+        "target": 213.384,
+        "risk_reward": 2.8571428571428594
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "STRONG_SELL",
+        "num_buys": 0,
+        "num_sells": 538,
+        "net_value": -1971575361.4503,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "COXE TENCH",
+          "shares": 1000000,
+          "value": 142804600.0,
+          "date": "2025-06-09"
+        },
+        "transactions": [
+          {
+            "name": "Kress Colette",
+            "change": -732,
+            "date": "2025-11-03",
+            "price": 210.8336,
+            "value": -154330.1952
+          },
+          {
+            "name": "Kress Colette",
+            "change": -873,
+            "date": "2025-11-03",
+            "price": 209.9023,
+            "value": -183244.7079
+          },
+          {
+            "name": "Kress Colette",
+            "change": -1521,
+            "date": "2025-11-03",
+            "price": 208.9188,
+            "value": -317765.4948
+          },
+          {
+            "name": "Kress Colette",
+            "change": -5360,
+            "date": "2025-11-03",
+            "price": 207.9333,
+            "value": -1114522.4880000001
+          },
+          {
+            "name": "Kress Colette",
+            "change": -1514,
+            "date": "2025-11-03",
+            "price": 207.0295,
+            "value": -313442.663
+          }
+        ],
+        "summary": "0 buys, 538 sells (last 6 months) | Net: -$1971.6M"
+      },
+      "reasons": [
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-11-25T17:04:33.577641"
+    },
+    {
+      "symbol": "AMZN",
+      "composite_score": 51.5,
+      "confidence": 51.5,
+      "recommendation": "SKIP",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 15
+      },
+      "trade_setup": {
+        "entry": 229.67,
+        "stop_loss": 213.5931,
+        "target": 275.604,
+        "risk_reward": 2.857142857142858
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "STRONG_SELL",
+        "num_buys": 0,
+        "num_sells": 54,
+        "net_value": -5686884854.2992,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "BEZOS JEFFREY P",
+          "shares": 3083140,
+          "value": 682649743.332,
+          "date": "2025-06-27"
+        },
+        "transactions": [
+          {
+            "name": "Huttenlocher Daniel P",
+            "change": -1237,
+            "date": "2025-11-20",
+            "price": 226.61,
+            "value": -280316.57
+          },
+          {
+            "name": "Alexander Keith Brian",
+            "change": -900,
+            "date": "2025-11-17",
+            "price": 233,
+            "value": -209700
+          },
+          {
+            "name": "Herrington Douglas J",
+            "change": -200,
+            "date": "2025-11-17",
+            "price": 234.38,
+            "value": -46876.0
+          },
+          {
+            "name": "Herrington Douglas J",
+            "change": -600,
+            "date": "2025-11-17",
+            "price": 233.7417,
+            "value": -140245.02000000002
+          },
+          {
+            "name": "Herrington Douglas J",
+            "change": -3200,
+            "date": "2025-11-17",
+            "price": 232.67,
+            "value": -744544.0
+          }
+        ],
+        "summary": "0 buys, 54 sells (last 6 months) | Net: -$5686.9M"
+      },
+      "reasons": [
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-11-25T17:04:34.230100"
+    },
+    {
+      "symbol": "GOOG",
+      "composite_score": 51.5,
+      "confidence": 51.5,
+      "recommendation": "SKIP",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 15
+      },
+      "trade_setup": {
+        "entry": 323.64,
+        "stop_loss": 300.9852,
+        "target": 388.368,
+        "risk_reward": 2.8571428571428616
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "STRONG_SELL",
+        "num_buys": 0,
+        "num_sells": 181,
+        "net_value": -159431093.69,
+        "largest_buy": null,
+        "largest_sell": {
+          "name": "Pichai Sundar",
+          "shares": 37646,
+          "value": 9329808.18,
+          "date": "2025-09-25"
+        },
+        "transactions": [
+          {
+            "name": "Pichai Sundar",
+            "change": -1644,
+            "date": "2025-11-19",
+            "price": 303.58,
+            "value": -499085.51999999996
+          },
+          {
+            "name": "Pichai Sundar",
+            "change": -1600,
+            "date": "2025-11-19",
+            "price": 302.39,
+            "value": -483824.0
+          },
+          {
+            "name": "Pichai Sundar",
+            "change": -2600,
+            "date": "2025-11-19",
+            "price": 301.35,
+            "value": -783510.0000000001
+          },
+          {
+            "name": "Pichai Sundar",
+            "change": -1900,
+            "date": "2025-11-19",
+            "price": 300.59,
+            "value": -571121.0
+          },
+          {
+            "name": "Pichai Sundar",
+            "change": -1700,
+            "date": "2025-11-19",
+            "price": 299.39,
+            "value": -508963.0
+          }
+        ],
+        "summary": "0 buys, 181 sells (last 6 months) | Net: -$159.4M"
+      },
+      "reasons": [
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-11-25T17:04:36.838797"
+    }
+  ],
   "portfolio_status": {}
 }

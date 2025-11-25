@@ -1,0 +1,39 @@
+name: Nightly Symbol Ranking
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # 2 AM UTC daily
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  rank:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install yfinance pandas finnhub-python python-dotenv
+
+      - name: Create .env file
+        run: |
+          echo "FINNHUB_API_KEY=${{ secrets.FINNHUB_API_KEY }}" > .env
+
+      - name: Rank symbols
+        run: |
+          python scripts/nightly_rank_symbols.py
+
+      - name: Commit rankings
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add data/metadata/ranked_stocks.csv data/metadata/ranked_etfs.csv
+          git diff --staged --quiet || git commit -m "chore: Update nightly symbol rankings [skip ci]"
+          git push || echo "No changes to push"
