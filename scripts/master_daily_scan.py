@@ -1625,8 +1625,9 @@ class MasterScanner:
                     now = now.tz_localize('UTC').tz_convert(last_date.tz)
                 days_old = (now - last_date).days
                 
-                # Fetch incremental data if needed (>= 1 day old)
-                if days_old >= 1:
+                # ALWAYS try to fetch incremental data (Yahoo handles weekends/holidays)
+                # Don't skip based on age - let Yahoo return empty if no new data
+                if True:  # Always attempt fetch
                     start_date = last_date + pd.Timedelta(days=1)
                     ticker = yf.Ticker(symbol)
                     new_data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=None)
