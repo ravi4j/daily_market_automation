@@ -1602,8 +1602,10 @@ class MasterScanner:
                 if df.empty:
                     return 'empty'
                 
-                # ALWAYS round and sort all data (not just when fetching new)
-                # Round to proper precision FIRST
+                # SORT FIRST (ascending for processing)
+                df = df.sort_index(ascending=True)
+                
+                # ALWAYS round all data
                 price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
                 for col in price_cols:
                     if col in df.columns:
@@ -1618,38 +1620,46 @@ class MasterScanner:
                 if 'Capital Gains' in df.columns:
                     df['Capital Gains'] = df['Capital Gains'].round(2)
                 
-                # Check how old the data is
-                last_date = df.index.max()  # Works with both ascending/descending
+                # Check how old the data is (last row after sorting ascending)
+                last_date = df.index[-1]  # Last row = newest date
                 now = pd.Timestamp.now()
                 if last_date.tz is not None:
                     now = now.tz_localize('UTC').tz_convert(last_date.tz)
                 days_old = (now - last_date).days
                 
-                # ALWAYS try to fetch incremental data (Yahoo handles weekends/holidays)
-                # Don't skip based on age - let Yahoo return empty if no new data
-                if True:  # Always attempt fetch
+                # Only fetch if data is old (skip if already has today/future data)
+                if days_old >= 0:
                     start_date = last_date + pd.Timedelta(days=1)
                     ticker = yf.Ticker(symbol)
                     new_data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=None)
+                else:
+                    new_data = pd.DataFrame()  # CSV has future data, skip fetch
+                
+                # Process new data if we got any
+                if not new_data.empty:
+                    # Fix timezone issue: make both timezone-naive for proper merging
+                    if new_data.index.tz is not None:
+                        new_data.index = new_data.index.tz_localize(None)
+                    if df.index.tz is not None:
+                        df.index = df.index.tz_localize(None)
                     
-                    if not new_data.empty:
-                        # Combine and deduplicate
-                        df = pd.concat([df, new_data])
-                        df = df[~df.index.duplicated(keep='last')]
-                        
-                        # Round new data too
-                        for col in price_cols:
-                            if col in df.columns:
-                                df[col] = df[col].round(2)
-                        
-                        if 'Volume' in df.columns:
-                            df['Volume'] = df['Volume'].round(0).astype('int64')
-                        if 'Dividends' in df.columns:
-                            df['Dividends'] = df['Dividends'].round(2)
-                        if 'Stock Splits' in df.columns:
-                            df['Stock Splits'] = df['Stock Splits'].round(2)
-                        if 'Capital Gains' in df.columns:
-                            df['Capital Gains'] = df['Capital Gains'].round(2)
+                    # Combine and deduplicate
+                    df = pd.concat([df, new_data])
+                    df = df[~df.index.duplicated(keep='last')]
+                    
+                    # Round all data again after merge
+                    for col in price_cols:
+                        if col in df.columns:
+                            df[col] = df[col].round(2)
+                    
+                    if 'Volume' in df.columns:
+                        df['Volume'] = df['Volume'].round(0).astype('int64')
+                    if 'Dividends' in df.columns:
+                        df['Dividends'] = df['Dividends'].round(2)
+                    if 'Stock Splits' in df.columns:
+                        df['Stock Splits'] = df['Stock Splits'].round(2)
+                    if 'Capital Gains' in df.columns:
+                        df['Capital Gains'] = df['Capital Gains'].round(2)
                 
                 # ALWAYS sort descending (newest first) and save
                 df = df.sort_index(ascending=False)
