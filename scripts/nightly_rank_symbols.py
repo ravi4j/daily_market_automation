@@ -22,57 +22,43 @@ METADATA_DIR.mkdir(parents=True, exist_ok=True)
 
 def get_all_us_symbols():
     """
-    Get symbols to rank
-    Strategy: Use base universe (major stocks/ETFs) + add more from Finnhub
-    This ensures we always include NVDA, AAPL, etc.
+    Get ALL US symbols from Finnhub
+    No limits - we'll rank all ~23,000 symbols using 1-day data (fast!)
     """
-
-    # Load base universe (curated list of important symbols)
-    base_file = METADATA_DIR / 'base_universe.txt'
     stocks = []
     etfs = []
-
-    if base_file.exists():
-        print("📋 Loading base universe...", flush=True)
-        with open(base_file, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    if '|' in line:
-                        symbol, sym_type = line.split('|')
-                        if sym_type == 'stock':
-                            stocks.append(symbol)
-                        elif sym_type == 'etf':
-                            etfs.append(symbol)
-        print(f"   Base: {len(stocks)} stocks, {len(etfs)} ETFs")
-
-    # Add more symbols from Finnhub (up to 500 total each)
+    
     api_key = os.getenv('FINNHUB_API_KEY')
-    if api_key:
-        try:
-            client = finnhub.Client(api_key=api_key)
-            print("📡 Fetching additional symbols from Finnhub...", flush=True)
-            us_symbols = client.stock_symbols('US')
-
-            for sym in us_symbols:
-                symbol = sym.get('displaySymbol', sym.get('symbol'))
-                sym_type = sym.get('type', '')
-                exchange = sym.get('mic', '')
-
-                # Filter for major exchanges
-                if exchange not in ['XNAS', 'XNYS', 'XASE', 'ARCX']:
-                    continue
-
-                # Add if not already in base list and under limit
-                if sym_type == 'Common Stock' and symbol not in stocks and len(stocks) < 500:
-                    stocks.append(symbol)
-                elif sym_type in ['ETP', 'ETF'] and symbol not in etfs and len(etfs) < 200:
-                    etfs.append(symbol)
-
-            print(f"   Added from Finnhub: {len(stocks)} stocks, {len(etfs)} ETFs total")
-        except Exception as e:
-            print(f"   ⚠️  Finnhub fetch failed: {e}")
-
+    if not api_key:
+        print("❌ FINNHUB_API_KEY not found in .env")
+        return [], []
+    
+    try:
+        client = finnhub.Client(api_key=api_key)
+        print("📡 Fetching ALL US symbols from Finnhub...", flush=True)
+        us_symbols = client.stock_symbols('US')
+        
+        for sym in us_symbols:
+            symbol = sym.get('displaySymbol', sym.get('symbol'))
+            sym_type = sym.get('type', '')
+            exchange = sym.get('mic', '')
+            
+            # Filter for major exchanges only
+            if exchange not in ['XNAS', 'XNYS', 'XASE', 'ARCX']:
+                continue
+            
+            # Collect all stocks and ETFs (no limits!)
+            if sym_type == 'Common Stock':
+                stocks.append(symbol)
+            elif sym_type in ['ETP', 'ETF']:
+                etfs.append(symbol)
+        
+        print(f"   ✅ Found {len(stocks)} stocks, {len(etfs)} ETFs from major exchanges")
+        print(f"   Total to rank: {len(stocks) + len(etfs)} symbols")
+    except Exception as e:
+        print(f"   ❌ Finnhub fetch failed: {e}")
+        return [], []
+    
     return stocks, etfs
 
 def rank_symbols(symbols, output_file, symbol_type='Stock'):
@@ -85,32 +71,39 @@ def rank_symbols(symbols, output_file, symbol_type='Stock'):
         symbol_type: 'Stock' or 'ETF'
     """
     print(f"\n📊 Ranking {len(symbols)} {symbol_type}s...", flush=True)
-    print(f"   This will take ~{len(symbols)//60} minutes (rate limited to 60/min)", flush=True)
-
+    est_minutes = len(symbols) // 60
+    print(f"   Estimated time: ~{est_minutes} minutes (using 1-day data for speed)", flush=True)
+    print(f"   Rate limit: 60 symbols/min (Yahoo Finance free tier)", flush=True)
+    
     results = []
     failed = 0
-
+    start_time = time.time()
+    
     for i, symbol in enumerate(symbols, 1):
-        # Rate limit: ~1 per second
+        # Rate limit: ~1 per second (conservative)
         if i > 1:
-            time.sleep(1.1)
+            time.sleep(1.0)
 
-        # Progress
+        # Progress (every 100 symbols)
         if i % 100 == 0:
-            print(f"   Progress: {i}/{len(symbols)} ({i*100//len(symbols)}%)")
+            elapsed = time.time() - start_time
+            rate = i / elapsed * 60  # symbols per minute
+            remaining = (len(symbols) - i) / rate
+            print(f"   Progress: {i}/{len(symbols)} ({i*100//len(symbols)}%) | "
+                  f"Rate: {rate:.1f}/min | ETA: {remaining:.1f} min | Failed: {failed}", flush=True)
 
         try:
             ticker = yf.Ticker(symbol)
-
-            # Get recent volume
-            hist = ticker.history(period='5d')
+            
+            # Get TODAY's data only (1d = MUCH faster than 5d)
+            hist = ticker.history(period='1d')
             if hist.empty:
                 failed += 1
                 continue
-
-            # Get info
+            
+            # Get info (for market cap)
             info = ticker.info
-
+            
             results.append({
                 'symbol': symbol,
                 'volume': int(hist['Volume'].iloc[-1]),
@@ -155,9 +148,15 @@ def rank_symbols(symbols, output_file, symbol_type='Stock'):
 
     # Save
     df.to_csv(output_file, index=False)
-
+    
+    # Final stats
+    total_time = time.time() - start_time
+    actual_rate = len(df) / total_time * 60
+    
     print(f"\n✅ Ranked {len(df)} {symbol_type}s")
     print(f"   Failed: {failed}")
+    print(f"   Time: {total_time/60:.1f} minutes")
+    print(f"   Rate: {actual_rate:.1f} symbols/min")
     print(f"   Saved to: {output_file}")
     print(f"\n   Top 10 {symbol_type}s by volume:")
     print(df.head(10)[['rank', 'symbol', 'volume', 'market_cap']].to_string(index=False))
