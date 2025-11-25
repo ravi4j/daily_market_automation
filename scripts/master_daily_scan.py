@@ -1602,6 +1602,22 @@ class MasterScanner:
                 if df.empty:
                     return 'empty'
                 
+                # ALWAYS round and sort all data (not just when fetching new)
+                # Round to proper precision FIRST
+                price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
+                for col in price_cols:
+                    if col in df.columns:
+                        df[col] = df[col].round(2)
+                
+                if 'Volume' in df.columns:
+                    df['Volume'] = df['Volume'].round(0).astype('int64')
+                if 'Dividends' in df.columns:
+                    df['Dividends'] = df['Dividends'].round(2)
+                if 'Stock Splits' in df.columns:
+                    df['Stock Splits'] = df['Stock Splits'].round(2)
+                if 'Capital Gains' in df.columns:
+                    df['Capital Gains'] = df['Capital Gains'].round(2)
+                
                 # Check how old the data is
                 last_date = df.index.max()  # Works with both ascending/descending
                 now = pd.Timestamp.now()
@@ -1609,40 +1625,34 @@ class MasterScanner:
                     now = now.tz_localize('UTC').tz_convert(last_date.tz)
                 days_old = (now - last_date).days
                 
-                # Skip if data is fresh (< 1 day old)
-                if days_old < 1:
-                    return 'fresh'
+                # Fetch incremental data if needed (>= 1 day old)
+                if days_old >= 1:
+                    start_date = last_date + pd.Timedelta(days=1)
+                    ticker = yf.Ticker(symbol)
+                    new_data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=None)
+                    
+                    if not new_data.empty:
+                        # Combine and deduplicate
+                        df = pd.concat([df, new_data])
+                        df = df[~df.index.duplicated(keep='last')]
+                        
+                        # Round new data too
+                        for col in price_cols:
+                            if col in df.columns:
+                                df[col] = df[col].round(2)
+                        
+                        if 'Volume' in df.columns:
+                            df['Volume'] = df['Volume'].round(0).astype('int64')
+                        if 'Dividends' in df.columns:
+                            df['Dividends'] = df['Dividends'].round(2)
+                        if 'Stock Splits' in df.columns:
+                            df['Stock Splits'] = df['Stock Splits'].round(2)
+                        if 'Capital Gains' in df.columns:
+                            df['Capital Gains'] = df['Capital Gains'].round(2)
                 
-                # Fetch incremental data
-                start_date = last_date + pd.Timedelta(days=1)
-                ticker = yf.Ticker(symbol)
-                new_data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=None)
-                
-                if new_data.empty:
-                    return 'no_new_data'
-                
-                # Combine and deduplicate
-                combined = pd.concat([df, new_data])
-                combined = combined[~combined.index.duplicated(keep='last')]
-                
-                # Round to proper precision
-                price_cols = ['Open', 'High', 'Low', 'Close', 'Adj Close']
-                for col in price_cols:
-                    if col in combined.columns:
-                        combined[col] = combined[col].round(2)
-                
-                if 'Volume' in combined.columns:
-                    combined['Volume'] = combined['Volume'].round(0).astype('int64')
-                if 'Dividends' in combined.columns:
-                    combined['Dividends'] = combined['Dividends'].round(2)
-                if 'Stock Splits' in combined.columns:
-                    combined['Stock Splits'] = combined['Stock Splits'].round(2)
-                if 'Capital Gains' in combined.columns:
-                    combined['Capital Gains'] = combined['Capital Gains'].round(2)
-                
-                # Sort descending (newest first) and save
-                combined = combined.sort_index(ascending=False)
-                combined.to_csv(csv_path)
+                # ALWAYS sort descending (newest first) and save
+                df = df.sort_index(ascending=False)
+                df.to_csv(csv_path)
                 
                 return 'updated'
                 
