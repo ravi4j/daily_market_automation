@@ -1,217 +1,394 @@
 {
-  "timestamp": "2025-11-27T21:58:46.175687",
+  "timestamp": "2025-11-28T21:57:33.535842",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
   "opportunities": [
     {
-      "symbol": "CPRT",
-      "composite_score": 72.0,
-      "confidence": 72.0,
-      "recommendation": "BUY",
+      "symbol": "PFE",
+      "composite_score": 60.5,
+      "confidence": 60.5,
+      "recommendation": "WATCH",
       "scores": {
-        "news": 100,
+        "news": 50.0,
         "technical": 50.0,
         "fundamentals": 85.0,
-        "insider": 50
+        "insider": 85
       },
       "trade_setup": {
-        "entry": 38.75,
-        "stop_loss": 36.0375,
-        "target": 46.5,
+        "entry": 25.74,
+        "stop_loss": 23.9382,
+        "target": 30.887999999999998,
+        "risk_reward": 2.8571428571428568
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "STRONG_BUY",
+        "num_buys": 23,
+        "num_sells": 0,
+        "net_value": 445668.26,
+        "largest_buy": {
+          "name": "NARAYEN SHANTANU",
+          "shares": 2063,
+          "value": 50007.119999999995,
+          "date": "2025-06-30"
+        },
+        "largest_sell": null,
+        "transactions": [
+          {
+            "name": "BOURLA ALBERT",
+            "change": 24,
+            "date": "2025-11-14",
+            "price": 25.06,
+            "value": 601.4399999999999
+          },
+          {
+            "name": "BOURLA ALBERT",
+            "change": 24,
+            "date": "2025-10-31",
+            "price": 24.65,
+            "value": 591.5999999999999
+          },
+          {
+            "name": "BOURLA ALBERT",
+            "change": 25,
+            "date": "2025-10-15",
+            "price": 24.39,
+            "value": 609.75
+          },
+          {
+            "name": "BOURLA ALBERT",
+            "change": 83,
+            "date": "2025-10-14",
+            "price": 24.52,
+            "value": 2035.1599999999999
+          },
+          {
+            "name": "Echevarria Joseph",
+            "change": 1815,
+            "date": "2025-09-30",
+            "price": 25.48,
+            "value": 46246.200000000004
+          }
+        ],
+        "summary": "23 buys, 0 sells (last 6 months) | Net: +$0.4M"
+      },
+      "reasons": [
+        "Solid fundamentals",
+        "Insider buying"
+      ],
+      "timestamp": "2025-11-28T21:44:09.684929"
+    },
+    {
+      "symbol": "T",
+      "composite_score": 60.5,
+      "confidence": 60.5,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 85
+      },
+      "trade_setup": {
+        "entry": 26.02,
+        "stop_loss": 24.198600000000003,
+        "target": 31.223999999999997,
+        "risk_reward": 2.8571428571428603
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "STRONG_BUY",
+        "num_buys": 51,
+        "num_sells": 1,
+        "net_value": 2098323.2199999997,
+        "largest_buy": {
+          "name": "TAYLOR CINDY B",
+          "shares": 6220,
+          "value": 180006.80000000002,
+          "date": "2025-06-30"
+        },
+        "largest_sell": {
+          "name": "Sabrina Sanders S",
+          "shares": 9249,
+          "value": 267666.06,
+          "date": "2025-08-29"
+        },
+        "transactions": [
+          {
+            "name": "McElfresh Jeffery S.",
+            "change": 2577,
+            "date": "2025-10-31",
+            "price": 24.75,
+            "value": 63780.75
+          },
+          {
+            "name": "Desroches Pascal",
+            "change": 3300,
+            "date": "2025-10-31",
+            "price": 24.75,
+            "value": 81675.0
+          },
+          {
+            "name": "Sabrina Sanders S",
+            "change": 225,
+            "date": "2025-10-31",
+            "price": 24.75,
+            "value": 5568.75
+          },
+          {
+            "name": "Grier Kelly J",
+            "change": 61,
+            "date": "2025-10-31",
+            "price": 24.75,
+            "value": 1509.75
+          },
+          {
+            "name": "Arroyo F. Thaddeus",
+            "change": 946,
+            "date": "2025-10-31",
+            "price": 24.75,
+            "value": 23413.5
+          }
+        ],
+        "summary": "51 buys, 1 sells (last 6 months) | Net: +$2.1M"
+      },
+      "reasons": [
+        "Solid fundamentals",
+        "Insider buying"
+      ],
+      "timestamp": "2025-11-28T21:45:00.262370"
+    },
+    {
+      "symbol": "B",
+      "composite_score": 60.5,
+      "confidence": 60.5,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 85
+      },
+      "trade_setup": {
+        "entry": 41.34,
+        "stop_loss": 38.446200000000005,
+        "target": 49.608000000000004,
         "risk_reward": 2.8571428571428585
       },
       "strategy_signals": [],
       "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 11,
-        "num_sells": 9,
-        "net_value": -13843175.419,
+        "sentiment": "STRONG_BUY",
+        "num_buys": 65,
+        "num_sells": 8,
+        "net_value": 735735489.2576001,
         "largest_buy": {
-          "name": "TRYFOROS THOMAS N",
-          "shares": 100000,
-          "value": 1180000.0,
-          "date": "2025-11-25"
+          "name": "BARRICK MINING CORPORATION",
+          "shares": 2500000,
+          "value": 88218750.0,
+          "date": "2025-09-23"
         },
         "largest_sell": {
-          "name": "TRYFOROS THOMAS N",
-          "shares": 228840,
-          "value": 10879053.6,
-          "date": "2025-09-15"
+          "name": "Shuttleworth, Graham Patrick",
+          "shares": 200000,
+          "value": 7212080.0,
+          "date": "2025-11-12"
         },
         "transactions": [
           {
-            "name": "TRYFOROS THOMAS N",
-            "change": -100000,
-            "date": "2025-11-25",
-            "price": 39.07,
-            "value": -3907000.0
+            "name": "Bock, Johann Sebastiaan",
+            "change": -67500,
+            "date": "2025-11-12",
+            "price": 37.1479,
+            "value": -2507483.25
           },
           {
-            "name": "TRYFOROS THOMAS N",
-            "change": 100000,
-            "date": "2025-11-25",
-            "price": 11.8,
-            "value": 1180000.0
+            "name": "Rich, Darian Kevin",
+            "change": -124349,
+            "date": "2025-11-12",
+            "price": 52.144,
+            "value": -6484054.256
           },
           {
-            "name": "Englander Daniel J",
-            "change": -100000,
-            "date": "2025-11-13",
-            "price": 11.8,
-            "value": -1180000.0
+            "name": "Shuttleworth, Graham Patrick",
+            "change": -200000,
+            "date": "2025-11-12",
+            "price": 36.0604,
+            "value": -7212080.0
           },
           {
-            "name": "Englander Daniel J",
-            "change": 100000,
-            "date": "2025-11-13",
-            "price": 11.8,
-            "value": 1180000.0
+            "name": "Costantini, Isela Angelica",
+            "change": 2043,
+            "date": "2025-09-30",
+            "price": 33.64,
+            "value": 68726.52
           },
           {
-            "name": "Liaw Jeffrey",
-            "change": -22086,
-            "date": "2025-10-15",
-            "price": 44.7902,
-            "value": -989236.3572
+            "name": "Cai, Hongyu (Helen)",
+            "change": 2043,
+            "date": "2025-09-30",
+            "price": 33.64,
+            "value": 68726.52
           }
         ],
-        "summary": "11 buys, 9 sells (last 6 months) | Net: -$13.8M"
+        "summary": "65 buys, 8 sells (last 6 months) | Net: +$735.7M"
       },
       "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
+        "Solid fundamentals",
+        "Insider buying"
       ],
-      "timestamp": "2025-11-27T21:49:06.913521"
+      "timestamp": "2025-11-28T21:45:58.583124"
     },
     {
-      "symbol": "SGHC",
-      "composite_score": 70.0,
-      "confidence": 70.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 10.93,
-        "stop_loss": 10.164900000000001,
-        "target": 13.116,
-        "risk_reward": 2.8571428571428625
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 0,
-        "num_sells": 0,
-        "net_value": 0,
-        "transactions": [],
-        "summary": "No recent insider transactions"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-27T21:51:04.335440"
-    },
-    {
-      "symbol": "AMBA",
-      "composite_score": 70.0,
-      "confidence": 70.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 73.89,
-        "stop_loss": 68.71770000000001,
-        "target": 88.66799999999999,
-        "risk_reward": 2.8571428571428594
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 0,
-        "num_sells": 0,
-        "net_value": 0,
-        "transactions": [],
-        "summary": "No recent insider transactions"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-11-27T21:54:38.038028"
-    },
-    {
-      "symbol": "FRO",
-      "composite_score": 69.0,
-      "confidence": 69.0,
+      "symbol": "VZ",
+      "composite_score": 60.5,
+      "confidence": 60.5,
       "recommendation": "WATCH",
       "scores": {
-        "news": 90,
+        "news": 50.0,
         "technical": 50.0,
         "fundamentals": 85.0,
-        "insider": 50.0
+        "insider": 85
       },
       "trade_setup": {
-        "entry": 23.52,
-        "stop_loss": 21.8736,
-        "target": 28.224,
-        "risk_reward": 2.8571428571428577
+        "entry": 41.11,
+        "stop_loss": 38.2323,
+        "target": 49.332,
+        "risk_reward": 2.8571428571428603
       },
       "strategy_signals": [],
       "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 0,
+        "sentiment": "STRONG_BUY",
+        "num_buys": 107,
         "num_sells": 0,
-        "net_value": 0,
-        "transactions": [],
-        "summary": "No recent insider transactions"
+        "net_value": 165271.43,
+        "largest_buy": {
+          "name": "SCHULMAN DANIEL H",
+          "shares": 363,
+          "value": 3982.11,
+          "date": "2025-10-23"
+        },
+        "largest_sell": null,
+        "transactions": [
+          {
+            "name": "Russo Joseph J.",
+            "change": 94,
+            "date": "2025-11-20",
+            "price": 11.64,
+            "value": 1094.16
+          },
+          {
+            "name": "Venkatesh Vandana",
+            "change": 109,
+            "date": "2025-11-20",
+            "price": 11.64,
+            "value": 1268.76
+          },
+          {
+            "name": "Sampath Sowmyanarayan",
+            "change": 169,
+            "date": "2025-11-20",
+            "price": 11.64,
+            "value": 1967.16
+          },
+          {
+            "name": "Hammock Samantha",
+            "change": 84,
+            "date": "2025-11-20",
+            "price": 11.64,
+            "value": 977.76
+          },
+          {
+            "name": "Malady Kyle",
+            "change": 149,
+            "date": "2025-11-20",
+            "price": 11.64,
+            "value": 1734.3600000000001
+          }
+        ],
+        "summary": "107 buys, 0 sells (last 6 months) | Net: +$0.2M"
       },
       "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
+        "Solid fundamentals",
+        "Insider buying"
       ],
-      "timestamp": "2025-11-27T21:52:09.503810"
+      "timestamp": "2025-11-28T21:46:58.006768"
     },
     {
-      "symbol": "ASPI",
-      "composite_score": 68.5,
-      "confidence": 68.5,
+      "symbol": "OBDC",
+      "composite_score": 60.5,
+      "confidence": 60.5,
       "recommendation": "WATCH",
       "scores": {
-        "news": 95,
+        "news": 50.0,
         "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 50.0
+        "fundamentals": 85.0,
+        "insider": 85
       },
       "trade_setup": {
-        "entry": 5.92,
-        "stop_loss": 5.5056,
-        "target": 7.104,
-        "risk_reward": 2.85714285714286
+        "entry": 13.17,
+        "stop_loss": 12.2481,
+        "target": 15.803999999999998,
+        "risk_reward": 2.8571428571428585
       },
       "strategy_signals": [],
       "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 0,
+        "sentiment": "STRONG_BUY",
+        "num_buys": 7,
         "num_sells": 0,
-        "net_value": 0,
-        "transactions": [],
-        "summary": "No recent insider transactions"
+        "net_value": 1708394.0039,
+        "largest_buy": {
+          "name": "Packer Craig",
+          "shares": 41600,
+          "value": 488962.24,
+          "date": "2025-11-18"
+        },
+        "largest_sell": null,
+        "transactions": [
+          {
+            "name": "Nicholson Logan",
+            "change": 25000,
+            "date": "2025-11-18",
+            "price": 11.7476,
+            "value": 293690.0
+          },
+          {
+            "name": "Packer Craig",
+            "change": 41600,
+            "date": "2025-11-18",
+            "price": 11.7539,
+            "value": 488962.24
+          },
+          {
+            "name": "Packer Craig",
+            "change": 41600,
+            "date": "2025-11-18",
+            "price": 11.7539,
+            "value": 488962.24
+          },
+          {
+            "name": "Temple Chris",
+            "change": 8000,
+            "date": "2025-11-12",
+            "price": 12.03,
+            "value": 96240.0
+          },
+          {
+            "name": "Weiler Melissa",
+            "change": 10000,
+            "date": "2025-11-10",
+            "price": 11.99,
+            "value": 119900.0
+          }
+        ],
+        "summary": "7 buys, 0 sells (last 6 months) | Net: +$1.7M"
       },
       "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
+        "Solid fundamentals",
+        "Insider buying"
       ],
-      "timestamp": "2025-11-27T21:54:42.945043"
+      "timestamp": "2025-11-28T21:50:02.696145"
     }
   ],
   "portfolio_status": {}
