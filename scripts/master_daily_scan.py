@@ -1953,9 +1953,16 @@ class MasterScanner:
                 badge = "🟢" if confidence == 'HIGH' else "🟡" if confidence == 'MEDIUM' else "⚪"
 
                 msg.append(f"\n{i}. {badge} {opp['symbol']} - {opp_type}")
-                msg.append(f"   Gap: {opp['gap_pct']:.2f}% | Score: {opp['score']:.0f}/100")
-                msg.append(f"   Entry: ${opp['entry']:.2f} | Target: ${opp['target']:.2f}")
-                msg.append(f"   Stop: ${opp['stop']:.2f}")
+                # Show gap details: previous close → today's open (gap price)
+                prev_close = opp.get('previous_close', 0)
+                today_open = opp.get('today_open', opp.get('entry', 0))
+                current = opp.get('current_price', 0)
+                msg.append(f"   Gap: {opp['gap_pct']:.2f}% (${prev_close:.2f} → ${today_open:.2f})")
+                if current != today_open:
+                    intraday_pct = opp.get('intraday_pct', 0)
+                    msg.append(f"   Current: ${current:.2f} (intraday: {intraday_pct:+.2f}%)")
+                msg.append(f"   Entry: ${opp['entry']:.2f} | Target: ${opp['target']:.2f} | Stop: ${opp['stop']:.2f}")
+                msg.append(f"   Score: {opp['score']:.0f}/100 | Confidence: {confidence}")
                 reasons = opp.get('reasons', [])
                 if reasons:
                     msg.append(f"   Why: {', '.join(reasons[:2])}")  # Show top 2 reasons

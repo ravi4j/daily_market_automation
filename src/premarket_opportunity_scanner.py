@@ -7,6 +7,7 @@ import yfinance as yf
 from typing import Dict, List, Optional
 from datetime import datetime
 import pytz
+from pathlib import Path
 
 
 class PreMarketOpportunityScanner:
@@ -22,55 +23,88 @@ class PreMarketOpportunityScanner:
         self.symbols_to_scan = symbols_to_scan or []
         self.et_tz = pytz.timezone('America/New_York')
 
-    def get_gap_data(self, symbol: str) -> Optional[Dict]:
+    def get_gap_data(self, symbol: str, debug: bool = False) -> Optional[Dict]:
         """
         Get gap data for a symbol
+        
+        FIXED: Uses daily OHLC data instead of 1-minute candles
+        Gap = Today's Open - Yesterday's Close (the true gap definition)
 
         Returns:
         {
             'symbol': 'AAPL',
-            'current_price': 220.50,
-            'previous_close': 230.00,
-            'gap_pct': -4.13,
-            'gap_dollars': -9.50,
-            'volume': 125000  # pre-market volume
+            'current_price': 220.50,    # Today's latest price
+            'previous_close': 230.00,   # Yesterday's actual close
+            'today_open': 225.00,       # Today's open (where gap occurred)
+            'gap_pct': -2.17,           # (today_open - yesterday_close) / yesterday_close
+            'gap_dollars': -5.00,
+            'volume': 1250000           # Today's volume
         }
         """
         try:
             ticker = yf.Ticker(symbol)
 
-            # Get pre-market data
-            data = ticker.history(period='1d', interval='1m', prepost=True)
+            # Get last 5 days of DAILY data (handles weekends/holidays)
+            data = ticker.history(period='5d', interval='1d')
 
-            if data.empty:
+            if data.empty or len(data) < 2:
+                if debug:
+                    print(f"   ⚠️  {symbol}: Insufficient data (need at least 2 days)")
                 return None
 
+            # Get yesterday's ACTUAL close (last complete trading day)
+            previous_close = data['Close'].iloc[-2]
+            previous_date = data.index[-2].strftime('%Y-%m-%d')
+
+            # Get today's open and current price
+            today_open = data['Open'].iloc[-1]
+            today_high = data['High'].iloc[-1]
+            today_low = data['Low'].iloc[-1]
             current_price = data['Close'].iloc[-1]
+            today_volume = data['Volume'].iloc[-1]
+            today_date = data.index[-1].strftime('%Y-%m-%d')
 
-            # Get previous close
-            info = ticker.info
-            previous_close = info.get('previousClose') or info.get('regularMarketPreviousClose')
-
-            if not previous_close:
-                return None
-
-            # Calculate gap
-            gap_dollars = current_price - previous_close
+            # Calculate gap (TODAY'S OPEN vs YESTERDAY'S CLOSE)
+            # This is the true definition of a gap!
+            gap_dollars = today_open - previous_close
             gap_pct = (gap_dollars / previous_close) * 100
 
-            # Pre-market volume
-            now_et = datetime.now(self.et_tz)
-            market_open = now_et.replace(hour=9, minute=30, second=0, microsecond=0)
-            premarket_data = data[data.index < market_open]
-            volume = int(premarket_data['Volume'].sum()) if not premarket_data.empty else 0
+            # Calculate intraday movement (current vs open)
+            intraday_change = current_price - today_open
+            intraday_pct = (intraday_change / today_open) * 100
+
+            # DEBUG LOGGING
+            if debug or abs(gap_pct) >= 2.0:
+                print(f"\n   📊 GAP DATA FOR {symbol}:")
+                print(f"      Data Source: Daily OHLC (period='5d', interval='1d')")
+                print(f"      Yesterday ({previous_date}):")
+                print(f"        - Close: ${previous_close:.2f}")
+                print(f"      Today ({today_date}):")
+                print(f"        - Open:  ${today_open:.2f}")
+                print(f"        - High:  ${today_high:.2f}")
+                print(f"        - Low:   ${today_low:.2f}")
+                print(f"        - Close: ${current_price:.2f}")
+                print(f"        - Volume: {today_volume:,}")
+                print(f"      Gap Calculation:")
+                print(f"        - Gap $: ${gap_dollars:+.2f}")
+                print(f"        - Gap %: {gap_pct:+.2f}%")
+                print(f"        - Formula: (${today_open:.2f} - ${previous_close:.2f}) / ${previous_close:.2f} × 100")
+                print(f"      Intraday Move:")
+                print(f"        - Change: ${intraday_change:+.2f} ({intraday_pct:+.2f}%)")
 
             return {
                 'symbol': symbol,
                 'current_price': round(float(current_price), 2),
                 'previous_close': round(float(previous_close), 2),
+                'today_open': round(float(today_open), 2),
+                'today_high': round(float(today_high), 2),
+                'today_low': round(float(today_low), 2),
                 'gap_pct': round(float(gap_pct), 2),
                 'gap_dollars': round(float(gap_dollars), 2),
-                'volume': volume
+                'intraday_pct': round(float(intraday_pct), 2),
+                'volume': int(today_volume),
+                'previous_date': previous_date,
+                'today_date': today_date
             }
 
         except Exception as e:
@@ -134,6 +168,7 @@ class PreMarketOpportunityScanner:
 
         gap_pct = abs(gap_data['gap_pct'])
         current = gap_data['current_price']
+        today_open = gap_data['today_open']  # Entry point is the gap open
         prev_close = gap_data['previous_close']
 
         # Gap size (2-10% is ideal)
@@ -195,9 +230,10 @@ class PreMarketOpportunityScanner:
             reasons.append("Good pre-market volume")
 
         # Calculate entry/stop/target
-        entry = current
-        stop = current * 0.97  # 3% stop
-        target = prev_close  # Gap fill target
+        # Entry is where the gap opened (today's open), not current price
+        entry = today_open
+        stop = today_open * 0.97  # 3% stop below entry
+        target = prev_close  # Gap fill target (yesterday's close)
 
         risk = entry - stop
         reward = target - entry
@@ -240,6 +276,7 @@ class PreMarketOpportunityScanner:
 
         gap_pct = gap_data['gap_pct']
         current = gap_data['current_price']
+        today_open = gap_data['today_open']  # Entry point is the gap open
         prev_close = gap_data['previous_close']
 
         # Gap size (3-8% is ideal for continuation)
@@ -293,9 +330,10 @@ class PreMarketOpportunityScanner:
             score += 10
 
         # Calculate entry/stop/target (for gap up continuation)
-        entry = current
-        stop = prev_close  # Stop below gap
-        target = current * 1.08  # 8% upside target
+        # Entry is where the gap opened (today's open), not current price
+        entry = today_open
+        stop = prev_close  # Stop below gap (yesterday's close)
+        target = today_open * 1.08  # 8% upside target from gap open
 
         risk = entry - stop
         reward = target - entry
@@ -322,7 +360,7 @@ class PreMarketOpportunityScanner:
         }
 
     def scan_for_opportunities(self, symbols: List[str] = None, min_gap_pct: float = 2.0,
-                              max_opportunities: int = 10) -> List[Dict]:
+                              max_opportunities: int = 10, debug: bool = True) -> List[Dict]:
         """
         Scan symbols for gap opportunities
 
@@ -330,6 +368,7 @@ class PreMarketOpportunityScanner:
             symbols: List of symbols to scan (overrides self.symbols_to_scan if provided)
             min_gap_pct: Minimum gap percentage to consider (default 2%)
             max_opportunities: Maximum opportunities to return
+            debug: Enable detailed logging (default True)
 
         Returns:
             List of opportunities sorted by score
@@ -340,10 +379,12 @@ class PreMarketOpportunityScanner:
 
         print(f"\n🔍 Scanning {len(scan_symbols)} symbols for gap opportunities...")
         print(f"   (Looking for gaps >= {min_gap_pct}%)")
+        if debug:
+            print(f"   📝 Debug logging: ENABLED (will show gap calculation details)")
 
         for symbol in scan_symbols:
-            # Get gap data
-            gap_data = self.get_gap_data(symbol)
+            # Get gap data (with debug logging)
+            gap_data = self.get_gap_data(symbol, debug=debug)
 
             if not gap_data:
                 continue
@@ -379,8 +420,68 @@ class PreMarketOpportunityScanner:
 
         print(f"✅ Found {len(opportunities)} opportunities (returning top {max_opportunities})")
 
+        # Save gap data log to file
+        if opportunities and debug:
+            self._save_gap_log(opportunities[:max_opportunities])
+
         # Return top N
         return opportunities[:max_opportunities]
+    
+    def _save_gap_log(self, opportunities: List[Dict]):
+        """Save detailed gap calculation log to file for verification"""
+        try:
+            log_dir = Path(__file__).parent.parent / 'logs'
+            log_dir.mkdir(exist_ok=True)
+            
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            log_file = log_dir / f'gap_calculation_{timestamp}.log'
+            
+            with open(log_file, 'w') as f:
+                f.write("="*80 + "\n")
+                f.write("GAP CALCULATION VERIFICATION LOG\n")
+                f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write("="*80 + "\n\n")
+                
+                for i, opp in enumerate(opportunities, 1):
+                    f.write(f"{i}. {opp['symbol']} - {opp.get('opportunity_type', 'UNKNOWN')}\n")
+                    f.write(f"   {'='*70}\n")
+                    f.write(f"   Data Source: Daily OHLC (period='5d', interval='1d')\n")
+                    f.write(f"   \n")
+                    f.write(f"   Previous Day ({opp.get('previous_date', 'N/A')}):\n")
+                    f.write(f"     Close: ${opp.get('previous_close', 0):.2f}\n")
+                    f.write(f"   \n")
+                    f.write(f"   Today ({opp.get('today_date', 'N/A')}):\n")
+                    f.write(f"     Open:  ${opp.get('today_open', 0):.2f}\n")
+                    f.write(f"     High:  ${opp.get('today_high', 0):.2f}\n")
+                    f.write(f"     Low:   ${opp.get('today_low', 0):.2f}\n")
+                    f.write(f"     Close: ${opp.get('current_price', 0):.2f}\n")
+                    f.write(f"     Volume: {opp.get('volume', 0):,}\n")
+                    f.write(f"   \n")
+                    f.write(f"   Gap Calculation:\n")
+                    prev_close = opp.get('previous_close', 0)
+                    today_open = opp.get('today_open', 0)
+                    gap_pct = opp.get('gap_pct', 0)
+                    f.write(f"     Formula: (Today_Open - Yesterday_Close) / Yesterday_Close × 100\n")
+                    f.write(f"     Formula: (${today_open:.2f} - ${prev_close:.2f}) / ${prev_close:.2f} × 100\n")
+                    f.write(f"     Gap $: ${opp.get('gap_dollars', 0):+.2f}\n")
+                    f.write(f"     Gap %: {gap_pct:+.2f}%\n")
+                    f.write(f"   \n")
+                    f.write(f"   Trade Setup:\n")
+                    f.write(f"     Entry:  ${opp.get('entry', 0):.2f} (gap open price)\n")
+                    f.write(f"     Target: ${opp.get('target', 0):.2f}\n")
+                    f.write(f"     Stop:   ${opp.get('stop', 0):.2f}\n")
+                    f.write(f"     Score:  {opp.get('score', 0):.0f}/100\n")
+                    f.write(f"     R/R:    {opp.get('risk_reward', 0):.2f}:1\n")
+                    f.write(f"\n")
+                
+                f.write("="*80 + "\n")
+                f.write("END OF LOG\n")
+                f.write("="*80 + "\n")
+            
+            print(f"\n📝 Gap calculation log saved to: {log_file}")
+            
+        except Exception as e:
+            print(f"   ⚠️  Could not save gap log: {e}")
 
 
 # Example usage and testing
