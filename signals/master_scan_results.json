@@ -1,186 +1,26 @@
 {
-  "timestamp": "2025-12-01T21:57:05.329123",
+  "timestamp": "2025-12-02T21:53:06.088370",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
   "opportunities": [
     {
-      "symbol": "BMNR",
-      "composite_score": 72.0,
-      "confidence": 72.0,
+      "symbol": "SNDK",
+      "composite_score": 70.0,
+      "confidence": 70.0,
       "recommendation": "BUY",
       "scores": {
         "news": 100,
         "technical": 50.0,
-        "fundamentals": 85.0,
-        "insider": 50
-      },
-      "trade_setup": {
-        "entry": 28.94,
-        "stop_loss": 26.9142,
-        "target": 34.728,
-        "risk_reward": 2.8571428571428568
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 7,
-        "num_sells": 3,
-        "net_value": 2994182.0,
-        "largest_buy": {
-          "name": "Innovative Digital Investors Emerging Technology LP",
-          "shares": 759915,
-          "value": 3039660,
-          "date": "2025-06-06"
-        },
-        "largest_sell": {
-          "name": "Innovative Digital Investors Emerging Technology LP",
-          "shares": 303966,
-          "value": 3039660,
-          "date": "2025-06-17"
-        },
-        "transactions": [
-          {
-            "name": "Lee Thomas Jong",
-            "change": 4500,
-            "date": "2025-07-17",
-            "price": 44,
-            "value": 198000
-          },
-          {
-            "name": "Lee Thomas Jong",
-            "change": 222222,
-            "date": "2025-07-09",
-            "price": 4.5,
-            "value": 999999.0
-          },
-          {
-            "name": "Lee Thomas Jong",
-            "change": 222222,
-            "date": "2025-07-09",
-            "price": 4.5,
-            "value": 999999.0
-          },
-          {
-            "name": "Innovative Digital Investors Emerging Technology LP",
-            "change": -2500,
-            "date": "2025-06-17",
-            "price": 1000,
-            "value": -2500000
-          },
-          {
-            "name": "Innovative Digital Investors Emerging Technology LP",
-            "change": -303966,
-            "date": "2025-06-17",
-            "price": 10,
-            "value": -3039660
-          }
-        ],
-        "summary": "7 buys, 3 sells (last 6 months) | Net: +$3.0M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-12-01T21:42:48.417930"
-    },
-    {
-      "symbol": "RDW",
-      "composite_score": 68.5,
-      "confidence": 68.5,
-      "recommendation": "WATCH",
-      "scores": {
-        "news": 95,
-        "technical": 50.0,
         "fundamentals": 75.0,
-        "insider": 50
-      },
-      "trade_setup": {
-        "entry": 5.12,
-        "stop_loss": 4.7616000000000005,
-        "target": 6.144,
-        "risk_reward": 2.8571428571428603
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 9,
-        "num_sells": 11,
-        "net_value": 696313265.8284999,
-        "largest_buy": {
-          "name": "AE INDUSTRIAL PARTNERS FUND II, LP",
-          "shares": 49764847,
-          "value": 749956244.29,
-          "date": "2025-06-13"
-        },
-        "largest_sell": {
-          "name": "BAIN CAPITAL CREDIT MEMBER, LLC",
-          "shares": 11000000,
-          "value": 86130000.0,
-          "date": "2025-09-17"
-        },
-        "transactions": [
-          {
-            "name": "Futch Aaron Michael",
-            "change": 18410,
-            "date": "2025-11-14",
-            "price": 5.45,
-            "value": 100334.5
-          },
-          {
-            "name": "Edmunds Chris",
-            "change": 5500,
-            "date": "2025-11-14",
-            "price": 5.4599,
-            "value": 30029.45
-          },
-          {
-            "name": "Cannito Peter Anthony Jr",
-            "change": 8750,
-            "date": "2025-11-13",
-            "price": 5.7099,
-            "value": 49961.625
-          },
-          {
-            "name": "Futch Aaron Michael",
-            "change": 4098,
-            "date": "2025-11-11",
-            "price": 6.1,
-            "value": 24997.8
-          },
-          {
-            "name": "Cannito Peter Anthony Jr",
-            "change": 32155,
-            "date": "2025-11-10",
-            "price": 6.2097,
-            "value": 199672.9035
-          }
-        ],
-        "summary": "9 buys, 11 sells (last 6 months) | Net: +$696.3M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-12-01T21:51:29.736683"
-    },
-    {
-      "symbol": "ZS",
-      "composite_score": 68.0,
-      "confidence": 68.0,
-      "recommendation": "WATCH",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 65.0,
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 243.28,
-        "stop_loss": 226.2504,
-        "target": 291.936,
-        "risk_reward": 2.8571428571428577
+        "entry": 205.35,
+        "stop_loss": 190.9755,
+        "target": 246.42,
+        "risk_reward": 2.85714285714286
       },
       "strategy_signals": [],
       "insider_activity": {
@@ -192,12 +32,109 @@
         "summary": "No recent insider transactions"
       },
       "reasons": [
-        "Strong news sentiment"
+        "Strong news sentiment",
+        "Solid fundamentals"
       ],
-      "timestamp": "2025-12-01T21:50:34.419421"
+      "timestamp": "2025-12-02T21:47:12.243087"
     },
     {
-      "symbol": "SNDK",
+      "symbol": "XYZ",
+      "composite_score": 69.0,
+      "confidence": 69.0,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 90,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 60.11,
+        "stop_loss": 55.902300000000004,
+        "target": 72.13199999999999,
+        "risk_reward": 2.857142857142858
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-02T21:48:28.488930"
+    },
+    {
+      "symbol": "ASPI",
+      "composite_score": 68.5,
+      "confidence": 68.5,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 95,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 5.58,
+        "stop_loss": 5.1894,
+        "target": 6.696,
+        "risk_reward": 2.857142857142856
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-02T21:49:43.368213"
+    },
+    {
+      "symbol": "NUVB",
+      "composite_score": 67.0,
+      "confidence": 67.0,
+      "recommendation": "WATCH",
+      "scores": {
+        "news": 90,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 7.47,
+        "stop_loss": 6.9471,
+        "target": 8.963999999999999,
+        "risk_reward": 2.8571428571428554
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-02T21:50:59.491607"
+    },
+    {
+      "symbol": "IREN",
       "composite_score": 66.5,
       "confidence": 66.5,
       "recommendation": "WATCH",
@@ -208,148 +145,68 @@
         "insider": 15
       },
       "trade_setup": {
-        "entry": 210.17,
-        "stop_loss": 195.4581,
-        "target": 252.20399999999998,
-        "risk_reward": 2.8571428571428594
+        "entry": 41.12,
+        "stop_loss": 38.2416,
+        "target": 49.343999999999994,
+        "risk_reward": 2.8571428571428568
       },
       "strategy_signals": [],
       "insider_activity": {
         "sentiment": "STRONG_SELL",
         "num_buys": 0,
-        "num_sells": 29,
-        "net_value": -5744711.859999999,
+        "num_sells": 6,
+        "net_value": -115262000.0,
         "largest_buy": null,
         "largest_sell": {
-          "name": "Goeckeler David",
-          "shares": 34995,
-          "value": 1553778.0,
-          "date": "2025-08-20"
+          "name": "Roberts Daniel John",
+          "shares": 1000000,
+          "value": 33131000.0,
+          "date": "2025-09-11"
         },
         "transactions": [
           {
-            "name": "Shek Bernard",
-            "change": -211,
-            "date": "2025-11-25",
-            "price": 220.5,
-            "value": -46525.5
+            "name": "Roberts Daniel John",
+            "change": -1000000,
+            "date": "2025-09-11",
+            "price": 33.131,
+            "value": -33131000.0
           },
           {
-            "name": "Ilkbahar Alper",
-            "change": -653,
-            "date": "2025-11-25",
-            "price": 220.5,
-            "value": -143986.5
+            "name": "Roberts William Gregory",
+            "change": -1000000,
+            "date": "2025-09-11",
+            "price": 33.131,
+            "value": -33131000.0
           },
           {
-            "name": "Goeckeler David",
-            "change": -1569,
-            "date": "2025-11-25",
-            "price": 220.5,
-            "value": -345964.5
+            "name": "Roberts Daniel John",
+            "change": -500000,
+            "date": "2025-09-04",
+            "price": 23.51,
+            "value": -11755000.0
           },
           {
-            "name": "Shek Bernard",
-            "change": -107,
-            "date": "2025-11-21",
-            "price": 200.27,
-            "value": -21428.89
+            "name": "Roberts William Gregory",
+            "change": -500000,
+            "date": "2025-09-04",
+            "price": 23.51,
+            "value": -11755000.0
           },
           {
-            "name": "Ilkbahar Alper",
-            "change": -319,
-            "date": "2025-11-21",
-            "price": 200.27,
-            "value": -63886.130000000005
+            "name": "Roberts Daniel John",
+            "change": -500000,
+            "date": "2025-09-03",
+            "price": 25.49,
+            "value": -12745000.0
           }
         ],
-        "summary": "0 buys, 29 sells (last 6 months) | Net: -$5.7M"
+        "summary": "0 buys, 6 sells (last 6 months) | Net: -$115.3M"
       },
       "reasons": [
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-12-01T21:43:55.194006"
-    },
-    {
-      "symbol": "UAMY",
-      "composite_score": 66.5,
-      "confidence": 66.5,
-      "recommendation": "WATCH",
-      "scores": {
-        "news": 95,
-        "technical": 50.0,
-        "fundamentals": 75.0,
-        "insider": 30
-      },
-      "trade_setup": {
-        "entry": 5.48,
-        "stop_loss": 5.096400000000001,
-        "target": 6.5760000000000005,
-        "risk_reward": 2.857142857142861
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "SELL",
-        "num_buys": 1,
-        "num_sells": 6,
-        "net_value": -546652.28,
-        "largest_buy": {
-          "name": "EVANS GARY C",
-          "shares": 100000,
-          "value": 613200.0,
-          "date": "2025-09-26"
-        },
-        "largest_sell": {
-          "name": "MCMANUS MICHAEL A JR",
-          "shares": 50000,
-          "value": 365800.0,
-          "date": "2025-10-01"
-        },
-        "transactions": [
-          {
-            "name": "Fink Jeffrey Russell",
-            "change": -8000,
-            "date": "2025-10-03",
-            "price": 8.12,
-            "value": -64959.99999999999
-          },
-          {
-            "name": "Fink Jeffrey Russell",
-            "change": -2833,
-            "date": "2025-10-03",
-            "price": 8.16,
-            "value": -23117.28
-          },
-          {
-            "name": "MCMANUS MICHAEL A JR",
-            "change": -50000,
-            "date": "2025-10-01",
-            "price": 7.316,
-            "value": -365800.0
-          },
-          {
-            "name": "ISAAK RICHARD R",
-            "change": -50000,
-            "date": "2025-10-01",
-            "price": 7,
-            "value": -350000
-          },
-          {
-            "name": "Bardswich Lloyd",
-            "change": -40000,
-            "date": "2025-09-29",
-            "price": 6.44,
-            "value": -257600.00000000003
-          }
-        ],
-        "summary": "1 buys, 6 sells (last 6 months) | Net: -$0.5M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-12-01T21:48:07.562051"
+      "timestamp": "2025-12-02T21:45:42.016437"
     }
   ],
   "portfolio_status": {}
