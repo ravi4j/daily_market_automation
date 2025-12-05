@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-04T21:59:55.683410",
+  "timestamp": "2025-12-05T21:56:24.263859",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
@@ -7,162 +7,6 @@
   "opportunities": [
     {
       "symbol": "PPL",
-      "composite_score": 74.0,
-      "confidence": 74.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 85.0,
-        "insider": 70
-      },
-      "trade_setup": {
-        "entry": 34.16,
-        "stop_loss": 31.7688,
-        "target": 40.992,
-        "risk_reward": 2.8571428571428603
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "BUY",
-        "num_buys": 21,
-        "num_sells": 5,
-        "net_value": 528396.6099999999,
-        "largest_buy": {
-          "name": "Bonenberger David J",
-          "shares": 3851,
-          "value": 137519.21,
-          "date": "2025-07-28"
-        },
-        "largest_sell": {
-          "name": "Crockett John R III",
-          "shares": 15791,
-          "value": 577318.9600000001,
-          "date": "2025-08-27"
-        },
-        "transactions": [
-          {
-            "name": "Redman Heather B",
-            "change": 1162,
-            "date": "2025-10-01",
-            "price": 36.59,
-            "value": 42517.58
-          },
-          {
-            "name": "von Althann Natica",
-            "change": 1162,
-            "date": "2025-10-01",
-            "price": 36.59,
-            "value": 42517.58
-          },
-          {
-            "name": "Madabhushi Venkata R",
-            "change": 1162,
-            "date": "2025-10-01",
-            "price": 36.59,
-            "value": 42517.58
-          },
-          {
-            "name": "Williamson Keith H",
-            "change": 1162,
-            "date": "2025-10-01",
-            "price": 36.59,
-            "value": 42517.58
-          },
-          {
-            "name": "Sullivan Linda G",
-            "change": 1162,
-            "date": "2025-10-01",
-            "price": 36.59,
-            "value": 42517.58
-          }
-        ],
-        "summary": "21 buys, 5 sells (last 6 months) | Net: +$0.5M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-12-04T21:50:54.574179"
-    },
-    {
-      "symbol": "EXC",
-      "composite_score": 72.5,
-      "confidence": 72.5,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 90,
-        "technical": 50.0,
-        "fundamentals": 85.0,
-        "insider": 85
-      },
-      "trade_setup": {
-        "entry": 43.91,
-        "stop_loss": 40.8363,
-        "target": 52.69199999999999,
-        "risk_reward": 2.8571428571428603
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "STRONG_BUY",
-        "num_buys": 22,
-        "num_sells": 0,
-        "net_value": 914258.11,
-        "largest_buy": {
-          "name": "BOWERS WILLIAM P",
-          "shares": 1805,
-          "value": 81243.05,
-          "date": "2025-09-30"
-        },
-        "largest_sell": null,
-        "transactions": [
-          {
-            "name": "Rogers Matthew C",
-            "change": 950,
-            "date": "2025-09-30",
-            "price": 43.43,
-            "value": 41258.5
-          },
-          {
-            "name": "Lillie Charisse R",
-            "change": 950,
-            "date": "2025-09-30",
-            "price": 43.43,
-            "value": 41258.5
-          },
-          {
-            "name": "Segedi Bryan K",
-            "change": 950,
-            "date": "2025-09-30",
-            "price": 43.43,
-            "value": 41258.5
-          },
-          {
-            "name": "BOWERS WILLIAM P",
-            "change": 1805,
-            "date": "2025-09-30",
-            "price": 45.01,
-            "value": 81243.05
-          },
-          {
-            "name": "BOWERS WILLIAM P",
-            "change": 950,
-            "date": "2025-09-30",
-            "price": 43.43,
-            "value": 41258.5
-          }
-        ],
-        "summary": "22 buys, 0 sells (last 6 months) | Net: +$0.9M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals",
-        "Insider buying"
-      ],
-      "timestamp": "2025-12-04T21:50:48.598262"
-    },
-    {
-      "symbol": "VG",
       "composite_score": 72.0,
       "confidence": 72.0,
       "recommendation": "BUY",
@@ -170,93 +14,13 @@
         "news": 100,
         "technical": 50.0,
         "fundamentals": 85.0,
-        "insider": 50
-      },
-      "trade_setup": {
-        "entry": 7.02,
-        "stop_loss": 6.5286,
-        "target": 8.424,
-        "risk_reward": 2.8571428571428594
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 13,
-        "num_sells": 12,
-        "net_value": -43306150.15,
-        "largest_buy": {
-          "name": "Earl Thomas",
-          "shares": 840076,
-          "value": 663660.04,
-          "date": "2025-09-11"
-        },
-        "largest_sell": {
-          "name": "Earl Thomas",
-          "shares": 840076,
-          "value": 11542644.24,
-          "date": "2025-09-11"
-        },
-        "transactions": [
-          {
-            "name": "Musser Fory",
-            "change": -42901,
-            "date": "2025-11-20",
-            "price": 7.8,
-            "value": -334627.8
-          },
-          {
-            "name": "Musser Fory",
-            "change": 42901,
-            "date": "2025-11-20",
-            "price": 0.79,
-            "value": 33891.79
-          },
-          {
-            "name": "Musser Fory",
-            "change": -188337,
-            "date": "2025-11-19",
-            "price": 7.8,
-            "value": -1469028.5999999999
-          },
-          {
-            "name": "Musser Fory",
-            "change": 188337,
-            "date": "2025-11-19",
-            "price": 0.79,
-            "value": 148786.23
-          },
-          {
-            "name": "Musser Fory",
-            "change": -768762,
-            "date": "2025-11-18",
-            "price": 8.01,
-            "value": -6157783.62
-          }
-        ],
-        "summary": "13 buys, 12 sells (last 6 months) | Net: -$43.3M"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-12-04T21:49:50.159792"
-    },
-    {
-      "symbol": "STNE",
-      "composite_score": 70.0,
-      "confidence": 70.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 75.0,
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 15.73,
-        "stop_loss": 14.628900000000002,
-        "target": 18.876,
-        "risk_reward": 2.8571428571428608
+        "entry": 33.86,
+        "stop_loss": 31.489800000000002,
+        "target": 40.632,
+        "risk_reward": 2.8571428571428603
       },
       "strategy_signals": [],
       "insider_activity": {
@@ -271,61 +35,135 @@
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-12-04T21:50:51.122259"
+      "timestamp": "2025-12-05T21:49:04.869013"
     },
     {
-      "symbol": "NGD",
-      "composite_score": 68.5,
-      "confidence": 68.5,
-      "recommendation": "WATCH",
+      "symbol": "XP",
+      "composite_score": 72.0,
+      "confidence": 72.0,
+      "recommendation": "BUY",
       "scores": {
         "news": 100,
         "technical": 50.0,
         "fundamentals": 85.0,
-        "insider": 15
+        "insider": 50.0
       },
       "trade_setup": {
-        "entry": 7.79,
-        "stop_loss": 7.244700000000001,
-        "target": 9.347999999999999,
-        "risk_reward": 2.8571428571428594
+        "entry": 17.88,
+        "stop_loss": 16.6284,
+        "target": 21.456,
+        "risk_reward": 2.857142857142858
       },
       "strategy_signals": [],
       "insider_activity": {
-        "sentiment": "STRONG_SELL",
+        "sentiment": "NEUTRAL",
         "num_buys": 0,
-        "num_sells": 2,
-        "net_value": -390196.80000000005,
-        "largest_buy": null,
-        "largest_sell": {
-          "name": "Godin, Patrick",
-          "shares": 32577,
-          "value": 319254.60000000003,
-          "date": "2025-11-22"
-        },
-        "transactions": [
-          {
-            "name": "Godin, Patrick",
-            "change": -7239,
-            "date": "2025-11-22",
-            "price": 9.8,
-            "value": -70942.20000000001
-          },
-          {
-            "name": "Godin, Patrick",
-            "change": -32577,
-            "date": "2025-11-22",
-            "price": 9.8,
-            "value": -319254.60000000003
-          }
-        ],
-        "summary": "0 buys, 2 sells (last 6 months) | Net: -$0.4M"
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
       },
       "reasons": [
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-12-04T21:49:50.775270"
+      "timestamp": "2025-12-05T21:50:09.792089"
+    },
+    {
+      "symbol": "PM",
+      "composite_score": 72.0,
+      "confidence": 72.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 147.81,
+        "stop_loss": 137.4633,
+        "target": 177.37199999999999,
+        "risk_reward": 2.857142857142856
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-05T21:50:13.128058"
+    },
+    {
+      "symbol": "ZTS",
+      "composite_score": 72.0,
+      "confidence": 72.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 118.65,
+        "stop_loss": 110.34450000000001,
+        "target": 142.38,
+        "risk_reward": 2.8571428571428577
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-05T21:52:40.223575"
+    },
+    {
+      "symbol": "PAGS",
+      "composite_score": 72.0,
+      "confidence": 72.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 9.8,
+        "stop_loss": 9.114,
+        "target": 11.76,
+        "risk_reward": 2.857142857142856
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-05T21:53:32.927352"
     }
   ],
   "portfolio_status": {}
