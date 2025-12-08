@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-12-05T21:56:24.263859",
+  "timestamp": "2025-12-08T21:56:31.289746",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
   "opportunities": [
     {
-      "symbol": "PPL",
+      "symbol": "XP",
       "composite_score": 72.0,
       "confidence": 72.0,
       "recommendation": "BUY",
@@ -17,10 +17,10 @@
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 33.86,
-        "stop_loss": 31.489800000000002,
-        "target": 40.632,
-        "risk_reward": 2.8571428571428603
+        "entry": 18.31,
+        "stop_loss": 17.028299999999998,
+        "target": 21.971999999999998,
+        "risk_reward": 2.857142857142855
       },
       "strategy_signals": [],
       "insider_activity": {
@@ -35,10 +35,10 @@
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-12-05T21:49:04.869013"
+      "timestamp": "2025-12-08T21:46:45.826409"
     },
     {
-      "symbol": "XP",
+      "symbol": "NGD",
       "composite_score": 72.0,
       "confidence": 72.0,
       "recommendation": "BUY",
@@ -49,9 +49,41 @@
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 17.88,
-        "stop_loss": 16.6284,
-        "target": 21.456,
+        "entry": 7.46,
+        "stop_loss": 6.9378,
+        "target": 8.952,
+        "risk_reward": 2.8571428571428585
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-08T21:47:05.219859"
+    },
+    {
+      "symbol": "PAGS",
+      "composite_score": 72.0,
+      "confidence": 72.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 10.02,
+        "stop_loss": 9.3186,
+        "target": 12.024,
         "risk_reward": 2.857142857142858
       },
       "strategy_signals": [],
@@ -67,24 +99,24 @@
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-12-05T21:50:09.792089"
+      "timestamp": "2025-12-08T21:52:25.885604"
     },
     {
-      "symbol": "PM",
-      "composite_score": 72.0,
-      "confidence": 72.0,
+      "symbol": "NU",
+      "composite_score": 70.0,
+      "confidence": 70.0,
       "recommendation": "BUY",
       "scores": {
         "news": 100,
         "technical": 50.0,
-        "fundamentals": 85.0,
+        "fundamentals": 75.0,
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 147.81,
-        "stop_loss": 137.4633,
-        "target": 177.37199999999999,
-        "risk_reward": 2.857142857142856
+        "entry": 16.62,
+        "stop_loss": 15.456600000000002,
+        "target": 19.944,
+        "risk_reward": 2.857142857142857
       },
       "strategy_signals": [],
       "insider_activity": {
@@ -99,24 +131,24 @@
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-12-05T21:50:13.128058"
+      "timestamp": "2025-12-08T21:44:57.341747"
     },
     {
-      "symbol": "ZTS",
-      "composite_score": 72.0,
-      "confidence": 72.0,
+      "symbol": "STNE",
+      "composite_score": 70.0,
+      "confidence": 70.0,
       "recommendation": "BUY",
       "scores": {
         "news": 100,
         "technical": 50.0,
-        "fundamentals": 85.0,
+        "fundamentals": 75.0,
         "insider": 50.0
       },
       "trade_setup": {
-        "entry": 118.65,
-        "stop_loss": 110.34450000000001,
-        "target": 142.38,
-        "risk_reward": 2.8571428571428577
+        "entry": 14.88,
+        "stop_loss": 13.838400000000002,
+        "target": 17.856,
+        "risk_reward": 2.8571428571428608
       },
       "strategy_signals": [],
       "insider_activity": {
@@ -131,39 +163,7 @@
         "Strong news sentiment",
         "Solid fundamentals"
       ],
-      "timestamp": "2025-12-05T21:52:40.223575"
-    },
-    {
-      "symbol": "PAGS",
-      "composite_score": 72.0,
-      "confidence": 72.0,
-      "recommendation": "BUY",
-      "scores": {
-        "news": 100,
-        "technical": 50.0,
-        "fundamentals": 85.0,
-        "insider": 50.0
-      },
-      "trade_setup": {
-        "entry": 9.8,
-        "stop_loss": 9.114,
-        "target": 11.76,
-        "risk_reward": 2.857142857142856
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 0,
-        "num_sells": 0,
-        "net_value": 0,
-        "transactions": [],
-        "summary": "No recent insider transactions"
-      },
-      "reasons": [
-        "Strong news sentiment",
-        "Solid fundamentals"
-      ],
-      "timestamp": "2025-12-05T21:53:32.927352"
+      "timestamp": "2025-12-08T21:47:05.854056"
     }
   ],
   "portfolio_status": {}
