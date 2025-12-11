@@ -1,9 +1,314 @@
 {
-  "timestamp": "2025-12-10T21:49:26.602322",
+  "timestamp": "2025-12-11T22:00:57.294937",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
-  "opportunities": [],
+  "opportunities": [
+    {
+      "symbol": "VG",
+      "composite_score": 72.0,
+      "confidence": 72.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 50
+      },
+      "trade_setup": {
+        "entry": 6.24,
+        "stop_loss": 5.8032,
+        "target": 7.4879999999999995,
+        "risk_reward": 2.8571428571428568
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 14,
+        "num_sells": 13,
+        "net_value": -49406150.15,
+        "largest_buy": {
+          "name": "Earl Thomas",
+          "shares": 1000000,
+          "value": 790000.0,
+          "date": "2025-12-05"
+        },
+        "largest_sell": {
+          "name": "Earl Thomas",
+          "shares": 840076,
+          "value": 11542644.24,
+          "date": "2025-09-11"
+        },
+        "transactions": [
+          {
+            "name": "Earl Thomas",
+            "change": -1000000,
+            "date": "2025-12-05",
+            "price": 6.89,
+            "value": -6890000.0
+          },
+          {
+            "name": "Earl Thomas",
+            "change": 1000000,
+            "date": "2025-12-05",
+            "price": 0.79,
+            "value": 790000.0
+          },
+          {
+            "name": "Musser Fory",
+            "change": -42901,
+            "date": "2025-11-20",
+            "price": 7.8,
+            "value": -334627.8
+          },
+          {
+            "name": "Musser Fory",
+            "change": 42901,
+            "date": "2025-11-20",
+            "price": 0.79,
+            "value": 33891.79
+          },
+          {
+            "name": "Musser Fory",
+            "change": -188337,
+            "date": "2025-11-19",
+            "price": 7.8,
+            "value": -1469028.5999999999
+          }
+        ],
+        "summary": "14 buys, 13 sells (last 6 months) | Net: -$49.4M"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-11T21:47:50.562629"
+    },
+    {
+      "symbol": "TTD",
+      "composite_score": 72.0,
+      "confidence": 72.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 37.02,
+        "stop_loss": 34.4286,
+        "target": 44.424,
+        "risk_reward": 2.8571428571428554
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-11T21:52:21.819637"
+    },
+    {
+      "symbol": "ORCL",
+      "composite_score": 70.0,
+      "confidence": 70.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 30
+      },
+      "trade_setup": {
+        "entry": 198.85,
+        "stop_loss": 184.9305,
+        "target": 238.61999999999998,
+        "risk_reward": 2.857142857142856
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "SELL",
+        "num_buys": 15,
+        "num_sells": 68,
+        "net_value": -896537248.5072999,
+        "largest_buy": {
+          "name": "ELLISON LAWRENCE JOSEPH",
+          "shares": 5000000,
+          "value": 255650000.0,
+          "date": "2025-07-15"
+        },
+        "largest_sell": {
+          "name": "CATZ SAFRA",
+          "shares": 899234,
+          "value": 191449076.7616,
+          "date": "2025-06-26"
+        },
+        "transactions": [
+          {
+            "name": "Smith Maria",
+            "change": -5740,
+            "date": "2025-12-05",
+            "price": 214.33,
+            "value": -1230254.2000000002
+          },
+          {
+            "name": "BERG JEFFREY",
+            "change": -4226,
+            "date": "2025-10-28",
+            "price": 284.307,
+            "value": -1201481.382
+          },
+          {
+            "name": "BERG JEFFREY",
+            "change": -22724,
+            "date": "2025-10-28",
+            "price": 283.627,
+            "value": -6445139.948
+          },
+          {
+            "name": "BERG JEFFREY",
+            "change": -13373,
+            "date": "2025-10-28",
+            "price": 282.555,
+            "value": -3778608.015
+          },
+          {
+            "name": "BERG JEFFREY",
+            "change": -9042,
+            "date": "2025-10-28",
+            "price": 281.579,
+            "value": -2546037.318
+          }
+        ],
+        "summary": "15 buys, 68 sells (last 6 months) | Net: -$896.5M"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-11T21:48:51.186555"
+    },
+    {
+      "symbol": "CRDO",
+      "composite_score": 70.0,
+      "confidence": 70.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 75.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 154.47,
+        "stop_loss": 143.6571,
+        "target": 185.364,
+        "risk_reward": 2.8571428571428616
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-11T21:52:22.398400"
+    },
+    {
+      "symbol": "EQT",
+      "composite_score": 70.0,
+      "confidence": 70.0,
+      "recommendation": "BUY",
+      "scores": {
+        "news": 100,
+        "technical": 50.0,
+        "fundamentals": 85.0,
+        "insider": 30
+      },
+      "trade_setup": {
+        "entry": 56.07,
+        "stop_loss": 52.145100000000006,
+        "target": 67.28399999999999,
+        "risk_reward": 2.8571428571428594
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "SELL",
+        "num_buys": 4,
+        "num_sells": 5,
+        "net_value": -4369569.050000001,
+        "largest_buy": {
+          "name": "Hu Frank C.",
+          "shares": 563,
+          "value": 30644.09,
+          "date": "2025-10-01"
+        },
+        "largest_sell": {
+          "name": "Jordan William E.",
+          "shares": 57500,
+          "value": 3486225.0,
+          "date": "2025-11-11"
+        },
+        "transactions": [
+          {
+            "name": "Jordan William E.",
+            "change": -57500,
+            "date": "2025-11-11",
+            "price": 60.63,
+            "value": -3486225.0
+          },
+          {
+            "name": "Bolen J.E.B.",
+            "change": -1422,
+            "date": "2025-10-28",
+            "price": 52.79,
+            "value": -75067.38
+          },
+          {
+            "name": "Hu Frank C.",
+            "change": 563,
+            "date": "2025-10-01",
+            "price": 54.43,
+            "value": 30644.09
+          },
+          {
+            "name": "Rice Daniel J. IV",
+            "change": 459,
+            "date": "2025-10-01",
+            "price": 54.43,
+            "value": 24983.37
+          },
+          {
+            "name": "BAILEY VICKY A",
+            "change": -4259,
+            "date": "2025-08-06",
+            "price": 51.56,
+            "value": -219594.04
+          }
+        ],
+        "summary": "4 buys, 5 sells (last 6 months) | Net: -$4.4M"
+      },
+      "reasons": [
+        "Strong news sentiment",
+        "Solid fundamentals"
+      ],
+      "timestamp": "2025-12-11T21:54:20.492957"
+    }
+  ],
   "portfolio_status": {}
 }
