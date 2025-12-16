@@ -1,9 +1,39 @@
 {
-  "timestamp": "2025-12-15T21:47:47.639772",
+  "timestamp": "2025-12-16T21:47:15.240671",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
-  "opportunities": [],
+  "opportunities": [
+    {
+      "symbol": "AMCI",
+      "composite_score": 50.0,
+      "confidence": 50.0,
+      "recommendation": "SKIP",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 50.0,
+        "insider": 50.0
+      },
+      "trade_setup": {
+        "entry": 14.65,
+        "stop_loss": 13.624500000000001,
+        "target": 17.58,
+        "risk_reward": 2.857142857142857
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 0,
+        "num_sells": 0,
+        "net_value": 0,
+        "transactions": [],
+        "summary": "No recent insider transactions"
+      },
+      "reasons": [],
+      "timestamp": "2025-12-16T21:47:07.507946"
+    }
+  ],
   "portfolio_status": {}
 }
