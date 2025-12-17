@@ -1,38 +1,86 @@
 {
-  "timestamp": "2025-12-16T21:47:15.240671",
+  "timestamp": "2025-12-17T21:46:59.179601",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
   "opportunities": [
     {
-      "symbol": "AMCI",
-      "composite_score": 50.0,
-      "confidence": 50.0,
+      "symbol": "TSLA",
+      "composite_score": 52.0,
+      "confidence": 52.0,
       "recommendation": "SKIP",
       "scores": {
         "news": 50.0,
         "technical": 50.0,
         "fundamentals": 50.0,
-        "insider": 50.0
+        "insider": 70
       },
       "trade_setup": {
-        "entry": 14.65,
-        "stop_loss": 13.624500000000001,
-        "target": 17.58,
-        "risk_reward": 2.857142857142857
+        "entry": 467.26,
+        "stop_loss": 434.5518,
+        "target": 560.712,
+        "risk_reward": 2.857142857142859
       },
       "strategy_signals": [],
       "insider_activity": {
-        "sentiment": "NEUTRAL",
-        "num_buys": 0,
-        "num_sells": 0,
-        "net_value": 0,
-        "transactions": [],
-        "summary": "No recent insider transactions"
+        "sentiment": "BUY",
+        "num_buys": 30,
+        "num_sells": 13,
+        "net_value": 144706744335.624,
+        "largest_buy": {
+          "name": "Musk Elon",
+          "shares": 423743904,
+          "value": 141568600887.36,
+          "date": "2025-11-06"
+        },
+        "largest_sell": {
+          "name": "MURDOCH JAMES R",
+          "shares": 120000,
+          "value": 42034320.0,
+          "date": "2025-08-26"
+        },
+        "transactions": [
+          {
+            "name": "Musk Kimbal",
+            "change": -56820,
+            "date": "2025-12-09",
+            "price": 450.66,
+            "value": -25606501.200000003
+          },
+          {
+            "name": "Taneja Vaibhav",
+            "change": -2637,
+            "date": "2025-12-08",
+            "price": 443.927,
+            "value": -1170635.499
+          },
+          {
+            "name": "Musk Elon",
+            "change": 423743904,
+            "date": "2025-11-06",
+            "price": 334.09,
+            "value": 141568600887.36
+          },
+          {
+            "name": "MURDOCH JAMES R",
+            "change": -60000,
+            "date": "2025-09-15",
+            "price": 422.68,
+            "value": -25360800.0
+          },
+          {
+            "name": "Musk Elon",
+            "change": 17536,
+            "date": "2025-09-12",
+            "price": 396.359,
+            "value": 6950551.424
+          }
+        ],
+        "summary": "30 buys, 13 sells (last 6 months) | Net: +$144706.7M"
       },
       "reasons": [],
-      "timestamp": "2025-12-16T21:47:07.507946"
+      "timestamp": "2025-12-17T21:46:42.126029"
     }
   ],
   "portfolio_status": {}
