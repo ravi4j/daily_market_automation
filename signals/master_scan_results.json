@@ -1,81 +1,86 @@
 {
-  "timestamp": "2025-12-24T21:45:40.555337",
+  "timestamp": "2025-12-25T21:46:20.327478",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
   "opportunities": [
     {
-      "symbol": "NVDA",
-      "composite_score": 46.5,
-      "confidence": 46.5,
+      "symbol": "NKE",
+      "composite_score": 48.0,
+      "confidence": 48.0,
       "recommendation": "SKIP",
       "scores": {
         "news": 50.0,
         "technical": 50.0,
         "fundamentals": 50.0,
-        "insider": 15
+        "insider": 30
       },
       "trade_setup": {
-        "entry": 188.61,
-        "stop_loss": 175.40730000000002,
-        "target": 226.33200000000002,
-        "risk_reward": 2.8571428571428594
+        "entry": 60.0,
+        "stop_loss": 55.800000000000004,
+        "target": 72.0,
+        "risk_reward": 2.85714285714286
       },
       "strategy_signals": [],
       "insider_activity": {
-        "sentiment": "STRONG_SELL",
-        "num_buys": 0,
-        "num_sells": 531,
-        "net_value": -1643011715.9869,
-        "largest_buy": null,
+        "sentiment": "SELL",
+        "num_buys": 5,
+        "num_sells": 22,
+        "net_value": -10995087.193400001,
+        "largest_buy": {
+          "name": "PARKER MARK G",
+          "shares": 110000,
+          "value": 6204000.0,
+          "date": "2025-07-16"
+        },
         "largest_sell": {
-          "name": "STEVENS MARK A",
-          "shares": 350000,
-          "value": 63604065.0,
-          "date": "2025-12-05"
+          "name": "PARKER MARK G",
+          "shares": 110000,
+          "value": 7951900.000000001,
+          "date": "2025-07-16"
         },
         "transactions": [
           {
-            "name": "Robertson Donald F Jr",
-            "change": -1690,
-            "date": "2025-12-19",
-            "price": 180.8837,
-            "value": -305693.453
+            "name": "SWAN ROBERT HOLMES",
+            "change": 8691,
+            "date": "2025-12-22",
+            "price": 57.54,
+            "value": 500080.14
           },
           {
-            "name": "Robertson Donald F Jr",
-            "change": -14300,
-            "date": "2025-12-19",
-            "price": 180.4451,
-            "value": -2580364.93
+            "name": "COOK TIMOTHY D",
+            "change": 50000,
+            "date": "2025-12-22",
+            "price": 58.97,
+            "value": 2948500.0
           },
           {
-            "name": "Robertson Donald F Jr",
-            "change": -6400,
-            "date": "2025-12-19",
-            "price": 179.3552,
-            "value": -1147873.28
+            "name": "Alagirisamy Venkatesh",
+            "change": 17615,
+            "date": "2025-12-10",
+            "price": 65.79,
+            "value": 1158890.85
           },
           {
-            "name": "Robertson Donald F Jr",
-            "change": -1800,
-            "date": "2025-12-19",
-            "price": 178.3511,
-            "value": -321031.98
+            "name": "PARKER MARK G",
+            "change": -86078,
+            "date": "2025-11-14",
+            "price": 64.8,
+            "value": -5577854.399999999
           },
           {
-            "name": "Robertson Donald F Jr",
-            "change": -400,
-            "date": "2025-12-19",
-            "price": 176.9075,
-            "value": -70763.0
+            "name": "KNUDSTORP JORGEN VIG",
+            "change": 16150,
+            "date": "2025-11-07",
+            "price": 62.09,
+            "value": 1002753.5
           }
         ],
-        "summary": "0 buys, 531 sells (last 6 months) | Net: -$1643.0M"
+        "summary": "5 buys, 22 sells (last 6 months) | Net: -$11.0M"
       },
       "reasons": [],
-      "timestamp": "2025-12-24T21:45:31.923840"
+      "timestamp": "2025-12-25T21:46:07.226462"
     }
   ],
   "portfolio_status": {}
