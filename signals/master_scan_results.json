@@ -1,82 +1,9 @@
 {
-  "timestamp": "2025-12-29T21:46:12.472739",
+  "timestamp": "2025-12-30T21:47:00.517056",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
-  "opportunities": [
-    {
-      "symbol": "NVDA",
-      "composite_score": 46.5,
-      "confidence": 46.5,
-      "recommendation": "SKIP",
-      "scores": {
-        "news": 50.0,
-        "technical": 50.0,
-        "fundamentals": 50.0,
-        "insider": 15
-      },
-      "trade_setup": {
-        "entry": 188.22,
-        "stop_loss": 175.0446,
-        "target": 225.864,
-        "risk_reward": 2.8571428571428585
-      },
-      "strategy_signals": [],
-      "insider_activity": {
-        "sentiment": "STRONG_SELL",
-        "num_buys": 0,
-        "num_sells": 505,
-        "net_value": -1583850283.9642,
-        "largest_buy": null,
-        "largest_sell": {
-          "name": "STEVENS MARK A",
-          "shares": 350000,
-          "value": 63604065.0,
-          "date": "2025-12-05"
-        },
-        "transactions": [
-          {
-            "name": "Robertson Donald F Jr",
-            "change": -1690,
-            "date": "2025-12-19",
-            "price": 180.8837,
-            "value": -305693.453
-          },
-          {
-            "name": "Robertson Donald F Jr",
-            "change": -14300,
-            "date": "2025-12-19",
-            "price": 180.4451,
-            "value": -2580364.93
-          },
-          {
-            "name": "Robertson Donald F Jr",
-            "change": -6400,
-            "date": "2025-12-19",
-            "price": 179.3552,
-            "value": -1147873.28
-          },
-          {
-            "name": "Robertson Donald F Jr",
-            "change": -1800,
-            "date": "2025-12-19",
-            "price": 178.3511,
-            "value": -321031.98
-          },
-          {
-            "name": "Robertson Donald F Jr",
-            "change": -400,
-            "date": "2025-12-19",
-            "price": 176.9075,
-            "value": -70763.0
-          }
-        ],
-        "summary": "0 buys, 505 sells (last 6 months) | Net: -$1583.9M"
-      },
-      "reasons": [],
-      "timestamp": "2025-12-29T21:46:05.781624"
-    }
-  ],
+  "opportunities": [],
   "portfolio_status": {}
 }
