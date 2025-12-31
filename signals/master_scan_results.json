@@ -1,9 +1,87 @@
 {
-  "timestamp": "2025-12-30T21:47:00.517056",
+  "timestamp": "2025-12-31T21:46:12.432148",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
-  "opportunities": [],
+  "opportunities": [
+    {
+      "symbol": "ONDS",
+      "composite_score": 50.0,
+      "confidence": 50.0,
+      "recommendation": "SKIP",
+      "scores": {
+        "news": 50.0,
+        "technical": 50.0,
+        "fundamentals": 50.0,
+        "insider": 50
+      },
+      "trade_setup": {
+        "entry": 9.76,
+        "stop_loss": 9.0768,
+        "target": 11.712,
+        "risk_reward": 2.85714285714286
+      },
+      "strategy_signals": [],
+      "insider_activity": {
+        "sentiment": "NEUTRAL",
+        "num_buys": 2,
+        "num_sells": 21,
+        "net_value": 1810683.3499999996,
+        "largest_buy": {
+          "name": "Brock Eric A",
+          "shares": 1153625,
+          "value": 9309753.75,
+          "date": "2025-12-17"
+        },
+        "largest_sell": {
+          "name": "Stern Ron",
+          "shares": 850000,
+          "value": 6725455.0,
+          "date": "2025-11-26"
+        },
+        "transactions": [
+          {
+            "name": "SOOD JASPREET K",
+            "change": -947,
+            "date": "2025-12-22",
+            "price": 9.48,
+            "value": -8977.560000000001
+          },
+          {
+            "name": "SOOD JASPREET K",
+            "change": -525,
+            "date": "2025-12-22",
+            "price": 9.48,
+            "value": -4977.0
+          },
+          {
+            "name": "SOOD JASPREET K",
+            "change": -6581,
+            "date": "2025-12-22",
+            "price": 9.48,
+            "value": -62387.880000000005
+          },
+          {
+            "name": "SOOD JASPREET K",
+            "change": -6581,
+            "date": "2025-12-22",
+            "price": 9.48,
+            "value": -62387.880000000005
+          },
+          {
+            "name": "SOOD JASPREET K",
+            "change": -8004,
+            "date": "2025-12-22",
+            "price": 9.48,
+            "value": -75877.92
+          }
+        ],
+        "summary": "2 buys, 21 sells (last 6 months) | Net: +$1.8M"
+      },
+      "reasons": [],
+      "timestamp": "2025-12-31T21:46:09.761699"
+    }
+  ],
   "portfolio_status": {}
 }
