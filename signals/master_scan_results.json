@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-31T21:46:12.432148",
+  "timestamp": "2026-01-01T21:46:58.405384",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
@@ -26,8 +26,8 @@
       "insider_activity": {
         "sentiment": "NEUTRAL",
         "num_buys": 2,
-        "num_sells": 21,
-        "net_value": 1810683.3499999996,
+        "num_sells": 22,
+        "net_value": -2800664.1500000004,
         "largest_buy": {
           "name": "Brock Eric A",
           "shares": 1153625,
@@ -41,6 +41,13 @@
           "date": "2025-11-26"
         },
         "transactions": [
+          {
+            "name": "Brock Eric A",
+            "change": -475000,
+            "date": "2025-12-31",
+            "price": 9.7081,
+            "value": -4611347.5
+          },
           {
             "name": "SOOD JASPREET K",
             "change": -947,
@@ -68,19 +75,12 @@
             "date": "2025-12-22",
             "price": 9.48,
             "value": -62387.880000000005
-          },
-          {
-            "name": "SOOD JASPREET K",
-            "change": -8004,
-            "date": "2025-12-22",
-            "price": 9.48,
-            "value": -75877.92
           }
         ],
-        "summary": "2 buys, 21 sells (last 6 months) | Net: +$1.8M"
+        "summary": "2 buys, 22 sells (last 6 months) | Net: -$2.8M"
       },
       "reasons": [],
-      "timestamp": "2025-12-31T21:46:09.761699"
+      "timestamp": "2026-01-01T21:46:45.387480"
     }
   ],
   "portfolio_status": {}
