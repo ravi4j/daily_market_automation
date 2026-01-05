@@ -1,83 +1,86 @@
 {
-  "timestamp": "2026-01-02T21:45:01.672676",
+  "timestamp": "2026-01-05T21:48:36.370321",
   "scan_config": {
     "tier": "daily",
     "symbols_scanned": 600
   },
   "opportunities": [
     {
-      "symbol": "UAA",
-      "composite_score": 53.5,
-      "confidence": 53.5,
+      "symbol": "PATH",
+      "composite_score": 46.5,
+      "confidence": 46.5,
       "recommendation": "SKIP",
       "scores": {
         "news": 50.0,
         "technical": 50.0,
         "fundamentals": 50.0,
-        "insider": 85
+        "insider": 15
       },
       "trade_setup": {
-        "entry": 5.29,
-        "stop_loss": 4.919700000000001,
-        "target": 6.348,
-        "risk_reward": 2.857142857142861
+        "entry": 16.03,
+        "stop_loss": 14.907900000000001,
+        "target": 19.236,
+        "risk_reward": 2.8571428571428577
       },
       "strategy_signals": [],
       "insider_activity": {
-        "sentiment": "STRONG_BUY",
-        "num_buys": 14,
-        "num_sells": 0,
-        "net_value": 72474682.5757,
+        "sentiment": "STRONG_SELL",
+        "num_buys": 1,
+        "num_sells": 92,
+        "net_value": -81610571.3782,
         "largest_buy": {
-          "name": "FAIRFAX FINANCIAL HOLDINGS LTD/ CAN",
-          "shares": 5383513,
-          "value": 24379238.620500002,
-          "date": "2025-12-22"
+          "name": "Gupta Ashim",
+          "shares": 148009,
+          "value": 111495.1797,
+          "date": "2025-10-09"
         },
-        "largest_sell": null,
+        "largest_sell": {
+          "name": "Gupta Ashim",
+          "shares": 181745,
+          "value": 3091882.289,
+          "date": "2025-10-09"
+        },
         "transactions": [
           {
-            "name": "FAIRFAX FINANCIAL HOLDINGS LTD/ CAN",
-            "change": 734430,
+            "name": "Dines Daniel",
+            "change": -45000,
+            "date": "2026-01-02",
+            "price": 16.3846,
+            "value": -737307.0
+          },
+          {
+            "name": "Dines Daniel",
+            "change": -45000,
+            "date": "2025-12-31",
+            "price": 16.5473,
+            "value": -744628.5
+          },
+          {
+            "name": "Dines Daniel",
+            "change": -45000,
+            "date": "2025-12-30",
+            "price": 16.8211,
+            "value": -756949.5
+          },
+          {
+            "name": "Dines Daniel",
+            "change": -45000,
             "date": "2025-12-29",
-            "price": 4.4776,
-            "value": 3288483.7679999997
+            "price": 16.4351,
+            "value": -739579.4999999999
           },
           {
-            "name": "FAIRFAX FINANCIAL HOLDINGS LTD/ CAN",
-            "change": 1763396,
-            "date": "2025-12-29",
-            "price": 4.7315,
-            "value": 8343508.174
-          },
-          {
-            "name": "FAIRFAX FINANCIAL HOLDINGS LTD/ CAN",
-            "change": 385850,
+            "name": "Dines Daniel",
+            "change": -45000,
             "date": "2025-12-26",
-            "price": 4.42,
-            "value": 1705457.0
-          },
-          {
-            "name": "FAIRFAX FINANCIAL HOLDINGS LTD/ CAN",
-            "change": 1000000,
-            "date": "2025-12-26",
-            "price": 4.6384,
-            "value": 4638400.0
-          },
-          {
-            "name": "FAIRFAX FINANCIAL HOLDINGS LTD/ CAN",
-            "change": 438333,
-            "date": "2025-12-24",
-            "price": 4.397,
-            "value": 1927350.2010000001
+            "price": 16.9026,
+            "value": -760617.0
           }
         ],
-        "summary": "14 buys, 0 sells (last 6 months) | Net: +$72.5M"
+        "summary": "1 buys, 92 sells (last 6 months) | Net: -$81.6M"
       },
-      "reasons": [
-        "Insider buying"
-      ],
-      "timestamp": "2026-01-02T21:44:55.273922"
+      "reasons": [],
+      "timestamp": "2026-01-05T21:48:32.423702"
     }
   ],
   "portfolio_status": {}
